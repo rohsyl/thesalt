@@ -11,13 +11,14 @@ MainScene.prototype = {
         this.x = 150;
         this.y = this.canvas.height - 100;
         this.speed = 5;
-        this.jumpStrength = 5;
+        this.jumpStrength = 10;
         this.velX = 0;
         this.velY = 0;
 
         this.jumpYOrigin = this.y;
         this.jumping = false;
-        
+        this.dblJumping = false;
+
     },
 
     draw: function(){
@@ -40,10 +41,15 @@ MainScene.prototype = {
         // start jumping
         if(this.gb.keyUpPressed){
             if(!this.jumping){
+                console.log("jump");
                 this.velY = -this.jumpStrength*2;
                 this.jumpYOrigin = this.y;
                 this.jumping = true;
+
+                console.log('cw : ' + this.canvas.width);
+                console.log('ch : ' + this.canvas.height);
             }
+
         }
 
         // move left or right
@@ -56,19 +62,20 @@ MainScene.prototype = {
                 this.velX--;
         }
 
-
-        this.velX *= FRICTION;
-        if(this.jumping)
-            this.velY += GRAVITY;
-
         this.x += this.velX;
         this.y += this.velY;
 
-        console.log(this.x, this.y);
+        this.velX *= FRICTION;
+        this.velY += GRAVITY;
 
-        if(this.y >= this.canvas.height - this.h - this.jumpYOrigin){
-            this.y = this.canvas.height - this.h - this.jumpYOrigin;
+
+        //console.log(this.x, this.y);
+
+        if(this.y >= this.jumpYOrigin - this.h){
+
+            this.y = this.jumpYOrigin;
             this.jumping = false;
+            this.dblJumping = false;
         }
     },
 

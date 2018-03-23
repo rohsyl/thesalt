@@ -14,5 +14,5 @@
     function loop() {
         gameBoard.redraw();
     }
-    setInterval(loop, 10);
+    setInterval(loop, 20);
 })();
