@@ -1,19 +1,18 @@
 (function() {
-    var canvas = document.getElementById('game-canvas'),
-        context = canvas.getContext('2d');
+    let canvas = document.getElementById('game-canvas');
 
-    var gameboard = new GameBoard(context);
+    let gameBoard = new GameBoard(canvas);
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
-        drawStuff();
     }
     window.addEventListener('resize', resizeCanvas, false);
     resizeCanvas();
 
-    function drawStuff() {
-        gameboard.redraw();
+    gameBoard.init();
+    function loop() {
+        gameBoard.redraw();
     }
+    setInterval(loop, 10);
 })();

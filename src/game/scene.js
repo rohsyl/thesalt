@@ -5,9 +5,18 @@ Chaque scène devrai implémenter les méthodes ci dessous.
 
  */
 
-function Scene(context) {
-    this.context = context;
+function Scene(gb) {
+    this.gb = gb;
+    this.canvas = this.gb.canvas;
+    this.context = this.gb.context;
 }
 Scene.prototype = {
 
+    init: function(canvas){
+
+    },
+
+    draw: function(canvas){
+
+    }
 };
