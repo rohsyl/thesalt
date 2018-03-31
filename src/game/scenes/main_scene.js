@@ -1,3 +1,5 @@
+const TIMEOUT_JUMP = 10;
+
 function MainScene(gb) {
     this.gb = gb;
     this.canvas = this.gb.canvas;
@@ -17,13 +19,18 @@ MainScene.prototype = {
 
         this.jumpYOrigin = this.y;
         this.jumping = false;
-        this.dblJumping = false;
+        this.jumpCount = 0;
+        this.jumpTimeout = TIMEOUT_JUMP;
 
     },
 
     draw: function(){
 
         this.drawPlayer();
+        if(this.jumpTimeout > -1){
+            this.jumpTimeout--;
+            console.log(this.jumpTimeout);
+        }
 
         //
         /*
@@ -48,8 +55,16 @@ MainScene.prototype = {
 
                 console.log('cw : ' + this.canvas.width);
                 console.log('ch : ' + this.canvas.height);
+                this.jumpCount = 1;
+                this.jumpTimeout = TIMEOUT_JUMP;
             }
-
+            else if (this.jumpTimeout < 0 && this.jumpCount == 1){
+                console.log(this.jumpCount);
+                this.velY = -this.jumpStrength*2;
+                this.jumping = true;
+                this.jumpCount = 2;
+                this.jumpTimeout = 0;
+            }
         }
 
         // move left or right
@@ -75,7 +90,7 @@ MainScene.prototype = {
 
             this.y = this.jumpYOrigin;
             this.jumping = false;
-            this.dblJumping = false;
+            this.jumpCount = 0;
         }
     },
 
