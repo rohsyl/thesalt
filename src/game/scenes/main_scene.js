@@ -32,18 +32,6 @@ MainScene.prototype = {
             console.log(this.jumpTimeout);
         }
 
-        //
-        /*
-        if(this.x + this.dx > this.canvas.width-this.ballRadius || this.x + this.dx < this.ballRadius) {
-            this.dx = -this.dx;
-        }
-        if(this.y + this.dy > this.canvas.height-this.ballRadius || this.y + this.dy < this.ballRadius) {
-            this.dy = -this.dy;
-        }
-
-        this.x +=dw this.dx;
-        this.y += this.dy;
-        */
 
         // start jumping
         if(this.gb.keyUpPressed){
@@ -82,9 +70,6 @@ MainScene.prototype = {
 
         this.velX *= FRICTION;
         this.velY += GRAVITY;
-
-
-        //console.log(this.x, this.y);
 
         if(this.y >= this.jumpYOrigin - this.h){
 
