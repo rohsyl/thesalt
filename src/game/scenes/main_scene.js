@@ -8,7 +8,7 @@ function MainScene(gb) {
 MainScene.prototype = {
 
     init: function(){
-        this.h = 10;
+        this.h = c;
         this.w = 10;
         this.x = 150;
         this.y = this.canvas.height - 100;
