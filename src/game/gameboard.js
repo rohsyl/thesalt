@@ -17,8 +17,8 @@ function GameBoard(canvas) {
 GameBoard.prototype = {
 
     init: function(){
-        this.activeScene = new MainScene(this);
-        //this.activeScene = new RmenScene(this);
+        // this.activeScene = new MainScene(this);
+        this.activeScene = new RmenScene(this);
         this.activeScene.init();
 
         let self = this;
