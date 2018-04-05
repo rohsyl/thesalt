@@ -12,11 +12,11 @@ function Scene(gb) {
 }
 Scene.prototype = {
 
-    init: function(canvas){
+    init: function(){
 
     },
 
-    draw: function(canvas){
+    draw: function(){
 
     }
 };

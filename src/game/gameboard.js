@@ -17,8 +17,10 @@ function GameBoard(canvas) {
 GameBoard.prototype = {
 
     init: function(){
+
         this.activeScene = new Scenecc(this);
-        //this.activeScene = new RmenScene(this);
+
+
         this.activeScene.init();
 
         let self = this;
