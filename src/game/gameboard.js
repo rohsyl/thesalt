@@ -20,7 +20,6 @@ GameBoard.prototype = {
 
         this.activeScene = new Scenecc(this);
 
-
         this.activeScene.init();
 
         let self = this;
