@@ -18,8 +18,7 @@ GameBoard.prototype = {
 
     init: function(){
 
-        this.activeScene = new LevelScene(this);
-        this.activeScene.init();
+        this.initActiveScene(new MainScene(this));
 
         let self = this;
         document.addEventListener("keydown", function(e){self.keyDownHandler(e)}, false);
@@ -30,7 +29,7 @@ GameBoard.prototype = {
         // do stuff when
         if(typeof this.activeScene !== "undefined"){
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.activeScene.draw();
+            this.activeScene.draw();
         }
     },
 
@@ -72,5 +71,10 @@ GameBoard.prototype = {
             if(keys[i] === keyCode) return true;
         }
         return false;
+    },
+
+    initActiveScene: function(scene) {
+        scene.init();
+        this.activeScene = scene;
     }
 };
