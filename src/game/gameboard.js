@@ -5,6 +5,11 @@ const KEYS_UP = [87, 38];
 const FRICTION = 0.8;
 const GRAVITY = 0.98;
 
+const BLOCK_TYPE_BLOCK = 0;
+const BLOCK_TYPE_COLLIDABLE_BLOCK = 1;
+const BLOCK_TYPE_PLAYER = 2;
+const BLOCK_TYPE_ENEMY = 3;
+
 function GameBoard(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
@@ -17,20 +22,19 @@ function GameBoard(canvas) {
 GameBoard.prototype = {
 
     init: function(){
-
-        this.activeScene = new LevelScene(this);
-        this.activeScene.init();
-
         let self = this;
         document.addEventListener("keydown", function(e){self.keyDownHandler(e)}, false);
         document.addEventListener("keyup", function(e){self.keyUpHandler(e)}, false);
+
+        this.activeScene = new LevelScene(self);
+        this.activeScene.init();
     },
 
     redraw : function(){
         // do stuff when
         if(typeof this.activeScene !== "undefined"){
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.activeScene.draw();
+            this.activeScene.draw();
         }
     },
 

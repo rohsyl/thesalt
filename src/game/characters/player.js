@@ -1,14 +1,15 @@
 const DEFAULT_FRAME = 3;
 const JUMPING_FRAME = 1;
-const TIMEOUT_JUMP = 10;
+const TIMEOUT_JUMP = 15;
 
-function Player(scene, x, y) {
+function Player(scene, x, y, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
     this.canvas = this.scene.canvas;
     this.context = this.scene.context;
     this.x = x;
     this.y = y;
+    this.blockSize = blockSize;
 }
 
 Player.prototype = {
@@ -20,10 +21,10 @@ Player.prototype = {
         this.w = 10;
 
         // w / h for drawing
-        this.realW = this.w * 12.8;
-        this.realH = this.h * 12.8;
+        this.realW = this.blockSize*2;
+        this.realH = this.blockSize*2;
 
-        this.y = this.y - this.realH;
+        this.y = this.y - this.realH/2;
         this.speed = 5;
         this.jumpStrength = 10;
         this.velX = 0;
@@ -134,6 +135,17 @@ Player.prototype = {
         }
     },
 
+    /*
+    what have, x, y, and getType()
+     */
+    onCollision: function(what){
+
+    },
+
+    getType: function(){
+        return BLOCK_TYPE_PLAYER;
+    },
+
     __drawPlayerWaiting: function(){
 
         if (!this.jumping){
@@ -171,7 +183,7 @@ Player.prototype = {
 
         this.context.drawImage(player[this.frameIndex], this.x, this.y, this.realW, this.realH);
 
-        },
+    },
 
 
     __update: function () {
