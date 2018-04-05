@@ -13,19 +13,19 @@ function Scenecc(gb) {
 Scenecc.prototype = {
 
     init: function(){
-
-        this.x = this.canvas.width;
+        this.x = 10;
         this.y = this.canvas.height - 100;
         this.speedX = 0;
         this.speedY = 0;
+     //   this.jumpYOrigin = this.y;
+  //      this.jumping = false;
+    //    this.jumpCount = 0;
 
-        this.ennemy = new Image();
-        ennemy.src ="assets/sprites/player/forwards/arret-rmen.png";
     },
-
 
     draw: function(){
         this.drawSquare();
+        this.drawCircle();
         if(this.gb.keyLeftPressed){
             this.moveLeft();
         }
@@ -39,14 +39,26 @@ Scenecc.prototype = {
 
         this.x += this.speedX;
         this.y += this.speedY;
-        this.x += this.velX;
-        this.y += this.velY;
-
-        this.velX *= FRICTION;
-        this.velY += GRAVITY;
 
 
-    },
+
+        this.speedX *= FRICTION;
+     //   this.speedY += GRAVITY
+        if (this.x == this.canvas.width){
+            this.x=0;
+
+        }
+
+        ;
+        if( this.y < this.jumpYOrigin - this.h) {
+            this.y = 0;
+            this.jumping = false;
+            this.jumpCount = 0;
+
+        }
+
+
+},
 
     moveLeft: function(){
         this.speedX -= 3;
@@ -61,18 +73,27 @@ Scenecc.prototype = {
 
 
     moveUp: function(){
-    this.speedY += 3;
+    this.speedY -= 2;
 
     },
-    update: function(){
-        draw();
 
-    },
+
 
     drawSquare: function(){
         this.context.fillStyle = "#FF0000";
         this.context.fillRect(this.x,this.y,10,10);
-        this.context.drawImage(document.getElementById("ennemi"));
+       // this.ennemy.src= "assets/sprites/player/forwards/arret-rmen.png";
+        //this.context.drawImage(this.ennemy.src,10,10);
+    },
+    drawCircle: function(){
+
+        this.context.beginPath();
+        this.context.(this.x+20,this.y,10,10,2*Math.PI);
+        this.context.fillStyle="#FF4422"
+        this.context.fill();
+        //this.context.stroke();
+
+
     }
 
 
