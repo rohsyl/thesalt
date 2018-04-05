@@ -71,11 +71,10 @@ Player.prototype = {
 
 
         // doublejump timeout
-        if(this.jumpTimeout > -1){
+        if(this.jumpTimeout > -1) {
             this.jumpTimeout--;
             // console.log(this.jumpTimeout);
         }
-
 
         // start jumping
         if(this.gb.keyUpPressed){
