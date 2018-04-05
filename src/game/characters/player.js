@@ -63,7 +63,7 @@ Player.prototype = {
 
         this.y = this.y - this.realH/2;
         this.speed = 5;
-        this.jumpStrength = 10;
+        this.jumpStrength = 8;
         this.velX = 0;
         this.velY = 0;
 
@@ -82,7 +82,6 @@ Player.prototype = {
         this.playerBackw1 = new Image();
         this.playerBackw2 = new Image();
         this.playerBackw3 = new Image();
-
 
         this.playerForw0.src = IMG_PLAYER_F_STOP[this.playerSelected];
         this.playerForw1.src = IMG_PLAYER_F_FEETFRONT[this.playerSelected];
@@ -217,7 +216,6 @@ Player.prototype = {
             player = this.playerForw;
         else
             player = this.playerBackw;
-
 
         this.context.drawImage(player[this.frameIndex], this.x, this.y, this.realW, this.realH);
 

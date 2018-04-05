@@ -1,11 +1,11 @@
 const LEVEL_ROW_NB = 24;
-function LevelBuilder(scene, levelString){
+function LevelBuilder(scene, levelString, playerSelected){
     this.scene = scene;
+    this.playerSelected = playerSelected;
     this.gb = this.scene.gb;
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
     this.levelString = levelString;
-
 
     this.sprites = [];
 
@@ -36,7 +36,7 @@ function LevelBuilder(scene, levelString){
             return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), 'background/floor_outside'));
         },
         p: function(i, j){
-            return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize()));
+            return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.playerSelected, self.__getBlockSize()));
         },
     }
 }
