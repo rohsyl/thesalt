@@ -1,6 +1,6 @@
 
-Level MUST have 16 rows. Columns are adaptable...
-Rows after 16 are ignored...
+Level MUST have 24 rows. Columns are adaptable...
+Rows after 24 are ignored...
 
 
 
@@ -16,3 +16,4 @@ o = floor_outside.png
 ANIMATED BLOCK
 ==============
 p = player
+1 = enemy1

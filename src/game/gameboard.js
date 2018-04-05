@@ -5,6 +5,11 @@ const KEYS_UP = [87, 38];
 const FRICTION = 0.8;
 const GRAVITY = 0.98;
 
+const BLOCK_TYPE_BLOCK = 0;
+const BLOCK_TYPE_COLLIDABLE_BLOCK = 1;
+const BLOCK_TYPE_PLAYER = 2;
+const BLOCK_TYPE_ENEMY = 3;
+
 function GameBoard(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');

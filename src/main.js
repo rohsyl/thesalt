@@ -1,4 +1,6 @@
 (function() {
+    const FPS = 60;
+
     let canvas = document.getElementById('game-canvas');
 
     let gameBoard = new GameBoard(canvas);
@@ -14,5 +16,5 @@
     function loop() {
         gameBoard.redraw();
     }
-    setInterval(loop, 20);
+    setInterval(loop, 1000 / FPS);
 })();
