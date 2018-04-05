@@ -18,7 +18,10 @@ GameBoard.prototype = {
 
     init: function(){
 
-        this.activeScene = new Scenecc(this);
+
+      //  this.activeScene = new Scenecc(this);
+
+        this.activeScene = new EnemyWalkScene(this);
 
         this.activeScene.init();
 
@@ -31,7 +34,7 @@ GameBoard.prototype = {
         // do stuff when
         if(typeof this.activeScene !== "undefined"){
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.activeScene.draw();
+                this.activeScene.draw();
         }
     },
 

@@ -20,19 +20,11 @@ MainScene.prototype = {
         this.jumpCount = 0;
         this.jumpTimeout = TIMEOUT_JUMP;
 
+        this.player = new Player(this, this.x, this.y);
+        this.player.init();
     },
 
     draw: function(){
-
-
-
-        this.player.init();
-
-    },
-
-    draw: function() {
-
         this.player.draw();
-
     }
 };

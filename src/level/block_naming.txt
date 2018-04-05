@@ -1,0 +1,18 @@
+
+Level MUST have 16 rows. Columns are adaptable...
+Rows after 16 are ignored...
+
+
+
+SIMPLE BLOCK
+============
+e = empty
+f = floor_cave_1.png
+g = floor_cave_2.png
+o = floor_outside.png
+
+
+
+ANIMATED BLOCK
+==============
+p = player
