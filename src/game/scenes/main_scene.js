@@ -7,7 +7,6 @@ MainScene.prototype = {
 
     init: function(){
 
-        this.player = new Player(this);
 
         this.player.init();
 
