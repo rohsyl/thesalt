@@ -16,13 +16,13 @@ LevelScene.prototype = {
     init: function(){
         let lvlLoader = new LevelLoader();
         let level = lvlLoader.loadLevel("level1");
-        this.levelBuilder = new LevelBuilder(this, level, this.playerSelected);
-        this.levelBuilder.init();
-        this.collisionManager = new CollisionManager(this.levelBuilder);
+        this.levelManager = new LevelManager(this, level, this.playerSelected);
+        this.levelManager.init();
+        this.collisionManager = new CollisionManager(this.levelManager);
     },
 
     draw: function(){
         this.collisionManager.detectCollisions();
-        this.levelBuilder.draw();
+        this.levelManager.draw();
     }
 };

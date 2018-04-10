@@ -104,7 +104,7 @@ Player.prototype = {
 
     },
 
-    draw: function () {
+    draw: function (shiftX) {
 
 
 
@@ -159,6 +159,7 @@ Player.prototype = {
         // move the player
         this.x += this.velX;
         this.y += this.velY;
+
 
         // apply forces
         this.velX *= FRICTION;

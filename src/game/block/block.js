@@ -20,8 +20,8 @@ Block.prototype = {
         this.image.src = this.__getSrc(this.spriteSrc);
     },
 
-    draw: function(){
-        this.context.drawImage(this.image, this.x, this.y, this.size, this.size);
+    draw: function(shiftX){
+        this.context.drawImage(this.image, this.x - shiftX, this.y, this.size, this.size);
     },
 
     getType: function(){

@@ -1,11 +1,12 @@
 const LEVEL_ROW_NB = 24;
-function LevelBuilder(scene, levelString, playerSelected){
+function LevelManager(scene, levelString, playerSelected){
     this.scene = scene;
     this.playerSelected = playerSelected;
     this.gb = this.scene.gb;
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
     this.levelString = levelString;
+    this.shiftX = 0;
 
     this.sprites = [];
 
@@ -40,7 +41,7 @@ function LevelBuilder(scene, levelString, playerSelected){
         },
     }
 }
-LevelBuilder.prototype = {
+LevelManager.prototype = {
     init: function(){
         console.log('builder : init start');
 
@@ -80,6 +81,12 @@ LevelBuilder.prototype = {
             }
         }
         console.log('builder : init done');
+
+        //make the level move automaticallys
+        /*let self = this;
+        setInterval(function(){
+            self.shiftX++;
+        }, 20);*/
     },
 
     draw: function(){
@@ -88,9 +95,19 @@ LevelBuilder.prototype = {
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined")
-                    this.sprites[i][j].draw();
+                    this.sprites[i][j].draw(this.shiftX);
             }
         }
+    },
+
+    __isInViewport: function(block){
+        let h = this.canvas.height;
+        let w = this.canvas.width;
+        // if the block is in the viewport - shiftX then draw it, else no
+        if(block.x){
+
+        }
+        return false;
     },
 
     __instanceBlock: function(blockString, i, j){

@@ -4,5 +4,6 @@ function CollisionManager(levelBuilder){
 CollisionManager.prototype = {
     detectCollisions: function(){
         // TODO : detect collisions
+
     }
 };
