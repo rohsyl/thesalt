@@ -53,40 +53,36 @@ Player.prototype = {
 
     init: function() {
 
-        // w / h for velocity calculation
-        this.h = 10;
-        this.w = 10;
-
-
-        // w / h for drawing
-        this.realW = this.blockSize*2;
-        this.realH = this.blockSize*2;
-
+        // ========================================================================
+        // Player physics
+        this.h = this.blockSize*2;
+        this.w = this.blockSize*2;
 
         // hit boxes
-        this.boxTop = this.realH / 2;
-        this.boxBottom = this.realH / 2;
-        this.boxLeft = this.realW / 4;
-        this.boxRight = this.realW / 4;
+        this.boxTop = this.h / 2;
+        this.boxBottom = this.h / 2;
+        this.boxLeft = this.w / 5;
+        this.boxRight = this.w / 5;
 
-            this.y = this.y - this.realH/2;
+        this.y = this.y - this.h / 2;
+
         this.speed = 5;
         this.jumpStrength = 8;
+
         this.velX = 0;
         this.velY = 0;
 
-        this.jumpYOrigin = this.y;
+        this.falling = false;
         this.jumping = false;
         this.jumpCount = 0;
         this.jumpTimeout = TIMEOUT_JUMP;
 
 
-        this.inCollision = false;
-        this.isOnFloor = false;
-        this.floorBlock = undefined;
 
+
+        // ========================================================================
+        // player graphics
         this.isPlayerForw = true;
-
         this.playerForw0 = new Image();
         this.playerForw1 = new Image();
         this.playerForw2 = new Image();
@@ -105,8 +101,6 @@ Player.prototype = {
         this.playerBackw2.src = IMG_PLAYER_B_RUN[this.playerSelected];
         this.playerBackw3.src = IMG_PLAYER_B_FEETBACK[this.playerSelected];
 
-
-
         this.playerForw = [this.playerForw1, this.playerForw2, this.playerForw3, this.playerForw0];
         this.playerBackw = [this.playerBackw1, this.playerBackw2, this.playerBackw3, this.playerBackw0];
 
@@ -114,16 +108,10 @@ Player.prototype = {
         this.tickCount = 0;
         this.ticksPerFrame = 3;
         this.numberOfFrames = this.playerForw.length;
-
     },
 
 
     update: function(shiftX){
-
-    },
-
-    draw: function (shiftX) {
-
         // doublejump timeout
         if(this.jumpTimeout > -1) {
             this.jumpTimeout--;
@@ -132,12 +120,10 @@ Player.prototype = {
 
         // start jumping
         if(this.gb.keyUpPressed){
-            this.__drawPlayerJumping();
             // first jump
             if(!this.jumping){
                 // console.log("jump");
                 this.velY = -this.jumpStrength*2;
-                this.jumpYOrigin = this.y;
                 this.jumping = true;
                 this.floorBlock = undefined;
 
@@ -158,42 +144,49 @@ Player.prototype = {
         }
 
         // apply velocity left // right
-        if(this.gb.keyRightPressed && this.x < this.canvas.width - this.realW) {
+        if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w) {
             if(this.velX < this.speed)
                 this.velX++;
-            this.isPlayerForw = true;
-            this.__drawPlayerWalking();
         }
         else if(this.gb.keyLeftPressed && this.x > 50) {
             if(this.velX > -this.speed)
                 this.velX--;
-            this.isPlayerForw = false;
-            this.__drawPlayerWalking();
-        }
-        else {
-            this.__drawPlayerWaiting();
         }
 
-        // move the player
-        this.x += this.velX;
-        this.y += this.velY;
+        if(typeof this.floorBlock !== 'undefined'){
+            if(this.getCenterX() - this.boxLeft < this.floorBlock.x
+                && this.getCenterX() + this.boxRight > this.floorBlock.x + this.floorBlock.w){
+                this.falling = true;
+            }
+        }
 
 
         // apply forces
         this.velX *= FRICTION;
         this.velY += GRAVITY;
 
-        // ground limit
-        /*if(this.y >= this.jumpYOrigin - this.h){
-            this.y = this.jumpYOrigin;
-            this.jumping = false;
-            this.jumpCount = 0;
-        }*/
-        if(!this.inCollision){
-            this.fall();
+    },
+
+    draw: function (shiftX) {
+
+        // move the player
+        this.x += this.velX;
+        this.y += this.velY;
+
+        if(this.gb.keyUpPressed){
+            this.__drawPlayerJumping();
         }
-        if(this.isOnFloor){
-            this.land();
+
+        if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w) {
+            this.isPlayerForw = true;
+            this.__drawPlayerWalking();
+        }
+        else if(this.gb.keyLeftPressed && this.x > 50) {
+            this.isPlayerForw = false;
+            this.__drawPlayerWalking();
+        }
+        else {
+            this.__drawPlayerWaiting();
         }
     },
 
@@ -201,16 +194,12 @@ Player.prototype = {
     what have, x, y, and getType()
      */
     onCollision: function(what){
-        this.inCollision = true;
         if(what instanceof CollidableBlock){
+            // falling
             if(this.velY > 0){
-                console.log("falling", what.y);
-                if(typeof this.floorBlock === 'undefined'){
-                    this.floorBlock = what;
-                    this.velY = 0;
-                    this.land();
-                }
+                this.land(what);
             }
+            // jumping
             else{
                 //console.log("ascending");
                 this.fall();
@@ -226,20 +215,16 @@ Player.prototype = {
     },
 
     fall: function(){
-        //console.log("player was jumping and hit something on the top, so now he is falling");
-        this.floorBlock = undefined;
-        this.isOnFloor = false;
-        this.jumping = true;
-        this.jumpCount = 1;
+
+
     },
 
-    land: function(){
-        this.y = this.floorBlock.y - this.blockSize * 2 + 1;
-        console.log("sur la terre ferme", this.y);
-        this.isOnFloor = true;
-        this.jumping = false;
+    land: function(what){
+        this.y = what.y - this.h;
+        this.velY = 0;
         this.jumpCount = 0;
-
+        this.jumping = false;
+        this.falling = false;
     },
 
     getType: function(){
@@ -247,11 +232,11 @@ Player.prototype = {
     },
 
     getCenterX: function(){
-        return this.x + this.realW / 2;
+        return this.x + this.w / 2;
     },
 
     getCenterY: function(){
-        return this.y + this.realH / 2;
+        return this.y + this.h / 2;
     },
 
     __drawPlayerWaiting: function(){
@@ -279,7 +264,7 @@ Player.prototype = {
     },
 
     __drawPlayer(){
-        this.context.clearRect(this.x, this.y, this.realW, this.realH);
+        this.context.clearRect(this.x, this.y, this.w, this.h);
 
         let player;
 
@@ -288,7 +273,7 @@ Player.prototype = {
         else
             player = this.playerBackw;
 
-        this.context.drawImage(player[this.frameIndex], this.x, this.y, this.realW, this.realH);
+        this.context.drawImage(player[this.frameIndex], this.x, this.y, this.w, this.h);
 
     },
 

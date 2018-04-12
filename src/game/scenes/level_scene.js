@@ -15,7 +15,7 @@ LevelScene.prototype = {
 
     init: function(){
         let lvlLoader = new LevelLoader();
-        let level = lvlLoader.loadLevel("level2");
+        let level = lvlLoader.loadLevel("level1");
         this.levelManager = new LevelManager(this, level, this.playerSelected);
         this.levelManager.init();
         this.collisionManager = new CollisionManager(this.levelManager);
