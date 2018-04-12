@@ -35,6 +35,10 @@ ScoreboardScene.prototype = {
         this.canvas.addEventListener("click", this.mc);
     },
 
+    update: function(){
+
+    },
+
     draw: function(){
 
         for (let i = 0; i < this.textHeight.length; i++) {

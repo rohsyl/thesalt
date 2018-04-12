@@ -29,6 +29,10 @@ DodScene.prototype = {
 
     },
 
+    update: function(){
+
+    },
+
     draw: function(){
 
         //this.drawBackground();

@@ -21,6 +21,10 @@ Block.prototype = {
         this.image.src = this.__getSrc(this.spriteSrc);
     },
 
+    update: function(shiftX){
+
+    },
+
     draw: function(shiftX){
         this.context.drawImage(this.image, this.x - shiftX, this.y, this.w, this.h);
     },

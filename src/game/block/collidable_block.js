@@ -21,8 +21,23 @@ CollidableBlock.prototype = {
         this.image.src = this.__getSrc(this.spriteSrc);
     },
 
+    update: function(shiftX){
+
+    },
+
     draw: function(shiftX){
         this.context.drawImage(this.image, this.x - shiftX, this.y, this.w, this.h);
+    },
+
+    /*
+    what have, x, y, and getType()
+     */
+    onCollision: function(what){
+        this.context.beginPath();
+        this.context.lineWidth="6";
+        this.context.strokeStyle="red";
+        this.context.rect(this.x, this.y, this.w, this.h);
+        this.context.stroke();
     },
 
     getType: function(){

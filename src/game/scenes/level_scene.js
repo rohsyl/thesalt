@@ -21,8 +21,12 @@ LevelScene.prototype = {
         this.collisionManager = new CollisionManager(this.levelManager);
     },
 
-    draw: function(){
+    update: function(){
+        this.levelManager.update();
         this.collisionManager.detectCollisions();
+    },
+
+    draw: function(){
         this.levelManager.draw();
     }
 };

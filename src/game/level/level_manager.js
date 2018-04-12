@@ -97,9 +97,23 @@ LevelManager.prototype = {
         }, 20);*/
     },
 
+    update: function(){
+        this.blockSize = this.canvas.height / LEVEL_ROW_NB;
+        this.player.update(this.shiftX);
+        for(let i = 0; i < this.sprites.length; i++){
+            for(let j = 0; j < this.sprites[i].length; j++){
+                if(typeof this.sprites[i][j] !== "undefined"){
+                    if(this.__isInViewport(this.sprites[i][j]))
+                        this.sprites[i][j].update(this.shiftX);
+                }
+            }
+        }
+    },
+
+
     draw: function(){
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
-        this.player.draw();
+        this.player.draw(this.shiftX);
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined"){

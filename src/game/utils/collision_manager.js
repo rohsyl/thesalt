@@ -3,33 +3,25 @@ function CollisionManager(levelBuilder){
 }
 CollisionManager.prototype = {
     detectCollisions: function(){
-        // TODO : detect collisions
         for(let i = 0; i < this.levelBuilder.collidableBlocks.length; i++){
-            if(this.__isInCollision(this.levelBuilder.player, this.levelBuilder.collidableBlocks[i])){
-                //console.log("ok");
-            }
+            this.__isInCollision(this.levelBuilder.player, this.levelBuilder.collidableBlocks[i]);
         }
     },
 
     __isInCollision: function(player, block){
-        //console.log(player, block);
-        // collision from left
-        /*if(player.x + player.w > block.x - this.levelBuilder.shiftX){
-            console.log('collision left');
+
+        let fromTop = player.getCenterY() + player.boxBottom > block.y;  // the player is hiting the top of something
+        let fromBottom = player.getCenterY() - player.boxTop < block.y + block.h; // the player is hiting the bottom of something
+        let fromLeft = player.getCenterX() + player.boxRight > block.x; // the player is hiting the left of something
+        let fromRight = player.getCenterX() - player.boxLeft < block.x + block.w; // the player is hiting the right of something
+
+        if (fromTop && fromBottom && fromLeft && fromRight)
+        {
+            console.log(block);
+            if(block instanceof CollidableBlock){
+                block.onCollision(player);
+            }
+            player.onCollision(block);
         }
-        // collision from right
-        if(player.x < block.x + block.w - this.levelBuilder.shiftX){
-            console.log('collision right');
-        }*/
-        // collision from top
-        if(player.y + player.realH / 2 > block.y && player.y < block.y + block.h ){
-            console.log(player.y, block.y);
-            console.log('collision top');
-        }
-        // collision from bottom
-        /*if(player.y < block.y + block.h){
-            console.log('collision bottom');
-        }*/
-        return true;
     }
 };

@@ -57,11 +57,19 @@ Player.prototype = {
         this.h = 10;
         this.w = 10;
 
+
         // w / h for drawing
         this.realW = this.blockSize*2;
         this.realH = this.blockSize*2;
 
-        this.y = this.y - this.realH/2;
+
+        // hit boxes
+        this.boxTop = this.realH / 2;
+        this.boxBottom = this.realH / 2;
+        this.boxLeft = this.realW / 4;
+        this.boxRight = this.realW / 4;
+
+            this.y = this.y - this.realH/2;
         this.speed = 5;
         this.jumpStrength = 8;
         this.velX = 0;
@@ -71,6 +79,11 @@ Player.prototype = {
         this.jumping = false;
         this.jumpCount = 0;
         this.jumpTimeout = TIMEOUT_JUMP;
+
+
+        this.inCollision = false;
+        this.isOnFloor = false;
+        this.floorBlock = undefined;
 
         this.isPlayerForw = true;
 
@@ -104,9 +117,12 @@ Player.prototype = {
 
     },
 
+
+    update: function(shiftX){
+
+    },
+
     draw: function (shiftX) {
-
-
 
         // doublejump timeout
         if(this.jumpTimeout > -1) {
@@ -123,9 +139,11 @@ Player.prototype = {
                 this.velY = -this.jumpStrength*2;
                 this.jumpYOrigin = this.y;
                 this.jumping = true;
+                this.floorBlock = undefined;
 
                 // console.log('cw : ' + this.canvas.width);
                 // console.log('ch : ' + this.canvas.height);
+                this.isOnFloor = false;
                 this.jumpCount = 1;
                 this.jumpTimeout = TIMEOUT_JUMP;
             }
@@ -166,10 +184,16 @@ Player.prototype = {
         this.velY += GRAVITY;
 
         // ground limit
-        if(this.y >= this.jumpYOrigin - this.h){
+        /*if(this.y >= this.jumpYOrigin - this.h){
             this.y = this.jumpYOrigin;
             this.jumping = false;
             this.jumpCount = 0;
+        }*/
+        if(!this.inCollision){
+            this.fall();
+        }
+        if(this.isOnFloor){
+            this.land();
         }
     },
 
@@ -177,11 +201,57 @@ Player.prototype = {
     what have, x, y, and getType()
      */
     onCollision: function(what){
+        this.inCollision = true;
+        if(what instanceof CollidableBlock){
+            if(this.velY > 0){
+                console.log("falling", what.y);
+                if(typeof this.floorBlock === 'undefined'){
+                    this.floorBlock = what;
+                    this.velY = 0;
+                    this.land();
+                }
+            }
+            else{
+                //console.log("ascending");
+                this.fall();
+            }
+
+            if(this.velX > 0){
+                //console.log("going right");
+            }
+            else{
+                //console.log("going left");
+            }
+        }
+    },
+
+    fall: function(){
+        //console.log("player was jumping and hit something on the top, so now he is falling");
+        this.floorBlock = undefined;
+        this.isOnFloor = false;
+        this.jumping = true;
+        this.jumpCount = 1;
+    },
+
+    land: function(){
+        this.y = this.floorBlock.y - this.blockSize * 2 + 1;
+        console.log("sur la terre ferme", this.y);
+        this.isOnFloor = true;
+        this.jumping = false;
+        this.jumpCount = 0;
 
     },
 
     getType: function(){
         return BLOCK_TYPE_PLAYER;
+    },
+
+    getCenterX: function(){
+        return this.x + this.realW / 2;
+    },
+
+    getCenterY: function(){
+        return this.y + this.realH / 2;
     },
 
     __drawPlayerWaiting: function(){

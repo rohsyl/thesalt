@@ -61,6 +61,10 @@ CharacterSelectionScene.prototype = {
 
     },
 
+    update: function(){
+
+    },
+
     draw: function(){
 
         this.context.font = '38pt Kremlin Pro Web';

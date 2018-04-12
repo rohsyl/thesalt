@@ -56,6 +56,10 @@ EnemyWalk.prototype = {
 
     },
 
+    update: function(){
+
+    },
+
     draw: function () {
 
          // apply velocity left // right

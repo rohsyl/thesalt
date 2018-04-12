@@ -14,6 +14,10 @@ EnemyWalkScene.prototype = {
 
     },
 
+    update: function(){
+        this.player.update();
+    },
+
     draw: function() {
 
         this.player.draw();
