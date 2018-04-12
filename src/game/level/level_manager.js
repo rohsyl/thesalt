@@ -1,5 +1,5 @@
 const LEVEL_ROW_NB = 24;
-const SHIFT_STEP = 1;
+const SHIFT_STEP = 5;
 
 
 const IMG_BLOCKS_PATH = SPRITES_PATH + "blocks/";
@@ -15,7 +15,9 @@ function LevelManager(scene, levelString, playerSelected){
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
     this.levelString = levelString;
+    this.levelTotalWidth = 0;
     this.shiftX = 0;
+
 
     this.sprites = [];
 
@@ -86,8 +88,9 @@ LevelManager.prototype = {
             }
             this.sprites.push(row);
         }
-
+        this.levelTotalWidth  = (this.sprites[0].length - 1) * this.blockSize - this.canvas.width;
         console.log(this.sprites);
+        console.log("levelTotalWidth", this.levelTotalWidth);
 
 
         for(let i = 0; i < this.sprites.length; i++){
@@ -122,10 +125,6 @@ LevelManager.prototype = {
 
     draw: function(){
 
-        // shift the background alongside the player position
-        let cw = this.canvas.width,
-            ch = this.canvas.height;
-
 
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
         this.player.draw();
@@ -135,6 +134,24 @@ LevelManager.prototype = {
                     if(this.__isInViewport(this.sprites[i][j]))
                             this.sprites[i][j].draw();
                 }
+            }
+        }
+
+
+        // shift the background alongside the player position
+        let cw = this.canvas.width,
+            ch = this.canvas.height;
+
+        if(this.player.x > cw * 1 / 2 + this.blockSize * 2 && this.gb.keyRightPressed){
+            if(this.shiftX < this.levelTotalWidth){
+                this.shiftX += SHIFT_STEP;
+                this.player.x -= this.player.speed;
+            }
+        }
+        else if(this.player.x < cw * 1 / 2 - this.blockSize * 2 && this.gb.keyLeftPressed){
+            if(this.shiftX > 0){
+                this.shiftX -= SHIFT_STEP;
+                this.player.x += this.player.speed;
             }
         }
     },

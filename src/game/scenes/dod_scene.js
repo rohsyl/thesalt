@@ -1,5 +1,5 @@
 var backgroundImage = new Image();
-backgroundImage.src = 'assets/sprites/background/floor_cave_1.png';
+backgroundImage.src = 'assets/sprites/blocks/floor_cave_1.png';
 backgroundImage.repeat = "repeat-x";
 let direction = 0;
 
