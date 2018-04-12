@@ -1,4 +1,11 @@
 const LEVEL_ROW_NB = 24;
+
+const IMG_BLOCKS_PATH = SPRITES_PATH + "blocks/";
+
+const IMG_FLOOR_CAVE_1 = IMG_BLOCKS_PATH + "floor_cave_1.png";
+const IMG_FLOOR_CAVE_2 = IMG_BLOCKS_PATH + "floor_cave_2.png";
+const IMG_FLOOR_GRASS = IMG_BLOCKS_PATH + "floor_grass.png";
+
 function LevelManager(scene, levelString, playerSelected){
     this.scene = scene;
     this.playerSelected = playerSelected;
@@ -28,13 +35,13 @@ function LevelManager(scene, levelString, playerSelected){
             return undefined;
         },
         f: function(i, j){
-            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), 'background/floor_cave_1'));
+            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
         },
         g: function(i, j){
-            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), 'background/floor_cave_2'));
+            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_2));
         },
         o: function(i, j){
-            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), 'background/floor_outside'));
+            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_GRASS));
         },
         p: function(i, j){
             return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.playerSelected, self.__getBlockSize()));

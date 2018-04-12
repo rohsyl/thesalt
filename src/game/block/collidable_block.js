@@ -18,7 +18,7 @@ CollidableBlock.prototype = {
     init: function(){
 
         this.image = new Image();
-        this.image.src = this.__getSrc(this.spriteSrc);
+        this.image.src = this.spriteSrc;
     },
 
     update: function(shiftX){
@@ -44,7 +44,4 @@ CollidableBlock.prototype = {
         return BLOCK_TYPE_COLLIDABLE_BLOCK;
     },
 
-    __getSrc: function(spriteName){
-        return "assets/sprites/"+spriteName+".png";
-    }
 };
