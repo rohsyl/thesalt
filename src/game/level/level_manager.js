@@ -1,6 +1,14 @@
+/**
+ * Number of row in a level
+ * @type {number}
+ */
 const LEVEL_ROW_NB = 24;
-const SHIFT_STEP = 5;
 
+/**
+ * Scrolling speed of the level
+ * @type {number}
+ */
+const SHIFT_STEP = 5;
 
 const IMG_BLOCKS_PATH = SPRITES_PATH + "blocks/";
 
@@ -8,6 +16,13 @@ const IMG_FLOOR_CAVE_1 = IMG_BLOCKS_PATH + "floor_cave_1.png";
 const IMG_FLOOR_CAVE_2 = IMG_BLOCKS_PATH + "floor_cave_2.png";
 const IMG_FLOOR_GRASS = IMG_BLOCKS_PATH + "floor_grass.png";
 
+/**
+ * LevelManager constructor
+ * @param scene The scene this level manager belongs to
+ * @param levelString The levelString
+ * @param playerSelected The player to use
+ * @constructor
+ */
 function LevelManager(scene, levelString, playerSelected){
     this.scene = scene;
     this.playerSelected = playerSelected;
@@ -18,7 +33,7 @@ function LevelManager(scene, levelString, playerSelected){
     this.levelTotalWidth = 0;
     this.shiftX = 0;
 
-
+    // all sprites
     this.sprites = [];
 
     // this variable contain a ref to the player
@@ -34,6 +49,10 @@ function LevelManager(scene, levelString, playerSelected){
     this.blockSize = 0;
 
     let self = this;
+    /**
+     * Definition of each possible blocks
+     * @type {{e: LevelManager.blockDefinitions.e, f: LevelManager.blockDefinitions.f, g: LevelManager.blockDefinitions.g, o: LevelManager.blockDefinitions.o, p: LevelManager.blockDefinitions.p}}
+     */
     this.blockDefinitions = {
         e: function(i, j){
             return undefined;

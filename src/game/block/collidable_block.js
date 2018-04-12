@@ -5,7 +5,6 @@ function CollidableBlock(gb, x, y, size, spriteName){
 
     this.spriteSrc = spriteName;
 
-    this.isCollidable = true;
     this.w = size;
     this.h = size;
     this.x = x;
@@ -30,9 +29,7 @@ CollidableBlock.prototype = {
         this.context.drawImage(this.image, this.getX(), this.getY(), this.w, this.h);
     },
 
-    /*
-    what have, x, y, and getType()
-     */
+
     onCollision: function(what){
         /*this.context.beginPath();
         this.context.lineWidth="6";
@@ -45,15 +42,19 @@ CollidableBlock.prototype = {
         return BLOCK_TYPE_COLLIDABLE_BLOCK;
     },
 
+    /**
+     * Get the x position with the shiftX
+     * @returns {number} The x position
+     */
     getX: function(){
         return this.x - this.shiftX;
     },
 
+    /**
+     * Get the y position
+     * @returns {number} The y position
+     */
     getY: function(){
         return this.y;
     },
-
-    __getSrc: function(spriteName){
-        return "assets/sprites/"+spriteName+".png";
-    }
 };

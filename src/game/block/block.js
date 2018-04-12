@@ -5,7 +5,6 @@ function Block(gb, x, y, size, spriteName){
 
     this.spriteSrc = spriteName;
 
-    this.isCollidable = false;
     this.w = size;
     this.h = size;
     this.x = x;
@@ -34,15 +33,19 @@ Block.prototype = {
         return BLOCK_TYPE_BLOCK;
     },
 
+    /**
+     * Get the x position with the shiftX
+     * @returns {number} The x position
+     */
     getX: function(){
         return this.x - this.shiftX;
     },
 
+    /**
+     * Get the y position
+     * @returns {number} The y position
+     */
     getY: function(){
         return this.y;
     },
-
-    __getSrc: function(spriteName){
-        return "assets/sprites/"+spriteName+".png";
-    }
 };

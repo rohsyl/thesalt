@@ -71,13 +71,12 @@ Player.prototype = {
 
         this.y = this.y - this.h / 2;
 
-        this.speed = 5;
+        this.speed = SHIFT_STEP;
         this.jumpStrength = 8;
 
         this.velX = 0;
         this.velY = 0;
 
-        this.falling = false;
         this.jumping = false;
         this.jumpCount = 0;
         this.jumpTimeout = TIMEOUT_JUMP;
@@ -127,20 +126,13 @@ Player.prototype = {
         if(this.gb.keyUpPressed){
             // first jump
             if(!this.jumping){
-                // console.log("jump");
                 this.velY = -this.jumpStrength*2;
                 this.jumping = true;
-                this.floorBlock = undefined;
-
-                // console.log('cw : ' + this.canvas.width);
-                // console.log('ch : ' + this.canvas.height);
-                this.isOnFloor = false;
                 this.jumpCount = 1;
                 this.jumpTimeout = TIMEOUT_JUMP;
             }
             // doublejump
             else if (this.jumpTimeout < 0 && this.jumpCount == 1){
-                // console.log(this.jumpCount);
                 this.velY = -this.jumpStrength*2;
                 this.jumping = true;
                 this.jumpCount = 2;
@@ -216,9 +208,7 @@ Player.prototype = {
     },
 
     fall: function(){
-        /*this.velY = 0;
-        this.jumpCount = 0;
-        this.jumping = false;*/
+
     },
 
     land: function(what){
@@ -227,7 +217,6 @@ Player.prototype = {
         this.velY = 0;
         this.jumpCount = 0;
         this.jumping = false;
-        this.falling = false;
     },
 
     getType: function(){
