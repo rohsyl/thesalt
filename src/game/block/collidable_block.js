@@ -6,11 +6,12 @@ function CollidableBlock(gb, x, y, size, spriteName){
     this.spriteSrc = spriteName;
 
     this.isCollidable = true;
-    this.size = size;
+    this.w = size;
+    this.h = size;
     this.x = x;
     this.y = y;
 
-    console.log(spriteName, x, y, size);
+    //console.log(spriteName, x, y, size);
 }
 CollidableBlock.prototype = {
 
@@ -21,7 +22,7 @@ CollidableBlock.prototype = {
     },
 
     draw: function(shiftX){
-        this.context.drawImage(this.image, this.x - shiftX, this.y, this.size, this.size);
+        this.context.drawImage(this.image, this.x - shiftX, this.y, this.w, this.h);
     },
 
     getType: function(){

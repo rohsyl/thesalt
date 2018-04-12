@@ -64,9 +64,16 @@ LevelManager.prototype = {
             let row = [];
             for(let j = 0; j < levelBlock[i].length; j++){
                 let blockString = levelBlock[i][j];
-                console.log(blockString);
-                if(typeof blockString !== "undefined")
-                    row.push(this.__instanceBlock(blockString, i, j));
+                //console.log(blockString);
+                if(typeof blockString !== "undefined"){
+                    let block = this.__instanceBlock(blockString, i, j)
+                    if(!block instanceof Player){
+                        row.push(undefined);
+                    }
+                    else{
+                        row.push(block);
+                    }
+                }
             }
             this.sprites.push(row);
         }
@@ -91,23 +98,33 @@ LevelManager.prototype = {
 
     draw: function(){
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
-
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
-                if(typeof this.sprites[i][j] !== "undefined")
-                    this.sprites[i][j].draw(this.shiftX);
+                if(typeof this.sprites[i][j] !== "undefined"){
+                    if(this.__isInViewport(this.sprites[i][j]))
+                            this.sprites[i][j].draw(this.shiftX);
+                }
             }
         }
+        this.player.draw();
     },
 
+    /**
+     * This method return true if the given block is in the viewport
+     * @param block Block|CollidableBlock|Player The block
+     * @returns {boolean} True if in viewport, else false
+     * @private
+     */
     __isInViewport: function(block){
-        let h = this.canvas.height;
-        let w = this.canvas.width;
-        // if the block is in the viewport - shiftX then draw it, else no
-        if(block.x){
-
+        if(block instanceof Block){
+            return (block.x - this.shiftX + block.w > 0) && block.x - this.shiftX < this.canvas.width;
         }
-        return false;
+        else if(block instanceof CollidableBlock){
+            return (block.x - this.shiftX + block.w > 0) && block.x - this.shiftX < this.canvas.width;
+        }
+        else{
+            return true;
+        }
     },
 
     __instanceBlock: function(blockString, i, j){
@@ -125,7 +142,7 @@ LevelManager.prototype = {
             case BLOCK_TYPE_PLAYER:
                 this.player = block;
                 break;
-            case BLOCK_TYPE_BLOCK:
+            case BLOCK_TYPE_COLLIDABLE_BLOCK:
                 this.collidableBlocks.push(block);
                 break;
             case BLOCK_TYPE_ENEMY:

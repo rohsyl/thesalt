@@ -140,7 +140,7 @@ Player.prototype = {
         }
 
         // apply velocity left // right
-        if(this.gb.keyRightPressed && this.x < this.canvas.width + this.w - 50) {
+        if(this.gb.keyRightPressed && this.x < this.canvas.width - this.realW) {
             if(this.velX < this.speed)
                 this.velX++;
             this.isPlayerForw = true;

@@ -6,11 +6,12 @@ function Block(gb, x, y, size, spriteName){
     this.spriteSrc = spriteName;
 
     this.isCollidable = false;
-    this.size = size;
+    this.w = size;
+    this.h = size;
     this.x = x;
     this.y = y;
 
-    console.log(spriteName, x, y, size);
+    //console.log(spriteName, x, y, size);
 }
 Block.prototype = {
 
@@ -21,7 +22,7 @@ Block.prototype = {
     },
 
     draw: function(shiftX){
-        this.context.drawImage(this.image, this.x - shiftX, this.y, this.size, this.size);
+        this.context.drawImage(this.image, this.x - shiftX, this.y, this.w, this.h);
     },
 
     getType: function(){
