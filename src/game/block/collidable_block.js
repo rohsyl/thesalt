@@ -34,11 +34,11 @@ CollidableBlock.prototype = {
     what have, x, y, and getType()
      */
     onCollision: function(what){
-        this.context.beginPath();
+        /*this.context.beginPath();
         this.context.lineWidth="6";
         this.context.strokeStyle="red";
         this.context.rect(this.getX(), this.getY(), this.w, this.h);
-        this.context.stroke();
+        this.context.stroke();*/
     },
 
     getType: function(){
