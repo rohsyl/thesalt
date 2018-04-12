@@ -1,5 +1,5 @@
 (function() {
-    const FPS = 40;
+    const FPS = 60;
 
     let canvas = document.getElementById('game-canvas');
 

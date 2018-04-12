@@ -66,8 +66,8 @@ LevelManager.prototype = {
                 let blockString = levelBlock[i][j];
                 //console.log(blockString);
                 if(typeof blockString !== "undefined"){
-                    let block = this.__instanceBlock(blockString, i, j)
-                    if(!block instanceof Player){
+                    let block = this.__instanceBlock(blockString, i, j);
+                    if(block instanceof Player){
                         row.push(undefined);
                     }
                     else{
@@ -87,6 +87,7 @@ LevelManager.prototype = {
                     this.sprites[i][j].init();
             }
         }
+        this.player.init();
         console.log('builder : init done');
 
         //make the level move automaticallys
