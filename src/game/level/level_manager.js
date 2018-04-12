@@ -1,4 +1,6 @@
 const LEVEL_ROW_NB = 24;
+const SHIFT_STEP = 1;
+
 function LevelManager(scene, levelString, playerSelected){
     this.scene = scene;
     this.playerSelected = playerSelected;
@@ -112,13 +114,19 @@ LevelManager.prototype = {
 
 
     draw: function(){
+
+        // shift the background alongside the player position
+        let cw = this.canvas.width,
+            ch = this.canvas.height;
+
+
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
-        this.player.draw(this.shiftX);
+        this.player.draw();
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined"){
                     if(this.__isInViewport(this.sprites[i][j]))
-                            this.sprites[i][j].draw(this.shiftX);
+                            this.sprites[i][j].draw();
                 }
             }
         }

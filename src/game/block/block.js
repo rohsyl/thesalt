@@ -11,6 +11,7 @@ function Block(gb, x, y, size, spriteName){
     this.x = x;
     this.y = y;
 
+    this.shiftX = undefined;
     //console.log(spriteName, x, y, size);
 }
 Block.prototype = {
@@ -22,15 +23,23 @@ Block.prototype = {
     },
 
     update: function(shiftX){
-
+        this.shiftX = shiftX;
     },
 
-    draw: function(shiftX){
-        this.context.drawImage(this.image, this.x - shiftX, this.y, this.w, this.h);
+    draw: function(){
+        this.context.drawImage(this.image, this.getX(), this.getY(), this.w, this.h);
     },
 
     getType: function(){
         return BLOCK_TYPE_BLOCK;
+    },
+
+    getX: function(){
+        return this.x - this.shiftX;
+    },
+
+    getY: function(){
+        return this.y;
     },
 
     __getSrc: function(spriteName){

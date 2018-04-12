@@ -60,7 +60,7 @@ Player.prototype = {
 
         // hit boxes
         this.boxTop = this.h / 2;
-        this.boxBottom = this.h / 2;
+        this.boxBottom = this.h / 2 - 4;
         this.boxLeft = this.w / 5;
         this.boxRight = this.w / 5;
 
@@ -77,8 +77,7 @@ Player.prototype = {
         this.jumpCount = 0;
         this.jumpTimeout = TIMEOUT_JUMP;
 
-
-
+        this.shiftX = undefined;
 
         // ========================================================================
         // player graphics
@@ -112,6 +111,7 @@ Player.prototype = {
 
 
     update: function(shiftX){
+        this.shiftX = shiftX;
         // doublejump timeout
         if(this.jumpTimeout > -1) {
             this.jumpTimeout--;
@@ -153,25 +153,19 @@ Player.prototype = {
                 this.velX--;
         }
 
-        if(typeof this.floorBlock !== 'undefined'){
-            if(this.getCenterX() - this.boxLeft < this.floorBlock.x
-                && this.getCenterX() + this.boxRight > this.floorBlock.x + this.floorBlock.w){
-                this.falling = true;
-            }
-        }
-
-
         // apply forces
         this.velX *= FRICTION;
+
         this.velY += GRAVITY;
 
     },
 
-    draw: function (shiftX) {
+    draw: function () {
 
         // move the player
         this.x += this.velX;
         this.y += this.velY;
+
 
         if(this.gb.keyUpPressed){
             this.__drawPlayerJumping();
@@ -197,6 +191,7 @@ Player.prototype = {
         if(what instanceof CollidableBlock){
             // falling
             if(this.velY > 0){
+                //if(this.jumping)
                 this.land(what);
             }
             // jumping
@@ -207,6 +202,7 @@ Player.prototype = {
 
             if(this.velX > 0){
                 //console.log("going right");
+
             }
             else{
                 //console.log("going left");
@@ -215,12 +211,14 @@ Player.prototype = {
     },
 
     fall: function(){
-
-
+        /*this.velY = 0;
+        this.jumpCount = 0;
+        this.jumping = false;*/
     },
 
     land: function(what){
-        this.y = what.y - this.h;
+        let topValue = this.getCenterY() - this.y + this.boxBottom;
+        this.y = what.y - topValue;
         this.velY = 0;
         this.jumpCount = 0;
         this.jumping = false;

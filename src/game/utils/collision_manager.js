@@ -16,10 +16,10 @@ CollisionManager.prototype = {
     },
 
     __isInCollision: function(player, block){
-        let fromTop = player.getCenterY() + player.boxBottom > block.y;  // the player is hiting the top of something
-        let fromBottom = player.getCenterY() - player.boxTop < block.y + block.h; // the player is hiting the bottom of something
-        let fromLeft = player.getCenterX() + player.boxRight > block.x; // the player is hiting the left of something
-        let fromRight = player.getCenterX() - player.boxLeft < block.x + block.w; // the player is hiting the right of something
+        let fromTop = player.getCenterY() + player.boxBottom > block.getY();  // the player is hiting the top of something
+        let fromBottom = player.getCenterY() - player.boxTop < block.getY() + block.h; // the player is hiting the bottom of something
+        let fromLeft = player.getCenterX() + player.boxRight > block.getX(); // the player is hiting the left of something
+        let fromRight = player.getCenterX() - player.boxLeft < block.getX() + block.w; // the player is hiting the right of something
         if (fromTop && fromBottom && fromLeft && fromRight) {
             if(block instanceof CollidableBlock){
                 block.onCollision(player);

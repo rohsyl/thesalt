@@ -11,6 +11,7 @@ function CollidableBlock(gb, x, y, size, spriteName){
     this.x = x;
     this.y = y;
 
+    this.shiftX = undefined;
     //console.log(spriteName, x, y, size);
 }
 CollidableBlock.prototype = {
@@ -22,11 +23,11 @@ CollidableBlock.prototype = {
     },
 
     update: function(shiftX){
-
+        this.shiftX = shiftX;
     },
 
-    draw: function(shiftX){
-        this.context.drawImage(this.image, this.x - shiftX, this.y, this.w, this.h);
+    draw: function(){
+        this.context.drawImage(this.image, this.getX(), this.getY(), this.w, this.h);
     },
 
     /*
@@ -36,12 +37,20 @@ CollidableBlock.prototype = {
         this.context.beginPath();
         this.context.lineWidth="6";
         this.context.strokeStyle="red";
-        this.context.rect(this.x, this.y, this.w, this.h);
+        this.context.rect(this.getX(), this.getY(), this.w, this.h);
         this.context.stroke();
     },
 
     getType: function(){
         return BLOCK_TYPE_COLLIDABLE_BLOCK;
+    },
+
+    getX: function(){
+        return this.x - this.shiftX;
+    },
+
+    getY: function(){
+        return this.y;
     },
 
     __getSrc: function(spriteName){
