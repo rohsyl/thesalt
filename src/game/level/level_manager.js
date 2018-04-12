@@ -99,6 +99,7 @@ LevelManager.prototype = {
 
     draw: function(){
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
+        this.player.draw();
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined"){
@@ -107,7 +108,6 @@ LevelManager.prototype = {
                 }
             }
         }
-        this.player.draw();
     },
 
     /**
