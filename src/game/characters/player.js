@@ -1,6 +1,7 @@
 const DEFAULT_FRAME = 3;
 const JUMPING_FRAME = 1;
 const TIMEOUT_JUMP = 15;
+const NB_ALLOWED_JUMP = 2;
 
 const SPRITES_PATH = "assets/sprites/";
 
@@ -117,7 +118,7 @@ Player.prototype = {
         this.velY = 0;
 
         this.jumping = false;
-        this.jumpCount = 0;
+        this.jumpCount = NB_ALLOWED_JUMP;
         this.jumpTimeout = TIMEOUT_JUMP;
 
         this.shiftX = undefined;
@@ -167,15 +168,14 @@ Player.prototype = {
             if(!this.jumping){
                 this.velY = -this.jumpStrength*2;
                 this.jumping = true;
-                this.jumpCount = 1;
+                this.jumpCount--;
                 this.jumpTimeout = TIMEOUT_JUMP;
             }
-            // doublejump
-            else if (this.jumpTimeout < 0 && this.jumpCount == 1){
+            else if(this.jumpTimeout < 0 && this.jumpCount > 0){
                 this.velY = -this.jumpStrength*2;
                 this.jumping = true;
-                this.jumpCount = 2;
-                this.jumpTimeout = 0;
+                this.jumpCount--;
+                this.jumpTimeout = TIMEOUT_JUMP;
             }
         }
 
@@ -220,28 +220,30 @@ Player.prototype = {
         }
     },
 
-    /*
-    what have, x, y, and getType()
+    /**
+     * Trigger when the player is on collision with one or many blocks
+     * @param whats [] Blocks in collision
      */
-    onCollision: function(what){
-        if(what instanceof CollidableBlock){
-            // falling
-            if(this.velY > 0){
-                //if(this.jumping)
-                this.land(what);
-            }
-            // jumping
-            else{
-                //console.log("ascending");
-                this.fall();
-            }
+    onCollision: function(whats){
+        for(let what in whats){
+            if(what instanceof CollidableBlock){
+                // falling
+                if(this.velY > 0){
+                    //if(this.jumping)
+                    this.land(what);
+                }
+                // jumping
+                else{
+                    //console.log("ascending");
+                    this.fall();
+                }
 
-            if(this.velX > 0){
-                //console.log("going right");
-
-            }
-            else{
-                //console.log("going left");
+                if(this.velX > 0){
+                    console.log("going right");
+                }
+                else{
+                    //console.log("going left");
+                }
             }
         }
     },
@@ -254,8 +256,9 @@ Player.prototype = {
         let topValue = this.getCenterY() - this.y + this.boxBottom;
         this.y = what.y - topValue;
         this.velY = 0;
-        this.jumpCount = 0;
+        this.jumpCount = NB_ALLOWED_JUMP;
         this.jumping = false;
+        this.jumpTimeout = TIMEOUT_JUMP;
     },
 
     getType: function(){
