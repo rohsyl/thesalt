@@ -31,13 +31,12 @@ CollisionManager.prototype = {
      * @private
      */
     __triggerCollision: function(player, blocks){
-
-        for(let block in blocks){
-            if(block instanceof CollidableBlock){
-                block.onCollision(player);
+        player.onCollision(blocks);
+        for(let k in blocks){
+            if(blocks[k] instanceof CollidableBlock){
+                blocks[k].onCollision(player);
             }
         }
-        player.onCollision(blocks);
     },
 
     __isCollide: function(player, block){

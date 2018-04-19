@@ -198,6 +198,13 @@ Player.prototype = {
 
     draw: function () {
 
+        if(this.velX < 0.0001 && this.velX > 0){
+            this.velX = 0;
+        }
+        if(this.velX > -0.0001 && this.velX < 0){
+            this.velX = 0;
+        }
+
         // move the player
         this.x += this.velX;
         this.y += this.velY;
@@ -225,12 +232,12 @@ Player.prototype = {
      * @param whats [] Blocks in collision
      */
     onCollision: function(whats){
-        for(let what in whats){
-            if(what instanceof CollidableBlock){
+        for(let k in whats) {
+            if(whats[k] instanceof CollidableBlock){
                 // falling
                 if(this.velY > 0){
                     //if(this.jumping)
-                    this.land(what);
+                    this.land(whats[k]);
                 }
                 // jumping
                 else{
@@ -241,8 +248,8 @@ Player.prototype = {
                 if(this.velX > 0){
                     console.log("going right");
                 }
-                else{
-                    //console.log("going left");
+                else if(this.velX < 0) {
+                    console.log("going left");
                 }
             }
         }
