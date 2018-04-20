@@ -23,6 +23,10 @@ Scenecc.prototype = {
 
     },
 
+    update: function(){
+
+    },
+
     draw: function(){
         this.drawSquare();
         this.drawCircle();
@@ -88,8 +92,8 @@ Scenecc.prototype = {
     drawCircle: function(){
 
         this.context.beginPath();
-        this.context.(this.x+20,this.y,10,10,2*Math.PI);
-        this.context.fillStyle="#FF4422"
+        this.context.fillRect(this.x+20,this.y,10,10,2*Math.PI);
+        this.context.fillStyle="#FF4422";
         this.context.fill();
         //this.context.stroke();
 

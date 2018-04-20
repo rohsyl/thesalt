@@ -34,6 +34,7 @@ GameBoard.prototype = {
         // do stuff when
         if(typeof this.activeScene !== "undefined"){
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.activeScene.update();
             this.activeScene.draw();
         }
     },

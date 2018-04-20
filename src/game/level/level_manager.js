@@ -1,4 +1,28 @@
+/**
+ * Number of row in a level
+ * @type {number}
+ */
 const LEVEL_ROW_NB = 24;
+
+/**
+ * Scrolling speed of the level
+ * @type {number}
+ */
+const SHIFT_STEP = 5;
+
+const IMG_BLOCKS_PATH = SPRITES_PATH + "blocks/";
+
+const IMG_FLOOR_CAVE_1 = IMG_BLOCKS_PATH + "floor_cave_1.png";
+const IMG_FLOOR_CAVE_2 = IMG_BLOCKS_PATH + "floor_cave_2.png";
+const IMG_FLOOR_GRASS = IMG_BLOCKS_PATH + "floor_grass.png";
+
+/**
+ * LevelManager constructor
+ * @param scene The scene this level manager belongs to
+ * @param levelString The levelString
+ * @param playerSelected The player to use
+ * @constructor
+ */
 function LevelManager(scene, levelString, playerSelected){
     this.scene = scene;
     this.playerSelected = playerSelected;
@@ -6,8 +30,10 @@ function LevelManager(scene, levelString, playerSelected){
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
     this.levelString = levelString;
+    this.levelTotalWidth = 0;
     this.shiftX = 0;
 
+    // all sprites
     this.sprites = [];
 
     // this variable contain a ref to the player
@@ -23,18 +49,22 @@ function LevelManager(scene, levelString, playerSelected){
     this.blockSize = 0;
 
     let self = this;
+    /**
+     * Definition of each possible blocks
+     * @type {{e: LevelManager.blockDefinitions.e, f: LevelManager.blockDefinitions.f, g: LevelManager.blockDefinitions.g, o: LevelManager.blockDefinitions.o, p: LevelManager.blockDefinitions.p}}
+     */
     this.blockDefinitions = {
         e: function(i, j){
             return undefined;
         },
         f: function(i, j){
-            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), 'background/floor_cave_1'));
+            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
         },
         g: function(i, j){
-            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), 'background/floor_cave_2'));
+            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_2));
         },
         o: function(i, j){
-            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), 'background/floor_outside'));
+            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_GRASS));
         },
         p: function(i, j){
             return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.playerSelected, self.__getBlockSize()));
@@ -66,8 +96,8 @@ LevelManager.prototype = {
                 let blockString = levelBlock[i][j];
                 //console.log(blockString);
                 if(typeof blockString !== "undefined"){
-                    let block = this.__instanceBlock(blockString, i, j)
-                    if(!block instanceof Player){
+                    let block = this.__instanceBlock(blockString, i, j);
+                    if(block instanceof Player){
                         row.push(undefined);
                     }
                     else{
@@ -77,8 +107,9 @@ LevelManager.prototype = {
             }
             this.sprites.push(row);
         }
-
+        this.levelTotalWidth  = (this.sprites[0].length - 1) * this.blockSize - this.canvas.width;
         console.log(this.sprites);
+        console.log("levelTotalWidth", this.levelTotalWidth);
 
 
         for(let i = 0; i < this.sprites.length; i++){
@@ -87,6 +118,7 @@ LevelManager.prototype = {
                     this.sprites[i][j].init();
             }
         }
+        this.player.init();
         console.log('builder : init done');
 
         //make the level move automaticallys
@@ -96,17 +128,51 @@ LevelManager.prototype = {
         }, 20);*/
     },
 
-    draw: function(){
+    update: function(){
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
+        this.player.update(this.shiftX);
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined"){
                     if(this.__isInViewport(this.sprites[i][j]))
-                            this.sprites[i][j].draw(this.shiftX);
+                        this.sprites[i][j].update(this.shiftX);
                 }
             }
         }
+    },
+
+
+    draw: function(){
+
+
+        this.blockSize = this.canvas.height / LEVEL_ROW_NB;
         this.player.draw();
+        for(let i = 0; i < this.sprites.length; i++){
+            for(let j = 0; j < this.sprites[i].length; j++){
+                if(typeof this.sprites[i][j] !== "undefined"){
+                    if(this.__isInViewport(this.sprites[i][j]))
+                            this.sprites[i][j].draw();
+                }
+            }
+        }
+
+
+        // shift the background alongside the player position
+        let cw = this.canvas.width,
+            ch = this.canvas.height;
+
+        if(this.player.x > cw * 1 / 2 + this.blockSize * 2 && this.gb.keyRightPressed){
+            if(this.shiftX < this.levelTotalWidth){
+                this.shiftX += SHIFT_STEP;
+                this.player.x -= this.player.speed;
+            }
+        }
+        else if(this.player.x < cw * 1 / 2 - this.blockSize * 2 && this.gb.keyLeftPressed){
+            if(this.shiftX > 0){
+                this.shiftX -= SHIFT_STEP;
+                this.player.x += this.player.speed;
+            }
+        }
     },
 
     /**

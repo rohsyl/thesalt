@@ -2,34 +2,49 @@ function CollisionManager(levelBuilder){
     this.levelBuilder = levelBuilder;
 }
 CollisionManager.prototype = {
+
+    /**
+     * Detect all possible collisions
+     */
     detectCollisions: function(){
-        // TODO : detect collisions
+        // collision player vs collidable block
+        let blocksInCollision = [];
         for(let i = 0; i < this.levelBuilder.collidableBlocks.length; i++){
-            if(this.__isInCollision(this.levelBuilder.player, this.levelBuilder.collidableBlocks[i])){
-                //console.log("ok");
+            if(this.__isCollide(this.levelBuilder.player, this.levelBuilder.collidableBlocks[i])){
+                blocksInCollision.push(this.levelBuilder.collidableBlocks[i]);
+            }
+        }
+        this.__triggerCollision(this.levelBuilder.player, blocksInCollision);
+
+        // collision player vs enemy
+        // TODO
+
+        //collision player vs bullet
+        // TODO
+    },
+
+    /**
+     * This method detect if the given player is in collision with the given block
+     * if a collision is detected, call the collision listener
+     * @param player Player The player
+     * @param blocks [] The block
+     * @private
+     */
+    __triggerCollision: function(player, blocks){
+        player.onCollision(blocks);
+        for(let k in blocks){
+            if(blocks[k] instanceof CollidableBlock){
+                blocks[k].onCollision(player);
             }
         }
     },
 
-    __isInCollision: function(player, block){
-        //console.log(player, block);
-        // collision from left
-        /*if(player.x + player.w > block.x - this.levelBuilder.shiftX){
-            console.log('collision left');
-        }
-        // collision from right
-        if(player.x < block.x + block.w - this.levelBuilder.shiftX){
-            console.log('collision right');
-        }*/
-        // collision from top
-        if(player.y + player.realH / 2 > block.y && player.y < block.y + block.h ){
-            console.log(player.y, block.y);
-            console.log('collision top');
-        }
-        // collision from bottom
-        /*if(player.y < block.y + block.h){
-            console.log('collision bottom');
-        }*/
-        return true;
+    __isCollide: function(player, block){
+        let fromTop = player.getCenterY() + player.boxBottom > block.getY();  // the player is hiting the top of something
+        let fromBottom = player.getCenterY() - player.boxTop < block.getY() + block.h; // the player is hiting the bottom of something
+        let fromLeft = player.getCenterX() + player.boxRight > block.getX(); // the player is hiting the left of something
+        let fromRight = player.getCenterX() - player.boxLeft < block.getX() + block.w; // the player is hiting the right of something
+
+        return fromTop && fromBottom && fromLeft && fromRight;
     }
 };

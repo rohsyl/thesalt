@@ -12,10 +12,25 @@ function Scene(gb) {
 }
 Scene.prototype = {
 
+    /**
+     * Method called one time in the beginning
+     */
     init: function(){
 
     },
 
+    /**
+     * Method called each frame
+     * Use it to change physics value
+     */
+    update: function(){
+
+    },
+
+    /**
+     * Method called each frame
+     * use it to change graphics
+     */
     draw: function(){
 
     }

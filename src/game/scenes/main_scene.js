@@ -26,6 +26,10 @@ MainScene.prototype = {
 
     },
 
+    update: function(){
+
+    },
+
     draw: function() {
 
 

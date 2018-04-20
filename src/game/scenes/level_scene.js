@@ -1,9 +1,3 @@
-/*
-
-Cette classe est la base pour toute les scènes qui seront créer.
-Chaque scène devrai implémenter les méthodes ci dessous.
-
- */
 
 function LevelScene(gb, charSelected) {
     this.gb = gb;
@@ -21,8 +15,12 @@ LevelScene.prototype = {
         this.collisionManager = new CollisionManager(this.levelManager);
     },
 
-    draw: function(){
+    update: function(){
+        this.levelManager.update();
         this.collisionManager.detectCollisions();
+    },
+
+    draw: function(){
         this.levelManager.draw();
     }
 };

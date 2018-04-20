@@ -22,11 +22,17 @@ CharacterSelectionScene.prototype = {
 
 
         this.charactersImages = [new Image(), new Image(), new Image(), new Image()];
+        this.charactersSelectedImages = [new Image(), new Image(), new Image(), new Image()];
 
-        this.charactersImages[0].src = "assets/sprites/player_0/forwards/arret.png";
-        this.charactersImages[1].src = "assets/sprites/player_1/forwards/arret.png";
-        this.charactersImages[2].src = "assets/sprites/player_2/forwards/arret.png";
-        this.charactersImages[3].src = "assets/sprites/player_3/forwards/arret.png";
+        this.charactersImages[0].src = IMG_PLAYER_B_STOP[0];
+        this.charactersImages[1].src = IMG_PLAYER_B_STOP[1];
+        this.charactersImages[2].src = IMG_PLAYER_B_STOP[2];
+        this.charactersImages[3].src = IMG_PLAYER_B_STOP[3];
+
+        this.charactersSelectedImages[0].src = IMG_PLAYER_SELECT_SCREEN[0];
+        this.charactersSelectedImages[1].src = IMG_PLAYER_SELECT_SCREEN[1];
+        this.charactersSelectedImages[2].src = IMG_PLAYER_SELECT_SCREEN[2];
+        this.charactersSelectedImages[3].src = IMG_PLAYER_SELECT_SCREEN[3];
 
         this.charactersLabels = ["R-Men", "Shaolin", "Dødskamp", "Célapéro"];
         this.title = "Select Your Player";
@@ -61,6 +67,10 @@ CharacterSelectionScene.prototype = {
 
     },
 
+    update: function(){
+
+    },
+
     draw: function(){
 
         this.context.font = '38pt Kremlin Pro Web';
@@ -70,16 +80,18 @@ CharacterSelectionScene.prototype = {
 
         for (let i = 0; i < this.charactersImages.length; i++) {
 
-            this.context.drawImage(this.charactersImages[i], this.imagesX[i], this.imagesY, this.imagesWH, this.imagesWH);
-
             if (this.isMouseHoverImages[i]) {
-                this.context.beginPath();
-                this.context.rect(this.imagesX[i], this.imagesY, this.imagesWH, this.imagesWH);
-                this.context.lineWidth = 2;
-                this.context.strokeStyle = '#660000';
-                this.context.stroke();
-                this.context.closePath();
-            }
+                this.context.drawImage(this.charactersSelectedImages[i], this.imagesX[i], this.imagesY, this.imagesWH, this.imagesWH);
+
+                // this.context.beginPath();
+                // this.context.rect(this.imagesX[i], this.imagesY, this.imagesWH, this.imagesWH);
+                // this.context.lineWidth = 2;
+                // this.context.strokeStyle = '#660000';
+                // this.context.stroke();
+                // this.context.closePath();
+            } else
+                this.context.drawImage(this.charactersImages[i], this.imagesX[i], this.imagesY, this.imagesWH, this.imagesWH);
+
 
             this.context.font = '16pt Kremlin Pro Web';
             this.context.fillStyle = '#000000';

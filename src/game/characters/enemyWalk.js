@@ -18,10 +18,10 @@ EnemyWalk.prototype = {
         this.w = 10;
 
         // w / h for drawing
-        this.realW = this.w * 12.8;
-        this.realH = this.h * 12.8;
+        this.w = this.w * 12.8;
+        this.h = this.h * 12.8;
 
-        this.y = this.y - this.realH;
+        this.y = this.y - this.h;
         this.speed = 5;
         this.velX = 0;
         this.velY = 0;
@@ -53,6 +53,10 @@ EnemyWalk.prototype = {
         this.tickCount = 0;
         this.ticksPerFrame = 3;
         this.numberOfFrames = this.playerForw.length;
+
+    },
+
+    update: function(){
 
     },
 
@@ -89,7 +93,7 @@ EnemyWalk.prototype = {
     },
 
     __drawPlayer(){
-        this.context.clearRect(this.x, this.y, this.realW, this.realH);
+        this.context.clearRect(this.x, this.y, this.w, this.h);
 
         let player;
 
@@ -99,7 +103,7 @@ EnemyWalk.prototype = {
             player = this.playerBackw;
 
 
-        this.context.drawImage(player[this.frameIndex], this.x, this.y, this.realW, this.realH);
+        this.context.drawImage(player[this.frameIndex], this.x, this.y, this.w, this.h);
 
     },
 

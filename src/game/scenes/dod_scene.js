@@ -1,5 +1,5 @@
 var backgroundImage = new Image();
-backgroundImage.src = 'assets/sprites/background/floor_cave_1.png';
+backgroundImage.src = 'assets/sprites/blocks/floor_cave_1.png';
 backgroundImage.repeat = "repeat-x";
 let direction = 0;
 
@@ -26,6 +26,10 @@ DodScene.prototype = {
         this.jumpCount = 0;
         this.jumpTimeout = TIMEOUT_JUMP;
 
+
+    },
+
+    update: function(){
 
     },
 
