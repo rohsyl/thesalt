@@ -1,11 +1,12 @@
 const LEVEL_ROW_NB = 24;
-function LevelBuilder(scene, levelString){
+function LevelManager(scene, levelString, playerSelected){
     this.scene = scene;
+    this.playerSelected = playerSelected;
     this.gb = this.scene.gb;
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
     this.levelString = levelString;
-
+    this.shiftX = 0;
 
     this.sprites = [];
 
@@ -36,11 +37,11 @@ function LevelBuilder(scene, levelString){
             return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), 'background/floor_outside'));
         },
         p: function(i, j){
-            return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize()));
+            return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.playerSelected, self.__getBlockSize()));
         },
     }
 }
-LevelBuilder.prototype = {
+LevelManager.prototype = {
     init: function(){
         console.log('builder : init start');
 
@@ -63,9 +64,16 @@ LevelBuilder.prototype = {
             let row = [];
             for(let j = 0; j < levelBlock[i].length; j++){
                 let blockString = levelBlock[i][j];
-                console.log(blockString);
-                if(typeof blockString !== "undefined")
-                    row.push(this.__instanceBlock(blockString, i, j));
+                //console.log(blockString);
+                if(typeof blockString !== "undefined"){
+                    let block = this.__instanceBlock(blockString, i, j)
+                    if(!block instanceof Player){
+                        row.push(undefined);
+                    }
+                    else{
+                        row.push(block);
+                    }
+                }
             }
             this.sprites.push(row);
         }
@@ -80,16 +88,42 @@ LevelBuilder.prototype = {
             }
         }
         console.log('builder : init done');
+
+        //make the level move automaticallys
+        /*let self = this;
+        setInterval(function(){
+            self.shiftX++;
+        }, 20);*/
     },
 
     draw: function(){
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
-
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
-                if(typeof this.sprites[i][j] !== "undefined")
-                    this.sprites[i][j].draw();
+                if(typeof this.sprites[i][j] !== "undefined"){
+                    if(this.__isInViewport(this.sprites[i][j]))
+                            this.sprites[i][j].draw(this.shiftX);
+                }
             }
+        }
+        this.player.draw();
+    },
+
+    /**
+     * This method return true if the given block is in the viewport
+     * @param block Block|CollidableBlock|Player The block
+     * @returns {boolean} True if in viewport, else false
+     * @private
+     */
+    __isInViewport: function(block){
+        if(block instanceof Block){
+            return (block.x - this.shiftX + block.w > 0) && block.x - this.shiftX < this.canvas.width;
+        }
+        else if(block instanceof CollidableBlock){
+            return (block.x - this.shiftX + block.w > 0) && block.x - this.shiftX < this.canvas.width;
+        }
+        else{
+            return true;
         }
     },
 
@@ -108,7 +142,7 @@ LevelBuilder.prototype = {
             case BLOCK_TYPE_PLAYER:
                 this.player = block;
                 break;
-            case BLOCK_TYPE_BLOCK:
+            case BLOCK_TYPE_COLLIDABLE_BLOCK:
                 this.collidableBlocks.push(block);
                 break;
             case BLOCK_TYPE_ENEMY:

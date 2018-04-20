@@ -2,7 +2,43 @@ const DEFAULT_FRAME = 3;
 const JUMPING_FRAME = 1;
 const TIMEOUT_JUMP = 15;
 
-function Player(scene, x, y, blockSize) {
+const SPRITES_PATH = "assets/sprites/";
+
+const IMG_PLAYER_0_PATH = SPRITES_PATH + "player_0/";
+const IMG_PLAYER_1_PATH = SPRITES_PATH + "player_1/";
+const IMG_PLAYER_2_PATH = SPRITES_PATH + "player_2/";
+const IMG_PLAYER_3_PATH = SPRITES_PATH + "player_3/";
+
+const IMG_PLAYER_FORW_PATH = "forwards/";
+const IMG_PLAYER_BACKW_PATH = "backwards/";
+
+const IMG_PLAYER_STOP_PATH = "arret.png";
+const IMG_PLAYER_FEET_FRONT_PATH = "pied-avant.png";
+const IMG_PLAYER_RUN_PATH = "court.png";
+const IMG_PLAYER_FEET_BACK_PATH = "pied-arriere.png";
+
+const IMG_PLAYER_F_STOP = [IMG_PLAYER_0_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_STOP_PATH, IMG_PLAYER_1_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_STOP_PATH,
+    IMG_PLAYER_2_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_STOP_PATH, IMG_PLAYER_3_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_STOP_PATH];
+const IMG_PLAYER_B_STOP = [IMG_PLAYER_0_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_STOP_PATH, IMG_PLAYER_1_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_STOP_PATH,
+    IMG_PLAYER_2_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_STOP_PATH, IMG_PLAYER_3_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_STOP_PATH];
+
+const IMG_PLAYER_F_FEETFRONT = [IMG_PLAYER_0_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_FEET_FRONT_PATH, IMG_PLAYER_1_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_FEET_FRONT_PATH, IMG_PLAYER_FEET_BACK_PATH,
+    IMG_PLAYER_2_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_FEET_FRONT_PATH, IMG_PLAYER_3_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_FEET_FRONT_PATH];
+const IMG_PLAYER_B_FEETFRONT = [IMG_PLAYER_0_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_FEET_FRONT_PATH, IMG_PLAYER_1_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_FEET_FRONT_PATH,
+    IMG_PLAYER_2_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_FEET_FRONT_PATH, IMG_PLAYER_3_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_FEET_FRONT_PATH];
+
+const IMG_PLAYER_F_RUN = [IMG_PLAYER_0_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_RUN_PATH, IMG_PLAYER_1_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_RUN_PATH, IMG_PLAYER_FEET_BACK_PATH,
+    IMG_PLAYER_2_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_RUN_PATH, IMG_PLAYER_3_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_RUN_PATH];
+const IMG_PLAYER_B_RUN = [IMG_PLAYER_0_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_RUN_PATH, IMG_PLAYER_1_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_RUN_PATH,
+    IMG_PLAYER_2_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_RUN_PATH, IMG_PLAYER_3_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_RUN_PATH];
+
+const IMG_PLAYER_F_FEETBACK = [IMG_PLAYER_0_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_FEET_BACK_PATH, IMG_PLAYER_1_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_FEET_BACK_PATH,
+    IMG_PLAYER_2_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_FEET_BACK_PATH, IMG_PLAYER_3_PATH + IMG_PLAYER_FORW_PATH + IMG_PLAYER_FEET_BACK_PATH];
+const IMG_PLAYER_B_FEETBACK = [IMG_PLAYER_0_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_FEET_BACK_PATH, IMG_PLAYER_1_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_FEET_BACK_PATH,
+    IMG_PLAYER_2_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_FEET_BACK_PATH, IMG_PLAYER_3_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_FEET_BACK_PATH];
+
+
+function Player(scene, x, y, indexPlayerSelected, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
     this.canvas = this.scene.canvas;
@@ -10,6 +46,7 @@ function Player(scene, x, y, blockSize) {
     this.x = x;
     this.y = y;
     this.blockSize = blockSize;
+    this.playerSelected = indexPlayerSelected;
 }
 
 Player.prototype = {
@@ -26,7 +63,7 @@ Player.prototype = {
 
         this.y = this.y - this.realH/2;
         this.speed = 5;
-        this.jumpStrength = 10;
+        this.jumpStrength = 8;
         this.velX = 0;
         this.velY = 0;
 
@@ -46,14 +83,14 @@ Player.prototype = {
         this.playerBackw2 = new Image();
         this.playerBackw3 = new Image();
 
-        this.playerForw0.src = "assets/sprites/player/forwards/arret-rmen.png";
-        this.playerForw1.src = "assets/sprites/player/forwards/pied-avant-rmen.png";
-        this.playerForw2.src = "assets/sprites/player/forwards/court-rmen.png";
-        this.playerForw3.src = "assets/sprites/player/forwards/pied-arriere-rmen.png";
-        this.playerBackw0.src = "assets/sprites/player/backwards/arret-rmen.png";
-        this.playerBackw1.src = "assets/sprites/player/backwards/pied-avant-rmen.png";
-        this.playerBackw2.src = "assets/sprites/player/backwards/court-rmen.png";
-        this.playerBackw3.src = "assets/sprites/player/backwards/pied-arriere-rmen.png";
+        this.playerForw0.src = IMG_PLAYER_F_STOP[this.playerSelected];
+        this.playerForw1.src = IMG_PLAYER_F_FEETFRONT[this.playerSelected];
+        this.playerForw2.src = IMG_PLAYER_F_RUN[this.playerSelected];
+        this.playerForw3.src = IMG_PLAYER_F_FEETBACK[this.playerSelected];
+        this.playerBackw0.src = IMG_PLAYER_B_STOP[this.playerSelected];
+        this.playerBackw1.src = IMG_PLAYER_B_FEETFRONT[this.playerSelected];
+        this.playerBackw2.src = IMG_PLAYER_B_RUN[this.playerSelected];
+        this.playerBackw3.src = IMG_PLAYER_B_FEETBACK[this.playerSelected];
 
 
 
@@ -67,7 +104,7 @@ Player.prototype = {
 
     },
 
-    draw: function () {
+    draw: function (shiftX) {
 
 
 
@@ -103,7 +140,7 @@ Player.prototype = {
         }
 
         // apply velocity left // right
-        if(this.gb.keyRightPressed && this.x < this.canvas.width + this.w - 50) {
+        if(this.gb.keyRightPressed && this.x < this.canvas.width - this.realW) {
             if(this.velX < this.speed)
                 this.velX++;
             this.isPlayerForw = true;
@@ -122,6 +159,7 @@ Player.prototype = {
         // move the player
         this.x += this.velX;
         this.y += this.velY;
+
 
         // apply forces
         this.velX *= FRICTION;
@@ -179,7 +217,6 @@ Player.prototype = {
             player = this.playerForw;
         else
             player = this.playerBackw;
-
 
         this.context.drawImage(player[this.frameIndex], this.x, this.y, this.realW, this.realH);
 

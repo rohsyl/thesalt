@@ -22,12 +22,12 @@ function GameBoard(canvas) {
 GameBoard.prototype = {
 
     init: function(){
+
+        this.initActiveScene(new EnemyFireScene(this));
+
         let self = this;
         document.addEventListener("keydown", function(e){self.keyDownHandler(e)}, false);
         document.addEventListener("keyup", function(e){self.keyUpHandler(e)}, false);
-
-        this.activeScene = new LevelScene(self);
-        this.activeScene.init();
     },
 
     redraw : function(){
@@ -76,5 +76,10 @@ GameBoard.prototype = {
             if(keys[i] === keyCode) return true;
         }
         return false;
+    },
+
+    initActiveScene: function(scene) {
+        scene.init();
+        this.activeScene = scene;
     }
 };
