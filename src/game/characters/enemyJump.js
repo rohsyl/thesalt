@@ -1,6 +1,4 @@
-let direction2 = 0;
-
-function EnemyWalk(scene, x, y) {
+function EnemyJump(scene, x, y) {
     this.scene = scene;
     this.gb = this.scene.gb;
     this.canvas = this.scene.canvas;
@@ -9,7 +7,7 @@ function EnemyWalk(scene, x, y) {
     this.y = y;
 }
 
-EnemyWalk.prototype = {
+EnemyJump.prototype = {
 
     init: function() {
 
@@ -18,13 +16,17 @@ EnemyWalk.prototype = {
         this.w = 10;
 
         // w / h for drawing
-        this.w = this.w * 12.8;
-        this.h = this.h * 12.8;
+        this.realW = this.w * 12.8;
+        this.realH = this.h * 12.8;
 
-        this.y = this.y - this.h;
+        this.y = this.y - this.realH;
         this.speed = 5;
+        this.jumpStrength = 10;
         this.velX = 0;
         this.velY = 0;
+
+        this.jumpYOrigin = this.y;
+        this.jumping = false;
 
         this.isPlayerForw = true;
 
@@ -56,13 +58,17 @@ EnemyWalk.prototype = {
 
     },
 
-    update: function(){
-
-    },
-
     draw: function () {
 
-         // apply velocity left // right
+        // start jumping
+        if(!this.jumping){
+            this.__drawPlayerJumping();
+            this.velY = -this.jumpStrength*2;
+            this.jumpYOrigin = this.y;
+            this.jumping = true;
+        }
+
+        // apply velocity left // right
         if(this.x < this.canvas.width + this.realW && direction2 == 0) {
             if(this.velX < this.speed)
                 this.velX++;
@@ -82,18 +88,37 @@ EnemyWalk.prototype = {
 
         // move the player
         this.x += this.velX;
+        this.y += this.velY;
 
         // apply forces
         this.velX *= FRICTION;
+        this.velY += GRAVITY;
+
+        // ground limit
+        if(this.y >= this.jumpYOrigin - this.h){
+            this.y = this.jumpYOrigin;
+            this.jumping = false;
+            this.jumpCount = 0;
+        }
     },
 
     __drawPlayerWalking: function(){
-        this.__update();
+
+        if (!this.jumping) {
+            this.__update();
+            this.__drawPlayer();
+        } else
+            this.__drawPlayerJumping();
+    },
+
+    __drawPlayerJumping: function(){
+
+        this.frameIndex = JUMPING_FRAME;
         this.__drawPlayer();
     },
 
     __drawPlayer(){
-        this.context.clearRect(this.x, this.y, this.w, this.h);
+        this.context.clearRect(this.x, this.y, this.realW, this.realH);
 
         let player;
 
@@ -103,9 +128,10 @@ EnemyWalk.prototype = {
             player = this.playerBackw;
 
 
-        this.context.drawImage(player[this.frameIndex], this.x, this.y, this.w, this.h);
+        this.context.drawImage(player[this.frameIndex], this.x, this.y, this.realW, this.realH);
 
     },
+
 
     __update: function () {
 

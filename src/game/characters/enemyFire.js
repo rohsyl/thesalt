@@ -1,6 +1,6 @@
-let direction2 = 0;
+let direction3 = 0;
 
-function EnemyWalk(scene, x, y) {
+function EnemyFire(scene, x, y) {
     this.scene = scene;
     this.gb = this.scene.gb;
     this.canvas = this.scene.canvas;
@@ -9,7 +9,7 @@ function EnemyWalk(scene, x, y) {
     this.y = y;
 }
 
-EnemyWalk.prototype = {
+EnemyFire.prototype = {
 
     init: function() {
 
@@ -18,13 +18,12 @@ EnemyWalk.prototype = {
         this.w = 10;
 
         // w / h for drawing
-        this.w = this.w * 12.8;
-        this.h = this.h * 12.8;
+        this.realW = this.w * 12.8;
+        this.realH = this.h * 12.8;
 
-        this.y = this.y - this.h;
+        this.y = this.y - this.realH;
         this.speed = 5;
         this.velX = 0;
-        this.velY = 0;
 
         this.isPlayerForw = true;
 
@@ -56,28 +55,26 @@ EnemyWalk.prototype = {
 
     },
 
-    update: function(){
-
-    },
-
     draw: function () {
 
-         // apply velocity left // right
-        if(this.x < this.canvas.width + this.realW && direction2 == 0) {
+        this.__fire();
+
+        // apply velocity left // right
+        if(this.x < this.canvas.width + this.realW && direction3 == 0) {
             if(this.velX < this.speed)
                 this.velX++;
             this.isPlayerForw = true;
             this.__drawPlayerWalking();
             if(this.x >= this.canvas.width - this.realW)
-                direction2 = 1;
+                direction3 = 1;
         }
-        else if(this.x > 50 && direction2 == 1) {
+        else if(this.x > 50 && direction3 == 1) {
             if(this.velX > -this.speed)
                 this.velX--;
             this.isPlayerForw = false;
             this.__drawPlayerWalking();
             if(this.x <= this.w + 50)
-                direction2 = 0;
+                direction3 = 0;
         }
 
         // move the player
@@ -93,7 +90,7 @@ EnemyWalk.prototype = {
     },
 
     __drawPlayer(){
-        this.context.clearRect(this.x, this.y, this.w, this.h);
+        this.context.clearRect(this.x, this.y, this.realW, this.realH);
 
         let player;
 
@@ -102,9 +99,20 @@ EnemyWalk.prototype = {
         else
             player = this.playerBackw;
 
+        this.context.drawImage(player[this.frameIndex], this.x, this.y, this.realW, this.realH);
 
-        this.context.drawImage(player[this.frameIndex], this.x, this.y, this.w, this.h);
+    },
 
+    __fire: function(){
+        let bullet = new Bullet(this.gb, this.x, this.y, 5, 0, 0);
+        let bullet2 = new Bullet(this.gb, this.x - 10, this.y - 10, 5, 0, 0);
+        let bullet3 = new Bullet(this.gb, this.x - 20, this.y - 20, 5, 0, 0);
+        bullet.init();
+        bullet.draw();
+        bullet2.init();
+        bullet2.draw();
+        bullet3.init();
+        bullet3.draw();
     },
 
     __update: function () {

@@ -105,10 +105,6 @@ DodScene.prototype = {
         }
     },
 
-    drawBackground: function() {
-        this.context.drawImage(backgroundImage, 0, this.canvas.height - 90);
-    },
-
     drawPlayer: function(){
         this.context.beginPath();
         this.context.arc(this.x, this.y, this.h, 0, Math.PI * 2);
