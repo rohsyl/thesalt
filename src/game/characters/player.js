@@ -234,34 +234,51 @@ Player.prototype = {
     onCollision: function(whats){
         for(let k in whats) {
             if(whats[k] instanceof CollidableBlock){
-                // falling
-                if(this.velY > 0){
-                    //if(this.jumping)
-                    this.land(whats[k]);
+                let block = whats[k];
+                let player_bottom = this.getCenterY() + this.boxBottom;
+                let tiles_bottom = block.getY() + block.h;
+                let player_right = this.getCenterX() + this.boxRight;
+                let tiles_right = block.getX() + block.w;
+
+                let b_collision = tiles_bottom - (this.getCenterY() - this.boxTop);
+                let t_collision = player_bottom - block.getY();
+                let l_collision = player_right - block.getX();
+                let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
+
+                if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision )
+                {
+                    //console.log("Top collision");
+                    this.land(block);
                 }
-                // jumping
-                else{
-                    //console.log("ascending");
+                else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision)
+                {
+                    //console.log("bottom collision");
                     this.fall();
                 }
+                else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
+                {
+                    console.log("Left collision");
+                    let leftValue = this.getCenterX() - this.x + this.boxLeft;
+                    this.x = block.getX() - leftValue;
+                }
+                else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
+                {
+                    console.log("Right collision");
+                    let rightValue = this.getCenterX() - this.x - this.boxLeft;
+                    this.x = block.getX() + block.w - rightValue;
+                }
 
-                if(this.velX > 0){
-                    console.log("going right");
-                }
-                else if(this.velX < 0) {
-                    console.log("going left");
-                }
             }
         }
     },
 
     fall: function(){
-
+        this.velY = GRAVITY;
     },
 
     land: function(what){
         let topValue = this.getCenterY() - this.y + this.boxBottom;
-        this.y = what.y - topValue;
+        this.y = what.getY() - topValue;
         this.velY = 0;
         this.jumpCount = NB_ALLOWED_JUMP;
         this.jumping = false;

@@ -1,6 +1,6 @@
 const KEYS_LEFT = [65, 37];
 const KEYS_RIGHT = [68, 39];
-const KEYS_UP = [87, 38];
+const KEYS_UP = [87, 38, 32];
 
 const FRICTION = 0.8;
 const GRAVITY = 0.98;
