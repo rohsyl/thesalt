@@ -18,7 +18,7 @@ Block.prototype = {
     init: function(){
 
         this.image = new Image();
-        this.image.src = this.__getSrc(this.spriteSrc);
+        this.image.src = this.spriteSrc;
     },
 
     update: function(shiftX){

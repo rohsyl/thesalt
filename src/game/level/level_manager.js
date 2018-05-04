@@ -5,6 +5,18 @@
 const LEVEL_ROW_NB = 24;
 
 /**
+ * Width of a background image
+ * @type {number}
+ */
+const BACKGROUND_WIDTH = 1920;
+
+/**
+ * Height of a background image
+ * @type {number}
+ */
+const BACKGROUND_HEIGHT = 1080;
+
+/**
  * Scrolling speed of the level
  * @type {number}
  */
@@ -21,9 +33,10 @@ const IMG_FLOOR_GRASS = IMG_BLOCKS_PATH + "floor_grass.png";
  * @param scene The scene this level manager belongs to
  * @param levelString The levelString
  * @param playerSelected The player to use
+ * @param backgroundPaths (optional) array of image path that will be displayed as background
  * @constructor
  */
-function LevelManager(scene, levelString, playerSelected){
+function LevelManager(scene, levelString, playerSelected, backgroundPaths){
     this.scene = scene;
     this.playerSelected = playerSelected;
     this.gb = this.scene.gb;
@@ -32,6 +45,12 @@ function LevelManager(scene, levelString, playerSelected){
     this.levelString = levelString;
     this.levelTotalWidth = 0;
     this.shiftX = 0;
+
+    this.backgrounds = [];
+    this.backgroundPaths = [];
+    if(typeof  backgroundPaths !== 'undefined'){
+        this.backgroundPaths = backgroundPaths;
+    }
 
     // all sprites
     this.sprites = [];
@@ -75,6 +94,14 @@ LevelManager.prototype = {
     init: function(){
         console.log('builder : init start');
 
+        for(let i = 0; i < this.backgroundPaths.length; i++){
+            this.backgrounds.push(new Background(this.backgroundPaths[i], this.scene, i * BACKGROUND_WIDTH, 0));
+        }
+        for(let i = 0; i < this.backgrounds.length; i++){
+            this.backgrounds[i].init();
+        }
+
+        // parse level string to array
         let levelLines = this.levelString.split('\n');
         let levelBlock = [];
 
@@ -83,7 +110,6 @@ LevelManager.prototype = {
         }
 
         this.sprites = [];
-
         // ignore if nb rows of the level is more that LEVEL_ROW_NB
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
         console.log("canvas height", this.canvas.height);
@@ -130,6 +156,11 @@ LevelManager.prototype = {
 
     update: function(){
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
+
+        for(let i = 0; i < this.backgrounds.length; i++){
+            this.backgrounds[i].update(this.shiftX);
+        }
+
         this.player.update(this.shiftX);
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
@@ -139,14 +170,25 @@ LevelManager.prototype = {
                 }
             }
         }
+
+
     },
 
 
     draw: function(){
 
-
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
+
+        // draw background
+        for(let i = 0; i < this.backgrounds.length; i++){
+            this.backgrounds[i].draw();
+        }
+
+
+        // draw player
         this.player.draw();
+
+        // draw world
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined"){

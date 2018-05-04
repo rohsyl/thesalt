@@ -10,7 +10,11 @@ LevelScene.prototype = {
     init: function(){
         let lvlLoader = new LevelLoader();
         let level = lvlLoader.loadLevel("level2");
-        this.levelManager = new LevelManager(this, level, this.playerSelected);
+        let backgrounds = [
+            SPRITES_PATH + "background/level1/background1.jpg",
+            SPRITES_PATH + "background/level1/background2.jpg"
+        ];
+        this.levelManager = new LevelManager(this, level, this.playerSelected, backgrounds);
         this.levelManager.init();
         this.collisionManager = new CollisionManager(this.levelManager);
     },

@@ -322,7 +322,8 @@ Player.prototype = {
     },
 
     __drawPlayer(){
-        this.context.clearRect(this.x, this.y, this.w, this.h);
+        // c'est useless enfaite ahah
+        //this.context.clearRect(this.x, this.y, this.w, this.h);
 
         let player;
 
