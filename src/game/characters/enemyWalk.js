@@ -37,6 +37,8 @@ EnemyWalk.prototype = {
         this.h = this.blockSize*2;
         this.w = this.blockSize*2;
 
+
+
         // hit boxes
         this.boxTop = this.h / 2;
         this.boxBottom = this.h / 2;
@@ -142,14 +144,14 @@ EnemyWalk.prototype = {
                 }
                 else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
                 {
-                    console.log("Enemy Left collision");
+                    console.log("Enemy Left collision" + " : " + this.getCenterX());
                     let leftValue = this.getCenterX() - this.x + this.boxLeft;
                     this.x = block.getX() - leftValue;
                     this.isEnemyForw = false;
                 }
                 else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
                 {
-                    console.log("Enemy Right collision");
+                    console.log("Enemy Right collision" + " : " + this.getCenterX());
                     let rightValue = this.getCenterX() - this.x - this.boxLeft;
                     this.x = block.getX() + block.w - rightValue;
                     this.isEnemyForw = true;

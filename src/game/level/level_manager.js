@@ -108,16 +108,16 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
             return self.__refBlock(new EnemyWalk(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
         },
         // 2: function(i, j){
-        //     return self.__refBlock(new EnemyJump(self.scene, self.__calcX(j), self.__calcY(i)));
+        //     return self.__refBlock(new EnemyJump(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize()));
         // },
         // 3: function(i, j){
-        //     return self.__refBlock(new EnemyFire(self.scene, self.__calcX(j), self.__calcY(i)));
+        //     return self.__refBlock(new EnemyFire(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize()));
         // },
     }
 }
 LevelManager.prototype = {
     init: function(){
-        console.log('builder : init start');
+        // console.log('builder : init start');
 
         for(let i = 0; i < this.backgroundPaths.length; i++){
             this.backgrounds.push(new Background(this.backgroundPaths[i], this.scene, i * BACKGROUND_WIDTH, 0));
@@ -137,9 +137,9 @@ LevelManager.prototype = {
         this.sprites = [];
         // ignore if nb rows of the level is more that LEVEL_ROW_NB
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
-        console.log("canvas height", this.canvas.height);
-        console.log("window height", window.innerHeight);
-        console.log("blocksize", this.blockSize);
+        // console.log("canvas height", this.canvas.height);
+        // console.log("window height", window.innerHeight);
+        // console.log("blocksize", this.blockSize);
         let nbRow = levelBlock.length > LEVEL_ROW_NB ? LEVEL_ROW_NB : levelBlock.length;
         for(let i = 0; i < nbRow; i++){
             let row = [];
@@ -148,7 +148,7 @@ LevelManager.prototype = {
                 //console.log(blockString);
                 if(typeof blockString !== "undefined"){
                     let block = this.__instanceBlock(blockString, i, j);
-                    if(block instanceof Player || block instanceof EnemyWalk ){//|| block instanceof EnemyJump || block instanceof EnemyFire){
+                    if(block instanceof Player || block instanceof EnemyWalk){//|| block instanceof EnemyJump || block instanceof EnemyFire){
                         row.push(undefined);
                     }
                     else{
@@ -159,8 +159,8 @@ LevelManager.prototype = {
             this.sprites.push(row);
         }
         this.levelTotalWidth  = (this.sprites[0].length - 1) * this.blockSize - this.canvas.width;
-        console.log(this.sprites);
-        console.log("levelTotalWidth", this.levelTotalWidth);
+        // console.log(this.sprites);
+        // console.log("levelTotalWidth", this.levelTotalWidth);
 
 
         for(let i = 0; i < this.sprites.length; i++){
@@ -173,10 +173,10 @@ LevelManager.prototype = {
         this.player.init();
 
         for (e in this.enemies){
-            this.enemies[e].init();
+                this.enemies[e].init();
         }
 
-        console.log('builder : init done');
+        // console.log('builder : init done');
 
         //make the level move automaticallys
         /*let self = this;
@@ -281,7 +281,7 @@ LevelManager.prototype = {
 
     __instanceBlock: function(blockString, i, j){
         if(!this.blockDefinitions.hasOwnProperty(blockString)){
-            console.log('block type unknown, undefined returned...');
+            // console.log('block type unknown, undefined returned...');
             return undefined;
         }
         let constructor = this.blockDefinitions[blockString];
