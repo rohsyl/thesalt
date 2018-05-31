@@ -39,7 +39,7 @@ Pizza.prototype = {
     },
 
     getType: function(){
-        return BLOCK_TYPE_COLLIDABLE_BLOCK;
+        return BLOCK_TYPE_ITEMS;
     },
 
     /**

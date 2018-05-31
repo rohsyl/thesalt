@@ -9,6 +9,7 @@ const BLOCK_TYPE_BLOCK = 0;
 const BLOCK_TYPE_COLLIDABLE_BLOCK = 1;
 const BLOCK_TYPE_PLAYER = 2;
 const BLOCK_TYPE_ENEMY = 3;
+const BLOCK_TYPE_ITEMS = 4;
 
 function GameBoard(canvas) {
     this.canvas = canvas;

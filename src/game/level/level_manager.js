@@ -68,6 +68,9 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
     // array of ref to all solid block
     this.collidableBlocks = [];
 
+    // array of ref to all items
+    this.items = [];
+
 
     this.blockSize = 0;
 
@@ -293,6 +296,9 @@ LevelManager.prototype = {
                 break;
             case BLOCK_TYPE_ENEMY:
                 this.enemies.push(block);
+                break;
+            case BLOCK_TYPE_ITEMS:
+                this.items.push(block);
                 break;
         }
         return block;

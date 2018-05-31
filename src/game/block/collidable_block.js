@@ -28,8 +28,7 @@ CollidableBlock.prototype = {
     draw: function(){
         this.context.drawImage(this.image, this.getX(), this.getY(), this.w, this.h);
     },
-
-
+    
     onCollision: function(what){
         /*this.context.beginPath();
         this.context.lineWidth="6";
