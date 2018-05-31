@@ -89,7 +89,7 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
             return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.playerSelected, self.__getBlockSize()));
         },
         1: function(i, j){
-            return self.__refBlock(new EnemyWalk(self.scene, self.__calcX(j), self.__calcY(i)));
+            return self.__refBlock(new EnemyWalk(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize()));
         },
         // 2: function(i, j){
         //     return self.__refBlock(new EnemyJump(self.scene, self.__calcX(j), self.__calcY(i)));
@@ -153,6 +153,7 @@ LevelManager.prototype = {
                     this.sprites[i][j].init();
             }
         }
+
         this.player.init();
 
         for (e in this.enemies){
@@ -202,7 +203,7 @@ LevelManager.prototype = {
         // draw player
         this.player.draw();
 
-
+        // draw enemies
         for (e in this.enemies){
             this.enemies[e].draw();
         }

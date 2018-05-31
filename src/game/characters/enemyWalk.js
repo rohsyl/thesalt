@@ -19,13 +19,14 @@ let IMG_ENEMY_1_B_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY
 
 let goForward = false;
 
-function EnemyWalk(scene, x, y) {
+function EnemyWalk(scene, x, y, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
     this.canvas = this.scene.canvas;
     this.context = this.scene.context;
     this.x = x;
     this.y = y;
+    this.blockSize = blockSize;
 }
 
 EnemyWalk.prototype = {
