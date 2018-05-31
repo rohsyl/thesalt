@@ -16,4 +16,6 @@ o = floor_outside.png
 ANIMATED BLOCK
 ==============
 p = player
-1 = enemy1
+1 = enemy walk
+2 = enemy jump
+3 = enemy fire

@@ -1,3 +1,23 @@
+
+let IMG_ENEMY_2_PATH = SPRITES_PATH + "npc/enemy_0/";
+
+let IMG_ENEMY_2_F_STOP = IMG_ENEMY_2_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_STOP_PATH;
+
+let IMG_ENEMY_2_B_STOP = IMG_ENEMY_2_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_STOP_PATH;
+
+let IMG_ENEMY_2_F_FEETFRONT = IMG_ENEMY_2_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_FEET_FRONT_PATH;
+
+let IMG_ENEMY_2_B_FEETFRONT = IMG_ENEMY_2_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_FRONT_PATH;
+
+let IMG_ENEMY_2_F_RUN = IMG_ENEMY_2_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_RUN_PATH;
+
+let IMG_ENEMY_2_B_RUN = IMG_ENEMY_2_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_RUN_PATH;
+
+let IMG_ENEMY_2_F_FEETBACK = IMG_ENEMY_2_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_FEET_BACK_PATH;
+
+let IMG_ENEMY_2_B_FEETBACK = IMG_ENEMY_2_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_BACK_PATH;
+
+
 function EnemyJump(scene, x, y) {
     this.scene = scene;
     this.gb = this.scene.gb;
@@ -39,14 +59,14 @@ EnemyJump.prototype = {
         this.playerBackw2 = new Image();
         this.playerBackw3 = new Image();
 
-        this.playerForw0.src = "assets/sprites/player/forwards/arret-rmen.png";
-        this.playerForw1.src = "assets/sprites/player/forwards/pied-avant-rmen.png";
-        this.playerForw2.src = "assets/sprites/player/forwards/court-rmen.png";
-        this.playerForw3.src = "assets/sprites/player/forwards/pied-arriere-rmen.png";
-        this.playerBackw0.src = "assets/sprites/player/backwards/arret-rmen.png";
-        this.playerBackw1.src = "assets/sprites/player/backwards/pied-avant-rmen.png";
-        this.playerBackw2.src = "assets/sprites/player/backwards/court-rmen.png";
-        this.playerBackw3.src = "assets/sprites/player/backwards/pied-arriere-rmen.png";
+        this.playerForw0.src = IMG_ENEMY_2_F_STOP;
+        this.playerForw1.src = IMG_ENEMY_2_F_FEETFRONT;
+        this.playerForw2.src = IMG_ENEMY_2_F_RUN;
+        this.playerForw3.src = IMG_ENEMY_2_F_FEETBACK;
+        this.playerBackw0.src = IMG_ENEMY_2_B_STOP;
+        this.playerBackw1.src = IMG_ENEMY_2_B_FEETFRONT;
+        this.playerBackw2.src = IMG_ENEMY_2_B_RUN;
+        this.playerBackw3.src = IMG_ENEMY_2_B_FEETBACK;
 
         this.playerForw = [this.playerForw1, this.playerForw2, this.playerForw3, this.playerForw0];
         this.playerBackw = [this.playerBackw1, this.playerBackw2, this.playerBackw3, this.playerBackw0];
@@ -146,6 +166,10 @@ EnemyJump.prototype = {
             else
                 this.frameIndex = 0;
         }
+    },
+
+    getType: function(){
+        return BLOCK_TYPE_ENEMY;
     }
 
 }

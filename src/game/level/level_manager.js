@@ -88,6 +88,15 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
         p: function(i, j){
             return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.playerSelected, self.__getBlockSize()));
         },
+        1: function(i, j){
+            return self.__refBlock(new EnemyWalk(self.scene, self.__calcX(j), self.__calcY(i)));
+        },
+        2: function(i, j){
+            return self.__refBlock(new EnemyJump(self.scene, self.__calcX(j), self.__calcY(i)));
+        },
+        3: function(i, j){
+            return self.__refBlock(new EnemyFire(self.scene, self.__calcX(j), self.__calcY(i)));
+        },
     }
 }
 LevelManager.prototype = {
@@ -123,7 +132,7 @@ LevelManager.prototype = {
                 //console.log(blockString);
                 if(typeof blockString !== "undefined"){
                     let block = this.__instanceBlock(blockString, i, j);
-                    if(block instanceof Player){
+                    if(block instanceof Player || block instanceof EnemyWalk || block instanceof EnemyJump || block instanceof EnemyFire){
                         row.push(undefined);
                     }
                     else{
@@ -145,6 +154,11 @@ LevelManager.prototype = {
             }
         }
         this.player.init();
+
+        for (e in this.enemies){
+            this.enemies[e].init();
+        }
+
         console.log('builder : init done');
 
         //make the level move automaticallys
@@ -187,6 +201,11 @@ LevelManager.prototype = {
 
         // draw player
         this.player.draw();
+
+
+        for (e in this.enemies){
+            this.enemies[e].draw();
+        }
 
         // draw world
         for(let i = 0; i < this.sprites.length; i++){
@@ -271,4 +290,5 @@ LevelManager.prototype = {
     __calcY: function(i){
         return i * this.blockSize;
     }
+
 };
