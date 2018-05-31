@@ -265,7 +265,6 @@ Player.prototype = {
                     let rightValue = this.getCenterX() - this.x - this.boxLeft;
                     this.x = block.getX() + block.w - rightValue;
                 }
-
             }
         }
     },

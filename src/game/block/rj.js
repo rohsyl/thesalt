@@ -1,4 +1,4 @@
-function CollidableBlock(gb, x, y, size, spriteName){
+function Rj(gb, x, y, size, spriteName){
     this.gb = gb;
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
@@ -13,7 +13,7 @@ function CollidableBlock(gb, x, y, size, spriteName){
     this.shiftX = undefined;
     //console.log(spriteName, x, y, size);
 }
-CollidableBlock.prototype = {
+Rj.prototype = {
 
     init: function(){
 
@@ -28,7 +28,8 @@ CollidableBlock.prototype = {
     draw: function(){
         this.context.drawImage(this.image, this.getX(), this.getY(), this.w, this.h);
     },
-    
+
+
     onCollision: function(what){
         /*this.context.beginPath();
         this.context.lineWidth="6";
@@ -38,7 +39,7 @@ CollidableBlock.prototype = {
     },
 
     getType: function(){
-        return BLOCK_TYPE_COLLIDABLE_BLOCK;
+        return BLOCK_TYPE_ITEMS;
     },
 
     /**

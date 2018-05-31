@@ -23,10 +23,14 @@ const BACKGROUND_HEIGHT = 1080;
 const SHIFT_STEP = 5;
 
 const IMG_BLOCKS_PATH = SPRITES_PATH + "blocks/";
+const IMG_ITEMS_PATH = SPRITES_PATH + "items/";
 
 const IMG_FLOOR_CAVE_1 = IMG_BLOCKS_PATH + "floor_cave_1.png";
 const IMG_FLOOR_CAVE_2 = IMG_BLOCKS_PATH + "floor_cave_2.png";
 const IMG_FLOOR_GRASS = IMG_BLOCKS_PATH + "floor_grass.png";
+const IMG_PIZZA = IMG_ITEMS_PATH +  "pizza.png";
+const IMG_RJ45 = IMG_ITEMS_PATH +  "rj45.png";
+const IMG_WATER = IMG_ITEMS_PATH +  "water_bottle.png";
 
 /**
  * LevelManager constructor
@@ -64,6 +68,9 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
     // array of ref to all solid block
     this.collidableBlocks = [];
 
+    // array of ref to all items
+    this.items = [];
+
 
     this.blockSize = 0;
 
@@ -88,8 +95,17 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
         p: function(i, j){
             return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.playerSelected, self.__getBlockSize()));
         },
+        z: function(i, j) {
+            return self.__refBlock(new Pizza(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_PIZZA));
+        },
+        r: function(i, j) {
+            return self.__refBlock(new Rj(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_RJ45));
+        },
+        w: function(i, j) {
+            return self.__refBlock(new Water(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_WATER));
+        },
         1: function(i, j){
-            return self.__refBlock(new EnemyWalk(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize()));
+            return self.__refBlock(new EnemyWalk(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
         },
         // 2: function(i, j){
         //     return self.__refBlock(new EnemyJump(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize()));
@@ -280,6 +296,9 @@ LevelManager.prototype = {
                 break;
             case BLOCK_TYPE_ENEMY:
                 this.enemies.push(block);
+                break;
+            case BLOCK_TYPE_ITEMS:
+                this.items.push(block);
                 break;
         }
         return block;
