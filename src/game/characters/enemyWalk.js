@@ -17,8 +17,6 @@ let IMG_ENEMY_1_F_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_
 
 let IMG_ENEMY_1_B_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_BACK_PATH;
 
-let goForward = false;
-
 function EnemyWalk(scene, x, y, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
@@ -38,6 +36,8 @@ EnemyWalk.prototype = {
         // Enemy physics
         this.h = this.blockSize*2;
         this.w = this.blockSize*2;
+
+
 
         // hit boxes
         this.boxTop = this.h / 2;
@@ -144,14 +144,14 @@ EnemyWalk.prototype = {
                 }
                 else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
                 {
-                    console.log("Enemy Left collision");
+                    console.log("Enemy Left collision" + " : " + this.getCenterX());
                     let leftValue = this.getCenterX() - this.x + this.boxLeft;
                     this.x = block.getX() - leftValue;
                     this.isEnemyForw = false;
                 }
                 else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
                 {
-                    console.log("Enemy Right collision");
+                    console.log("Enemy Right collision" + " : " + this.getCenterX());
                     let rightValue = this.getCenterX() - this.x - this.boxLeft;
                     this.x = block.getX() + block.w - rightValue;
                     this.isEnemyForw = true;
