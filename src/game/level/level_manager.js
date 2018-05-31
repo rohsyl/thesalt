@@ -91,12 +91,12 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
         1: function(i, j){
             return self.__refBlock(new EnemyWalk(self.scene, self.__calcX(j), self.__calcY(i)));
         },
-        2: function(i, j){
-            return self.__refBlock(new EnemyJump(self.scene, self.__calcX(j), self.__calcY(i)));
-        },
-        3: function(i, j){
-            return self.__refBlock(new EnemyFire(self.scene, self.__calcX(j), self.__calcY(i)));
-        },
+        // 2: function(i, j){
+        //     return self.__refBlock(new EnemyJump(self.scene, self.__calcX(j), self.__calcY(i)));
+        // },
+        // 3: function(i, j){
+        //     return self.__refBlock(new EnemyFire(self.scene, self.__calcX(j), self.__calcY(i)));
+        // },
     }
 }
 LevelManager.prototype = {
@@ -132,7 +132,7 @@ LevelManager.prototype = {
                 //console.log(blockString);
                 if(typeof blockString !== "undefined"){
                     let block = this.__instanceBlock(blockString, i, j);
-                    if(block instanceof Player || block instanceof EnemyWalk || block instanceof EnemyJump || block instanceof EnemyFire){
+                    if(block instanceof Player || block instanceof EnemyWalk ){//|| block instanceof EnemyJump || block instanceof EnemyFire){
                         row.push(undefined);
                     }
                     else{
