@@ -30,8 +30,17 @@ CollisionManager.prototype = {
         // collision player vs enemy
         // TODO
 
-        // collision player vs bullet
-        // TODO
+        // collision player vs item
+        for (e in this.levelBuilder.itemsBlock) {
+            blocksInCollision = [];
+            for(let i = 0; i < this.levelBuilder.itemsBlock.length; i++){
+                if(this.__isCollide(this.levelBuilder.player, this.levelBuilder.itemsBlock[i])){
+                    blocksInCollision.push(this.levelBuilder.itemsBlock[i]);
+                    console.log("collision player vs item")
+                }
+            }
+            this.__triggerCollision(this.levelBuilder.itemsBlock[e], blocksInCollision);
+        }
     },
 
     /**
@@ -45,6 +54,9 @@ CollisionManager.prototype = {
         player.onCollision(blocks);
         for(let k in blocks){
             if(blocks[k] instanceof CollidableBlock){
+                blocks[k].onCollision(player);
+            }
+            else if(blocks[k] instanceof ItemBlock) {
                 blocks[k].onCollision(player);
             }
         }
