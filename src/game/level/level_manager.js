@@ -50,6 +50,8 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
     this.levelTotalWidth = 0;
     this.shiftX = 0;
 
+    this.scoreLabel = "Score : ";
+
     this.backgrounds = [];
     this.backgroundPaths = [];
     if(typeof  backgroundPaths !== 'undefined'){
@@ -219,9 +221,11 @@ LevelManager.prototype = {
             this.backgrounds[i].draw();
         }
 
-
         // draw player
         this.player.draw();
+
+        // draw player score
+        this.context.fillText(this.scoreLabel.concat(this.player.score) ,this.canvas.width/2, 100 );
 
         // draw enemies
         for (e in this.enemies){
@@ -237,7 +241,6 @@ LevelManager.prototype = {
                 }
             }
         }
-
 
         // shift the background alongside the player position
         let cw = this.canvas.width,
