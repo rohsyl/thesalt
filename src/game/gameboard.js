@@ -24,7 +24,7 @@ GameBoard.prototype = {
 
     init: function(){
 
-        this.initActiveScene(new MainScene(this));
+        this.initActiveScene(new GameOver(this));
 
         let self = this;
         document.addEventListener("keydown", function(e){self.keyDownHandler(e)}, false);
