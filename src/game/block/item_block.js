@@ -1,4 +1,4 @@
-function Pizza(gb, x, y, size, spriteName){
+function ItemBlock(gb, x, y, size, spriteName){
     this.gb = gb;
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
@@ -13,7 +13,7 @@ function Pizza(gb, x, y, size, spriteName){
     this.shiftX = undefined;
     //console.log(spriteName, x, y, size);
 }
-Pizza.prototype = {
+ItemBlock.prototype = {
 
     init: function(){
 
@@ -28,7 +28,6 @@ Pizza.prototype = {
     draw: function(){
         this.context.drawImage(this.image, this.getX(), this.getY(), this.w, this.h);
     },
-
 
     onCollision: function(what){
         /*this.context.beginPath();

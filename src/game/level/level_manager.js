@@ -96,13 +96,13 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
             return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.playerSelected, self.__getBlockSize()));
         },
         z: function(i, j) {
-            return self.__refBlock(new Pizza(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_PIZZA));
+            return self.__refBlock(new ItemBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_PIZZA));
         },
         r: function(i, j) {
-            return self.__refBlock(new Rj(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_RJ45));
+            return self.__refBlock(new ItemBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_RJ45));
         },
         w: function(i, j) {
-            return self.__refBlock(new Water(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_WATER));
+            return self.__refBlock(new ItemBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_WATER));
         },
         1: function(i, j){
             return self.__refBlock(new EnemyWalk(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
@@ -271,6 +271,9 @@ LevelManager.prototype = {
         else if(block instanceof CollidableBlock){
             return (block.x - this.shiftX + block.w > 0) && block.x - this.shiftX < this.canvas.width;
         }
+        else if(block instanceof ItemBlock){
+            return (block.x - this.shiftX + block.w > 0) && block.x - this.shiftX < this.canvas.width;
+        }
         else{
             return true;
         }
@@ -299,6 +302,7 @@ LevelManager.prototype = {
                 break;
             case BLOCK_TYPE_ITEMS:
                 this.items.push(block);
+                console.log('hit item');
                 break;
         }
         return block;
