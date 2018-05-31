@@ -172,7 +172,7 @@ EnemyWalk.prototype = {
     },
 
     getCenterX: function(){
-        return this.x + this.w / 2;
+        return this.x - this.shiftX + this.w / 2;
     },
 
     getCenterY: function(){
