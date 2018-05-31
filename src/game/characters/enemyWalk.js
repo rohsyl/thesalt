@@ -26,6 +26,7 @@ function EnemyWalk(scene, x, y, blockSize) {
     this.y = y;
     this.blockSize = blockSize;
     this.slowness = 5;
+    this.dead = false;
 }
 
 EnemyWalk.prototype = {
@@ -86,32 +87,34 @@ EnemyWalk.prototype = {
 
 
     update: function(shiftX){
-        this.shiftX = shiftX;
+        if (!this.dead) {
+            this.shiftX = shiftX;
 
-        // apply forces
-        this.velX *= FRICTION;
+            // apply forces
+            this.velX *= FRICTION;
 
-        this.velY += GRAVITY;
-
+            this.velY += GRAVITY;
+        }
     },
 
     draw: function () {
+        if (!this.dead) {
 
-        if(this.isEnemyForw) {
-            if(this.velX < this.speed)
-                this.velX++;
-            this.__drawEnemyWalking();
+            if (this.isEnemyForw) {
+                if (this.velX < this.speed)
+                    this.velX++;
+                this.__drawEnemyWalking();
+            }
+            else if (!this.isEnemyForw) {
+                if (this.velX > -this.speed)
+                    this.velX--;
+                this.__drawEnemyWalking();
+            }
+
+            // move the player
+            this.x += this.velX;
+            this.y += this.velY;
         }
-        else if(!this.isEnemyForw) {
-            if(this.velX > -this.speed)
-                this.velX--;
-            this.__drawEnemyWalking();
-        }
-
-        // move the player
-        this.x += this.velX;
-        this.y += this.velY;
-
     },
 
     /**
@@ -119,44 +122,43 @@ EnemyWalk.prototype = {
      * @param whats [] Blocks in collision
      */
     onCollision: function(whats){
-        for(let k in whats) {
-            if(whats[k] instanceof CollidableBlock){
-                let block = whats[k];
-                let enemy_bottom = this.getCenterY() + this.boxBottom;
-                let tiles_bottom = block.getY() + block.h;
-                let enemy_right = this.getCenterX() + this.boxRight;
-                let tiles_right = block.getX() + block.w;
+        if (!this.dead) {
 
-                let b_collision = tiles_bottom - (this.getCenterY() - this.boxTop);
-                let t_collision = enemy_bottom - block.getY();
-                let l_collision = enemy_right - block.getX();
-                let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
+            for(let k in whats) {
+                if (whats[k] instanceof CollidableBlock) {
+                    let block = whats[k];
+                    let enemy_bottom = this.getCenterY() + this.boxBottom;
+                    let tiles_bottom = block.getY() + block.h;
+                    let enemy_right = this.getCenterX() + this.boxRight;
+                    let tiles_right = block.getX() + block.w;
 
-                if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision )
-                {
-                    //console.log("Top collision");
-                    this.land(block);
-                }
-                else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision)
-                {
-                    //console.log("bottom collision");
-                    this.fall();
-                }
-                else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
-                {
-                    console.log("Enemy Left collision" + " : " + this.getCenterX());
-                    let leftValue = this.getCenterX() - this.x + this.boxLeft;
-                    this.x = block.getX() - leftValue;
-                    this.isEnemyForw = false;
-                }
-                else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
-                {
-                    console.log("Enemy Right collision" + " : " + this.getCenterX());
-                    let rightValue = this.getCenterX() - this.x - this.boxLeft;
-                    this.x = block.getX() + block.w - rightValue;
-                    this.isEnemyForw = true;
-                }
+                    let b_collision = tiles_bottom - (this.getCenterY() - this.boxTop);
+                    let t_collision = enemy_bottom - block.getY();
+                    let l_collision = enemy_right - block.getX();
+                    let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
 
+                    if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision) {
+                        //console.log("Top collision");
+                        this.land(block);
+                    }
+                    else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision) {
+                        //console.log("bottom collision");
+                        this.fall();
+                    }
+                    else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision) {
+                        // console.log("Enemy Left collision" + " : " + this.getCenterX());
+                        let leftValue = this.getCenterX() - this.x + this.boxLeft;
+                        this.x = block.getX() - leftValue;
+                        this.isEnemyForw = false;
+                    }
+                    else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision) {
+                        // console.log("Enemy Right collision" + " : " + this.getCenterX());
+                        let rightValue = this.getCenterX() - this.x - this.boxLeft;
+                        this.x = block.getX() + block.w - rightValue;
+                        this.isEnemyForw = true;
+                    }
+
+                }
             }
         }
     },
@@ -177,6 +179,10 @@ EnemyWalk.prototype = {
 
     getCenterY: function(){
         return this.y + this.h / 2;
+    },
+
+    die: function(){
+        this.dead = true;
     },
 
     __drawEnemyWalking: function(){

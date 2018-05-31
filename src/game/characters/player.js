@@ -90,6 +90,7 @@ function Player(scene, x, y, indexPlayerSelected, blockSize) {
     this.y = y;
     this.blockSize = blockSize;
     this.playerSelected = indexPlayerSelected;
+    this.dead = false;
 }
 
 Player.prototype = {
@@ -153,75 +154,78 @@ Player.prototype = {
 
 
     update: function(shiftX){
-        this.shiftX = shiftX;
-        // doublejump timeout
-        if(this.jumpTimeout > -1) {
-            this.jumpTimeout--;
-            // console.log(this.jumpTimeout);
-        }
-
-        // start jumping
-        if(this.gb.keyUpPressed){
-            // first jump
-            if(!this.jumping){
-                this.velY = -this.jumpStrength*2;
-                this.jumping = true;
-                this.jumpCount--;
-                this.jumpTimeout = TIMEOUT_JUMP;
+        if (!this.dead) {
+            this.shiftX = shiftX;
+            // doublejump timeout
+            if(this.jumpTimeout > -1) {
+                this.jumpTimeout--;
+                // console.log(this.jumpTimeout);
             }
-            else if(this.jumpTimeout < 0 && this.jumpCount > 0){
-                this.velY = -this.jumpStrength*2;
-                this.jumping = true;
-                this.jumpCount--;
-                this.jumpTimeout = TIMEOUT_JUMP;
+
+            // start jumping
+            if(this.gb.keyUpPressed){
+                // first jump
+                if(!this.jumping){
+                    this.velY = -this.jumpStrength*2;
+                    this.jumping = true;
+                    this.jumpCount--;
+                    this.jumpTimeout = TIMEOUT_JUMP;
+                }
+                else if(this.jumpTimeout < 0 && this.jumpCount > 0){
+                    this.velY = -this.jumpStrength*2;
+                    this.jumping = true;
+                    this.jumpCount--;
+                    this.jumpTimeout = TIMEOUT_JUMP;
+                }
             }
+
+            // apply velocity left // right
+            if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w - this.blockSize) {
+                if(this.velX < this.speed)
+                    this.velX++;
+            }
+            else if(this.gb.keyLeftPressed && this.x > this.blockSize) {
+                if(this.velX > -this.speed)
+                    this.velX--;
+            }
+
+            // apply forces
+            this.velX *= FRICTION;
+
+            this.velY += GRAVITY;
         }
-
-        // apply velocity left // right
-        if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w - this.blockSize) {
-            if(this.velX < this.speed)
-                this.velX++;
-        }
-        else if(this.gb.keyLeftPressed && this.x > this.blockSize) {
-            if(this.velX > -this.speed)
-                this.velX--;
-        }
-
-        // apply forces
-        this.velX *= FRICTION;
-
-        this.velY += GRAVITY;
-
     },
 
     draw: function () {
 
-        if(this.velX < 0.0001 && this.velX > 0){
+        if (!this.dead) {
+            if(this.velX < 0.0001 && this.velX > 0){
             this.velX = 0;
-        }
-        if(this.velX > -0.0001 && this.velX < 0){
-            this.velX = 0;
-        }
+            }
+            if(this.velX > -0.0001 && this.velX < 0){
+                this.velX = 0;
+            }
 
-        // move the player
-        this.x += this.velX;
-        this.y += this.velY;
+            // move the player
+            this.x += this.velX;
+            this.y += this.velY;
 
 
-        if(this.gb.keyUpPressed){
-            this.__drawPlayerJumping();
-        }
+            if(this.gb.keyUpPressed){
+                this.__drawPlayerJumping();
+            }
 
-        if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w) {
-            this.isPlayerForw = true;
-            this.__drawPlayerWalking();
-        }
-        else if(this.gb.keyLeftPressed && this.x > 50) {
-            this.isPlayerForw = false;
-            this.__drawPlayerWalking();
-        }
-        else {
-            this.__drawPlayerWaiting();
+            if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w) {
+                this.isPlayerForw = true;
+                this.__drawPlayerWalking();
+            }
+            else if(this.gb.keyLeftPressed && this.x > 50) {
+                this.isPlayerForw = false;
+                this.__drawPlayerWalking();
+            }
+            else {
+                this.__drawPlayerWaiting();
+            }
         }
     },
 
@@ -230,40 +234,43 @@ Player.prototype = {
      * @param whats [] Blocks in collision
      */
     onCollision: function(whats){
-        for(let k in whats) {
-            if(whats[k] instanceof CollidableBlock){
-                let block = whats[k];
-                let player_bottom = this.getCenterY() + this.boxBottom;
-                let tiles_bottom = block.getY() + block.h;
-                let player_right = this.getCenterX() + this.boxRight;
-                let tiles_right = block.getX() + block.w;
 
-                let b_collision = tiles_bottom - (this.getCenterY() - this.boxTop);
-                let t_collision = player_bottom - block.getY();
-                let l_collision = player_right - block.getX();
-                let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
+        if (!this.dead){
+            for(let k in whats) {
+                if(whats[k] instanceof CollidableBlock){
+                    let block = whats[k];
+                    let player_bottom = this.getCenterY() + this.boxBottom;
+                    let tiles_bottom = block.getY() + block.h;
+                    let player_right = this.getCenterX() + this.boxRight;
+                    let tiles_right = block.getX() + block.w;
 
-                if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision )
-                {
-                    //console.log("Top collision");
-                    this.land(block);
-                }
-                else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision)
-                {
-                    //console.log("bottom collision");
-                    this.fall();
-                }
-                else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
-                {
-                    console.log("Left collision");
-                    let leftValue = this.getCenterX() - this.x + this.boxLeft;
-                    this.x = block.getX() - leftValue;
-                }
-                else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
-                {
-                    console.log("Right collision");
-                    let rightValue = this.getCenterX() - this.x - this.boxLeft;
-                    this.x = block.getX() + block.w - rightValue;
+                    let b_collision = tiles_bottom - (this.getCenterY() - this.boxTop);
+                    let t_collision = player_bottom - block.getY();
+                    let l_collision = player_right - block.getX();
+                    let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
+
+                    if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision )
+                    {
+                        //console.log("Top collision");
+                        this.land(block);
+                    }
+                    else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision)
+                    {
+                        //console.log("bottom collision");
+                        this.fall();
+                    }
+                    else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
+                    {
+                        console.log("Left collision");
+                        let leftValue = this.getCenterX() - this.x + this.boxLeft;
+                        this.x = block.getX() - leftValue;
+                    }
+                    else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
+                    {
+                        console.log("Right collision");
+                        let rightValue = this.getCenterX() - this.x - this.boxLeft;
+                        this.x = block.getX() + block.w - rightValue;
+                    }
                 }
             }
         }
@@ -292,6 +299,20 @@ Player.prototype = {
 
     getCenterY: function(){
         return this.y + this.h / 2;
+    },
+
+    kill: function () {
+        this.velY = -this.jumpStrength*2;
+        this.__drawPlayerJumping();
+    },
+
+    die: function () {
+
+        this.velY = -this.jumpStrength*2;
+        this.__drawPlayerJumping();
+        this.velX = 0;
+        this.dead = true;
+
     },
 
     __drawPlayerWaiting: function(){

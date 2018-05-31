@@ -28,7 +28,15 @@ CollisionManager.prototype = {
         }
 
         // collision player vs enemy
-        // TODO
+        blocksInCollision = [];
+        enemyIndex = 0;
+        for (e in this.levelBuilder.enemies) {
+            if(this.__charCollide(this.levelBuilder.player, this.levelBuilder.enemies[e])){
+                blocksInCollision.push(this.levelBuilder.enemies[e]);
+                enemyIndex = e;
+            }
+        }
+        this.__triggerCollision(this.levelBuilder.player, blocksInCollision);
 
         // collision player vs item
         for (e in this.levelBuilder.itemsBlock) {
@@ -53,6 +61,16 @@ CollisionManager.prototype = {
     __triggerCollision: function(player, blocks){
         player.onCollision(blocks);
         for(let k in blocks){
+
+            if(blocks[k].getType() == BLOCK_TYPE_ENEMY && player.getType() == BLOCK_TYPE_PLAYER) {
+                if (this.__charTopCollide(this.levelBuilder.player, blocks[k])) {
+                    this.levelBuilder.player.kill();
+                    this.levelBuilder.enemies[enemyIndex].die();
+                }
+                else
+                    this.levelBuilder.player.die();
+            }
+
             if(blocks[k] instanceof CollidableBlock){
                 blocks[k].onCollision(player);
             }
@@ -69,5 +87,19 @@ CollisionManager.prototype = {
         let fromRight = player.getCenterX() - player.boxLeft < block.getX() + block.w; // the player is hiting the right of something
 
         return fromTop && fromBottom && fromLeft && fromRight;
+    },
+
+    __charCollide: function(player, npc){
+        let fromTop = player.getCenterY() + player.boxBottom > npc.getCenterY() - npc.boxTop;  // the player is hiting the top of npc
+        let fromBottom = player.getCenterY() - player.boxTop < npc.getCenterY() + npc.boxBottom; // the player is hiting the bottom of npc
+        let fromLeft = player.getCenterX() + player.boxRight > npc.getCenterX() - npc.boxLeft; // the player is hiting the left of npc
+        let fromRight = player.getCenterX() - player.boxLeft < npc.getCenterX() + npc.boxRight; // the player is hiting the right of npc
+
+        return fromTop && fromBottom && fromLeft && fromRight;
+    },
+
+    __charTopCollide: function(player, npc){
+        let fromTop = player.getCenterY() + player.boxBottom > npc.getCenterY() - npc.boxTop;  // the player is hiting the top of npc
+        return fromTop;
     }
 };
