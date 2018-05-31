@@ -43,7 +43,7 @@ const IMG_ENEMY_B_FEETBACK = [
 // check the direction of the enemy
 var goForward = true;
 
-function EnemyWalk(scene, x, y, indexEnemySelected, blockSize) {
+function EnemyWalk(scene, x, y, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
     this.canvas = this.scene.canvas;
@@ -51,7 +51,6 @@ function EnemyWalk(scene, x, y, indexEnemySelected, blockSize) {
     this.x = x;
     this.y = y;
     this.blockSize = blockSize;
-    this.enemySelected = indexEnemySelected;
 }
 
 EnemyWalk.prototype = {
@@ -90,14 +89,14 @@ EnemyWalk.prototype = {
         this.enemyBackw2 = new Image();
         this.enemyBackw3 = new Image();
 
-        this.enemyForw0.src = IMG_ENEMY_F_STOP[this.enemySelected];
-        this.enemyForw1.src = IMG_ENEMY_F_FEETFRONT[this.enemySelected];
-        this.enemyForw2.src = IMG_ENEMY_F_RUN[this.enemySelected];
-        this.enemyForw3.src = IMG_ENEMY_F_FEETBACK[this.enemySelected];
-        this.enemyBackw0.src = IMG_ENEMY_B_STOP[this.enemySelected];
-        this.enemyBackw1.src = IMG_ENEMY_B_FEETFRONT[this.enemySelected];
-        this.enemyBackw2.src = IMG_ENEMY_B_RUN[this.enemySelected];
-        this.enemyBackw3.src = IMG_ENEMY_B_FEETBACK[this.enemySelected];
+        this.enemyForw0.src = IMG_ENEMY_F_STOP[0];
+        this.enemyForw1.src = IMG_ENEMY_F_FEETFRONT[0];
+        this.enemyForw2.src = IMG_ENEMY_F_RUN[0];
+        this.enemyForw3.src = IMG_ENEMY_F_FEETBACK[0];
+        this.enemyBackw0.src = IMG_ENEMY_B_STOP[0];
+        this.enemyBackw1.src = IMG_ENEMY_B_FEETFRONT[0];
+        this.enemyBackw2.src = IMG_ENEMY_B_RUN[0];
+        this.enemyBackw3.src = IMG_ENEMY_B_FEETBACK[0];
 
         this.enemyForw = [this.enemyForw1, this.enemyForw2, this.enemyForw3, this.enemyForw0];
         this.enemyBackw = [this.enemyBackw1, this.enemyBackw2, this.enemyBackw3, this.enemyBackw0];

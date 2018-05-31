@@ -8,7 +8,7 @@ EnemyWalkScene.prototype = {
 
     init: function(){
 
-        this.player = new Old_enemyWalk(this, 150, this.canvas.height - 100);
+        this.player = new enemyWalk(this, 150, this.canvas.height - 100);
 
         this.player.init();
 
