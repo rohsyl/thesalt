@@ -32,8 +32,6 @@ MainScene.prototype = {
 
     draw: function() {
 
-
-
         for (let i = 0; i < this.buttonsX.length; i++) {
             this.context.beginPath();
             this.context.rect(this.buttonsX[i], this.buttonsY[i],

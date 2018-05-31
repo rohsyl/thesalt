@@ -8,7 +8,7 @@ EnemyJumpScene.prototype = {
 
     init: function(){
 
-        this.player = new EnemyJump(this, 150, this.canvas.height - 100);
+        this.player = new Old_enemyJump(this, 150, this.canvas.height - 100);
 
         this.player.init();
 

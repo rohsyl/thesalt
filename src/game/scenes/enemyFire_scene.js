@@ -8,7 +8,7 @@ EnemyFireScene.prototype = {
 
     init: function(){
 
-        this.player = new EnemyFire(this, 150, this.canvas.height - 100);
+        this.player = new Old_enemyFire(this, 150, this.canvas.height - 100);
 
         this.player.init();
 
