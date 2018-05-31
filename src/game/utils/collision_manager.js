@@ -16,10 +16,21 @@ CollisionManager.prototype = {
         }
         this.__triggerCollision(this.levelBuilder.player, blocksInCollision);
 
+        // collision enemy vs collidable block
+        blocksInCollision = [];
+        for (e in this.levelBuilder.enemies) {
+            for(let i = 0; i < this.levelBuilder.collidableBlocks.length; i++){
+                if(this.__isCollide(this.levelBuilder.enemies[e], this.levelBuilder.collidableBlocks[i])){
+                    blocksInCollision.push(this.levelBuilder.collidableBlocks[i]);
+                }
+            }
+            this.__triggerCollision(this.levelBuilder.enemies[e], blocksInCollision);
+        }
+
         // collision player vs enemy
         // TODO
 
-        //collision player vs bullet
+        // collision player vs bullet
         // TODO
     },
 

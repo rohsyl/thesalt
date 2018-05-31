@@ -17,8 +17,6 @@ let IMG_ENEMY_1_F_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_
 
 let IMG_ENEMY_1_B_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_BACK_PATH;
 
-let goForward = false;
-
 function EnemyWalk(scene, x, y, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
@@ -27,6 +25,7 @@ function EnemyWalk(scene, x, y, blockSize) {
     this.x = x;
     this.y = y;
     this.blockSize = blockSize;
+    this.slowness = 5;
 }
 
 EnemyWalk.prototype = {
@@ -46,7 +45,7 @@ EnemyWalk.prototype = {
 
         this.y = this.y - this.h / 2;
 
-        this.speed = SHIFT_STEP;
+        this.speed = SHIFT_STEP / this.slowness;
 
         this.velX = 0;
         this.velY = 0;
@@ -79,23 +78,13 @@ EnemyWalk.prototype = {
 
         this.frameIndex = 0;
         this.tickCount = 0;
-        this.ticksPerFrame = 3;
+        this.ticksPerFrame = 3 * this.slowness/2;
         this.numberOfFrames = this.enemyForw.length;
     },
 
 
     update: function(shiftX){
         this.shiftX = shiftX;
-
-        // apply velocity left // right
-        if(goForward && this.x < this.canvas.width - this.w - this.blockSize) {
-            if(this.velX < this.speed)
-                this.velX++;
-        }
-        else if(!goForward && this.x > this.blockSize) {
-            if(this.velX > -this.speed)
-                this.velX--;
-        }
 
         // apply forces
         this.velX *= FRICTION;
@@ -106,28 +95,21 @@ EnemyWalk.prototype = {
 
     draw: function () {
 
-        if(this.velX < 0.0001 && this.velX > 0){
-            this.velX = 0;
+        if(this.isEnemyForw) {
+            if(this.velX < this.speed)
+                this.velX++;
+            this.__drawEnemyWalking();
         }
-        if(this.velX > -0.0001 && this.velX < 0){
-            this.velX = 0;
+        else if(!this.isEnemyForw) {
+            if(this.velX > -this.speed)
+                this.velX--;
+            this.__drawEnemyWalking();
         }
 
         // move the player
         this.x += this.velX;
         this.y += this.velY;
 
-        if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w) {
-            this.isEnemyForw = true;
-            this.__drawEnemyWalking();
-        }
-        else if(this.gb.keyLeftPressed && this.x > 50) {
-            this.isEnemyForw = false;
-            this.__drawEnemyWalking();
-        }
-        else {
-            this.__drawEnemyWaiting();
-        }
     },
 
     /**
@@ -160,17 +142,17 @@ EnemyWalk.prototype = {
                 }
                 else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
                 {
-                    console.log("Left collision");
+                    console.log("Enemy Left collision");
                     let leftValue = this.getCenterX() - this.x + this.boxLeft;
                     this.x = block.getX() - leftValue;
-                    goForward = true;
+                    this.isEnemyForw = false;
                 }
                 else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
                 {
-                    console.log("Right collision");
+                    console.log("Enemy Right collision");
                     let rightValue = this.getCenterX() - this.x - this.boxLeft;
                     this.x = block.getX() + block.w - rightValue;
-                    goForward = false;
+                    this.isEnemyForw = true;
                 }
 
             }
@@ -187,22 +169,12 @@ EnemyWalk.prototype = {
         this.velY = 0;
     },
 
-    getType: function(){
-        return BLOCK_TYPE_PLAYER;
-    },
-
     getCenterX: function(){
         return this.x + this.w / 2;
     },
 
     getCenterY: function(){
         return this.y + this.h / 2;
-    },
-
-    __drawEnemyWaiting: function(){
-
-        this.frameIndex = DEFAULT_FRAME;
-        this.__drawEnemy();
     },
 
     __drawEnemyWalking: function(){
@@ -222,7 +194,7 @@ EnemyWalk.prototype = {
         else
             enemy = this.enemyBackw;
 
-        this.context.drawImage(enemy[this.frameIndex], this.x, this.y, this.w, this.h);
+        this.context.drawImage(enemy[this.frameIndex], this.x - this.shiftX, this.y, this.w, this.h);
 
     },
 

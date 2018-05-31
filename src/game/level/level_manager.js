@@ -177,6 +177,12 @@ LevelManager.prototype = {
         }
 
         this.player.update(this.shiftX);
+
+
+        for (e in this.enemies) {
+            this.enemies[e].update(this.shiftX);
+        }
+
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined"){
@@ -185,7 +191,6 @@ LevelManager.prototype = {
                 }
             }
         }
-
 
     },
 
