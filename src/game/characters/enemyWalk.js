@@ -17,7 +17,7 @@ let IMG_ENEMY_1_F_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_
 
 let IMG_ENEMY_1_B_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_BACK_PATH;
 
-let goForward = 0;
+let goForward = false;
 
 function EnemyWalk(scene, x, y) {
     this.scene = scene;
