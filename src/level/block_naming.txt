@@ -11,7 +11,11 @@ f = floor_cave_1.png
 g = floor_cave_2.png
 o = floor_outside.png
 
-
+ITEM BLOCK
+==========
+z = pizza
+r = rj45
+w = water_bottle
 
 ANIMATED BLOCK
 ==============
