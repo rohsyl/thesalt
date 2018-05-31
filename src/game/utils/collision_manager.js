@@ -74,8 +74,9 @@ CollisionManager.prototype = {
             if(blocks[k] instanceof CollidableBlock){
                 blocks[k].onCollision(player);
             }
-            else if(blocks[k] instanceof ItemBlock) {
-                blocks[k].onCollision(player);
+
+            if(blocks[k] instanceof ItemBlock) {
+                this.levelBuilder.player.pick(blocks[k]);
             }
         }
     },

@@ -12,6 +12,8 @@ function ItemBlock(gb, x, y, size, spriteName){
 
     this.shiftX = undefined;
     //console.log(spriteName, x, y, size);
+
+    this.scorePoint = 1;
 }
 ItemBlock.prototype = {
 

@@ -150,6 +150,10 @@ Player.prototype = {
         this.tickCount = 0;
         this.ticksPerFrame = 3;
         this.numberOfFrames = this.playerForw.length;
+
+        // ========================================================================
+        // player score
+        this.score = 0;
     },
 
 
@@ -307,12 +311,16 @@ Player.prototype = {
     },
 
     die: function () {
-
         this.velY = -this.jumpStrength*2;
         this.__drawPlayerJumping();
         this.velX = 0;
         this.dead = true;
+    },
 
+    pick: function(item) {
+        this.score += item.scorePoint;
+        item.scorePoint = 0;
+        console.log(this.score);
     },
 
     __drawPlayerWaiting: function(){
