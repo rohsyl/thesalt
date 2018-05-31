@@ -17,8 +17,6 @@ let IMG_ENEMY_1_F_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_
 
 let IMG_ENEMY_1_B_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_BACK_PATH;
 
-let goForward = false;
-
 function EnemyWalk(scene, x, y, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
@@ -83,16 +81,15 @@ EnemyWalk.prototype = {
         this.numberOfFrames = this.enemyForw.length;
     },
 
-
     update: function(shiftX){
         this.shiftX = shiftX;
 
         // apply velocity left // right
-        if(goForward && this.x < this.canvas.width - this.w - this.blockSize) {
+        if(this.isEnemyForw && this.x < this.canvas.width - this.w - this.blockSize) {
             if(this.velX < this.speed)
                 this.velX++;
         }
-        else if(!goForward && this.x > this.blockSize) {
+        else if(!this.isEnemyForw && this.x > this.blockSize) {
             if(this.velX > -this.speed)
                 this.velX--;
         }
@@ -117,11 +114,11 @@ EnemyWalk.prototype = {
         this.x += this.velX;
         this.y += this.velY;
 
-        if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w) {
+        if(this.x < this.canvas.width - this.w) {
             this.isEnemyForw = true;
             this.__drawEnemyWalking();
         }
-        else if(this.gb.keyLeftPressed && this.x > 50) {
+        else if(this.x > 50) {
             this.isEnemyForw = false;
             this.__drawEnemyWalking();
         }
@@ -163,14 +160,14 @@ EnemyWalk.prototype = {
                     console.log("Left collision");
                     let leftValue = this.getCenterX() - this.x + this.boxLeft;
                     this.x = block.getX() - leftValue;
-                    goForward = true;
+                    this.isEnemyForw = false;
                 }
                 else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
                 {
                     console.log("Right collision");
                     let rightValue = this.getCenterX() - this.x - this.boxLeft;
                     this.x = block.getX() + block.w - rightValue;
-                    goForward = false;
+                    this.isEnemyForw = true;
                 }
 
             }
