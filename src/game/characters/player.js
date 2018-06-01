@@ -91,6 +91,12 @@ function Player(scene, x, y, indexPlayerSelected, blockSize) {
     this.blockSize = blockSize;
     this.playerSelected = indexPlayerSelected;
     this.dead = false;
+
+    // ========================================================================
+    // player score
+    this.score = 0;
+    this.saltLevel = 0;
+    this.saltLevel.toFixed(0);
 }
 
 Player.prototype = {
@@ -150,10 +156,6 @@ Player.prototype = {
         this.tickCount = 0;
         this.ticksPerFrame = 3;
         this.numberOfFrames = this.playerForw.length;
-
-        // ========================================================================
-        // player score
-        this.score = 0;
     },
 
 
@@ -214,7 +216,6 @@ Player.prototype = {
             this.x += this.velX;
             this.y += this.velY;
 
-
             if(this.gb.keyUpPressed){
                 this.__drawPlayerJumping();
             }
@@ -230,7 +231,18 @@ Player.prototype = {
             else {
                 this.__drawPlayerWaiting();
             }
+
+            // increase salt level each second
+            // TODO: get the FPS from main.js and replace 60
+            // TODO: get a integer and not a 568098456340958 length number
+            this.saltLevel = this.saltLevel + 1/60;
+
+            // die if salt level = 100
+            // TODO: not working
+            if(this.saltLevel == 30)
+                this.die();
         }
+
     },
 
     /**
@@ -315,6 +327,7 @@ Player.prototype = {
         this.__drawPlayerJumping();
         this.velX = 0;
         this.dead = true;
+        console.log("die...");
     },
 
     pick: function(item) {
@@ -377,5 +390,8 @@ Player.prototype = {
                 this.frameIndex = 0;
         }
     }
+}
 
+function increment(){
+    this.saltLevel = this.saltLevel % 360 + 1;
 }

@@ -1,4 +1,4 @@
-function ItemBlock(gb, x, y, size, spriteName){
+function ItemBlock(gb, x, y, size, spriteName, scorePoint){
     this.gb = gb;
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
@@ -13,7 +13,7 @@ function ItemBlock(gb, x, y, size, spriteName){
     this.shiftX = undefined;
     //console.log(spriteName, x, y, size);
 
-    this.scorePoint = 1;
+    this.scorePoint = scorePoint;
 }
 ItemBlock.prototype = {
 

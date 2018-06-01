@@ -51,6 +51,7 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
     this.shiftX = 0;
 
     this.scoreLabel = "Score : ";
+    this.saltLevelLabel = "Salt level : ";
 
     this.backgrounds = [];
     this.backgroundPaths = [];
@@ -97,13 +98,13 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
             return self.__refBlock(new Player(self.scene, self.__calcX(j), self.__calcY(i), self.playerSelected, self.__getBlockSize()));
         },
         z: function(i, j) {
-            return self.__refBlock(new ItemBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_PIZZA));
+            return self.__refBlock(new ItemBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_PIZZA, 100));
         },
         r: function(i, j) {
-            return self.__refBlock(new ItemBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_RJ45));
+            return self.__refBlock(new ItemBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_RJ45, 50));
         },
         w: function(i, j) {
-            return self.__refBlock(new ItemBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_WATER));
+            return self.__refBlock(new ItemBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_WATER, 25));
         },
         1: function(i, j){
             return self.__refBlock(new EnemyWalk(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
@@ -225,7 +226,10 @@ LevelManager.prototype = {
         this.player.draw();
 
         // draw player score
-        this.context.fillText(this.scoreLabel.concat(this.player.score) ,this.canvas.width/2, 100 );
+        this.context.fillText(this.scoreLabel.concat(this.player.score) ,this.canvas.width - 200, 100);
+
+        // draw player salt level
+        this.context.fillText(this.saltLevelLabel.concat(this.player.saltLevel).substr(0,17) ,200, 100);
 
         // draw enemies
         for (e in this.enemies){
