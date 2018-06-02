@@ -46,6 +46,18 @@ ItemBlock.prototype = {
         return BLOCK_TYPE_ITEMS;
     },
 
+    effect: function(player){
+        if(this.spriteSrc == IMG_PIZZA){
+            // TODO : add pizza effect
+        }
+        else if(this.spriteSrc == IMG_RJ45){
+            // TODO : add rj45 effect
+        }
+        else if(this.spriteSrc == IMG_WATER){
+            player.reduceSalt(10);
+        }
+    },
+
     /**
      * Get the x position with the shiftX
      * @returns {number} The x position

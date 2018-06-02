@@ -233,13 +233,10 @@ Player.prototype = {
             }
 
             // increase salt level each second
-            // TODO: get the FPS from main.js and replace 60
-            // TODO: get a integer and not a 568098456340958 length number
             this.saltLevel = this.saltLevel + 1 / FPS;
 
             // die if salt level = 100
-            // TODO: not working
-            if(this.saltLevel > 30)
+            if(this.saltLevel >= 100)
                 this.die();
         }
 
@@ -333,8 +330,16 @@ Player.prototype = {
     pick: function(item) {
         this.score += item.scorePoint;
         item.scorePoint = 0;
+        item.effect(this);
         item.pick();
         console.log(this.score);
+    },
+
+    reduceSalt: function(nbr){
+        if(this.saltLevel - nbr < 0)
+            this.saltLevel = 0;
+        else
+            this.saltLevel -= nbr;
     },
 
     __drawPlayerWaiting: function(){
