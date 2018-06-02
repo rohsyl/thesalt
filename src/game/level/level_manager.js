@@ -229,7 +229,7 @@ LevelManager.prototype = {
         this.context.fillText(this.scoreLabel.concat(this.player.score) ,this.canvas.width - 200, 100);
 
         // draw player salt level
-        this.context.fillText(this.saltLevelLabel.concat(this.player.saltLevel).substr(0,17) ,200, 100);
+        this.context.fillText(this.saltLevelLabel.concat(Math.round(this.player.saltLevel)) ,200, 100);
 
         // draw enemies
         for (e in this.enemies){

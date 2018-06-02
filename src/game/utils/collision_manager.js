@@ -62,13 +62,15 @@ CollisionManager.prototype = {
         player.onCollision(blocks);
         for(let k in blocks){
 
-            if(blocks[k].getType() == BLOCK_TYPE_ENEMY && player.getType() == BLOCK_TYPE_PLAYER) {
-                if (this.__charTopCollide(this.levelBuilder.player, blocks[k])) {
-                    this.levelBuilder.player.kill();
-                    this.levelBuilder.enemies[enemyIndex].die();
+            if(blocks[k].getType() === BLOCK_TYPE_ENEMY && player.getType() === BLOCK_TYPE_PLAYER) {
+                if(!blocks[k].dead){
+                    if (this.__charTopCollide(this.levelBuilder.player, blocks[k])) {
+                        this.levelBuilder.player.kill();
+                        this.levelBuilder.enemies[enemyIndex].die();
+                    }
+                    else
+                        this.levelBuilder.player.die();
                 }
-                else
-                    this.levelBuilder.player.die();
             }
 
             if(blocks[k] instanceof CollidableBlock){
