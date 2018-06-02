@@ -49,9 +49,14 @@ ItemBlock.prototype = {
     effect: function(player){
         if(this.spriteSrc == IMG_PIZZA){
             // TODO : add pizza effect
+            // boost jump by 2 for 5 seconds
+            player.boostJump(2, 5);
         }
         else if(this.spriteSrc == IMG_RJ45){
             // TODO : add rj45 effect
+            // boost speed dont work well
+            // boost jump by 2 for 10 seconds
+            player.boostSpeed(2, 10);
         }
         else if(this.spriteSrc == IMG_WATER){
             player.reduceSalt(10);

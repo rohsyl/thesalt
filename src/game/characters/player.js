@@ -1,6 +1,7 @@
 let DEFAULT_FRAME = 3;
 let JUMPING_FRAME = 1;
 let TIMEOUT_JUMP = 15;
+let JUMP_STRENGTH = 8;
 let NB_ALLOWED_JUMP = 2;
 let SALT_PER_SECOND = 2;
 
@@ -118,7 +119,7 @@ Player.prototype = {
         this.y = this.y - this.h / 2;
 
         this.speed = SHIFT_STEP;
-        this.jumpStrength = 8;
+        this.jumpStrength = JUMP_STRENGTH;
 
         this.velX = 0;
         this.velY = 0;
@@ -126,6 +127,9 @@ Player.prototype = {
         this.jumping = false;
         this.jumpCount = NB_ALLOWED_JUMP;
         this.jumpTimeout = TIMEOUT_JUMP;
+
+        this.boostedSpeedTimeout = 0;
+        this.boostedJumpTimeout = 0;
 
         this.shiftX = undefined;
 
@@ -169,6 +173,20 @@ Player.prototype = {
                 // console.log(this.jumpTimeout);
             }
 
+            if(this.boostedJumpTimeout > 0){
+                this.boostedJumpTimeout -= 1 / FPS;
+            }
+            else{
+                this.jumpStrength = JUMP_STRENGTH;
+            }
+
+            if(this.boostedSpeedTimeout > 0){
+                this.boostedSpeedTimeout -= 1 / 60;
+            }
+            else{
+                this.speed = SHIFT_STEP;
+            }
+
             // start jumping
             if(this.gb.keyUpPressed){
                 // first jump
@@ -186,6 +204,12 @@ Player.prototype = {
                 }
             }
 
+
+            // apply forces
+            this.velX *= FRICTION;
+
+            this.velY += GRAVITY;
+
             // apply velocity left // right
             if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w - this.blockSize) {
                 if(this.velX < this.speed)
@@ -195,11 +219,6 @@ Player.prototype = {
                 if(this.velX > -this.speed)
                     this.velX--;
             }
-
-            // apply forces
-            this.velX *= FRICTION;
-
-            this.velY += GRAVITY;
         }
     },
 
@@ -369,7 +388,6 @@ Player.prototype = {
 
     pick: function(item) {
         this.score += item.scorePoint;
-        item.scorePoint = 0;
         item.effect(this);
         item.pick();
         console.log(this.score);
@@ -380,6 +398,16 @@ Player.prototype = {
             this.saltLevel = 0;
         else
             this.saltLevel -= nbr;
+    },
+
+    boostSpeed: function(nbr, time){
+        this.speed += nbr;
+        this.boostedSpeedTimeout = time;
+    },
+
+    boostJump: function(nbr, time){
+        this.jumpStrength += nbr;
+        this.boostedJumpTimeout = time;
     },
 
     __drawPlayerWaiting: function(){

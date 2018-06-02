@@ -229,7 +229,7 @@ LevelManager.prototype = {
         this.context.fillText(this.scoreLabel.concat(this.player.score) ,this.canvas.width - 200, 100);
 
         // draw player salt level
-        this.context.fillText(this.saltLevelLabel.concat(Math.round(this.player.saltLevel)) ,200, 100);
+        this.context.fillText(this.saltLevelLabel.concat(Math.round(this.player.saltLevel).toString()) ,200, 100);
 
         // draw enemies
         for (e in this.enemies){
@@ -252,16 +252,20 @@ LevelManager.prototype = {
 
         if(this.player.x > cw * 1 / 2 + this.blockSize * 2 && this.gb.keyRightPressed){
             if(this.shiftX < this.levelTotalWidth){
-                this.shiftX += SHIFT_STEP;
+                this.shiftX += this.getShiftStep();
                 this.player.x -= this.player.speed;
             }
         }
         else if(this.player.x < cw * 1 / 2 - this.blockSize * 2 && this.gb.keyLeftPressed){
             if(this.shiftX > 0){
-                this.shiftX -= SHIFT_STEP;
+                this.shiftX -= this.getShiftStep();
                 this.player.x += this.player.speed;
             }
         }
+    },
+
+    getShiftStep: function(){
+        return this.player.speed;
     },
 
     /**
