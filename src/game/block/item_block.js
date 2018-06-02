@@ -5,6 +5,8 @@ function ItemBlock(gb, x, y, size, spriteName, scorePoint){
 
     this.spriteSrc = spriteName;
 
+    this.picked = false;
+
     this.w = size;
     this.h = size;
     this.x = x;
@@ -28,11 +30,16 @@ ItemBlock.prototype = {
     },
 
     draw: function(){
-        this.context.drawImage(this.image, this.getX(), this.getY(), this.w, this.h);
+        if(!this.picked)
+            this.context.drawImage(this.image, this.getX(), this.getY(), this.w, this.h);
     },
 
     onCollision: function(player){
 
+    },
+
+    pick: function(){
+        this.picked = true;
     },
 
     getType: function(){

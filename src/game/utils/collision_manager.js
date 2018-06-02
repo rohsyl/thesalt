@@ -76,7 +76,8 @@ CollisionManager.prototype = {
             }
 
             if(blocks[k] instanceof ItemBlock) {
-                this.levelBuilder.player.pick(blocks[k]);
+                if(!blocks[k].picked)
+                    this.levelBuilder.player.pick(blocks[k]);
             }
         }
     },

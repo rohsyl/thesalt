@@ -333,6 +333,7 @@ Player.prototype = {
     pick: function(item) {
         this.score += item.scorePoint;
         item.scorePoint = 0;
+        item.pick();
         console.log(this.score);
     },
 
