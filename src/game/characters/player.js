@@ -2,6 +2,7 @@ let DEFAULT_FRAME = 3;
 let JUMPING_FRAME = 1;
 let TIMEOUT_JUMP = 15;
 let NB_ALLOWED_JUMP = 2;
+let SALT_PER_SECOND = 2;
 
 let IMG_PLAYER_0_PATH = SPRITES_PATH + "players/player_0/";
 let IMG_PLAYER_1_PATH = SPRITES_PATH + "players/player_1/";
@@ -233,7 +234,7 @@ Player.prototype = {
             }
 
             // increase salt level each second
-            this.saltLevel = this.saltLevel + 1 / FPS;
+            this.saltLevel = this.saltLevel + SALT_PER_SECOND / FPS;
 
             // die if salt level = 100
             if(this.saltLevel >= 100)
@@ -274,15 +275,53 @@ Player.prototype = {
                     }
                     else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
                     {
-                        console.log("Left collision");
+                        //console.log("Left collision");
                         let leftValue = this.getCenterX() - this.x + this.boxLeft;
                         this.x = block.getX() - leftValue;
                     }
                     else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
                     {
-                        console.log("Right collision");
+                        //console.log("Right collision");
                         let rightValue = this.getCenterX() - this.x - this.boxLeft;
                         this.x = block.getX() + block.w - rightValue;
+                    }
+                }
+                else if(whats[k] instanceof ItemBlock) {
+                    let item = whats[k];
+                    if(!item.picked)
+                        this.pick(item);
+                }
+                else if(whats[k].getType() === BLOCK_TYPE_ENEMY){
+                    let enemy = whats[k];
+                    let player_bottom = this.getCenterY() + this.boxBottom;
+                    let tiles_bottom = enemy.getCenterY() + enemy.boxBottom;
+                    let player_right = this.getCenterX() + this.boxRight;
+                    let tiles_right = enemy.getCenterX() + enemy.boxRight;
+
+                    let b_collision = tiles_bottom - (this.getCenterY() - this.boxTop);
+                    let t_collision = player_bottom - (enemy.getCenterY() - enemy.boxTop);
+                    let l_collision = player_right - (enemy.getCenterX() - enemy.boxLeft);
+                    let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
+
+                    if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision )
+                    {
+                        //console.log("Top collision");
+                        this.kill(enemy);
+                    }
+                    else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision)
+                    {
+                        //console.log("bottom collision");
+                        this.die();
+                    }
+                    else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
+                    {
+                        //console.log("Left collision");
+                        this.die();
+                    }
+                    else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
+                    {
+                        //console.log("Right collision");
+                        this.die();
                     }
                 }
             }
@@ -314,7 +353,8 @@ Player.prototype = {
         return this.y + this.h / 2;
     },
 
-    kill: function () {
+    kill: function (enemy) {
+        enemy.die();
         this.velY = -this.jumpStrength*2;
         this.__drawPlayerJumping();
     },
@@ -396,7 +436,7 @@ Player.prototype = {
                 this.frameIndex = 0;
         }
     }
-}
+};
 
 function increment(){
     this.saltLevel = this.saltLevel % 360 + 1;

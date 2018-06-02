@@ -43,8 +43,8 @@ EnemyWalk.prototype = {
         // hit boxes
         this.boxTop = this.h / 2;
         this.boxBottom = this.h / 2;
-        this.boxLeft = this.w / 6;
-        this.boxRight = this.w / 6;
+        this.boxLeft = this.w / 7;
+        this.boxRight = this.w / 7;
 
         this.y = this.y - this.h / 2;
 
@@ -226,4 +226,4 @@ EnemyWalk.prototype = {
         return BLOCK_TYPE_ENEMY;
     }
 
-}
+};

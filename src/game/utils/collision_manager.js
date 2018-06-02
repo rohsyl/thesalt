@@ -29,26 +29,27 @@ CollisionManager.prototype = {
 
         // collision player vs enemy
         blocksInCollision = [];
-        enemyIndex = 0;
         for (e in this.levelBuilder.enemies) {
-            if(this.__charCollide(this.levelBuilder.player, this.levelBuilder.enemies[e])){
-                blocksInCollision.push(this.levelBuilder.enemies[e]);
-                enemyIndex = e;
+            if(!this.levelBuilder.enemies[e].dead){
+                if(this.__charCollide(this.levelBuilder.player, this.levelBuilder.enemies[e])){
+                    blocksInCollision.push(this.levelBuilder.enemies[e]);
+                }
             }
         }
         this.__triggerCollision(this.levelBuilder.player, blocksInCollision);
 
         // collision player vs item
-        for (e in this.levelBuilder.itemsBlock) {
-            blocksInCollision = [];
-            for(let i = 0; i < this.levelBuilder.itemsBlock.length; i++){
+        blocksInCollision = [];
+        for(let i = 0; i < this.levelBuilder.itemsBlock.length; i++){
+            if(!this.levelBuilder.itemsBlock[i].picked){
                 if(this.__isCollide(this.levelBuilder.player, this.levelBuilder.itemsBlock[i])){
                     blocksInCollision.push(this.levelBuilder.itemsBlock[i]);
                     console.log("collision player vs item")
                 }
             }
-            this.__triggerCollision(this.levelBuilder.itemsBlock[e], blocksInCollision);
         }
+        this.__triggerCollision(this.levelBuilder.player, blocksInCollision);
+
     },
 
     /**
@@ -60,28 +61,6 @@ CollisionManager.prototype = {
      */
     __triggerCollision: function(player, blocks){
         player.onCollision(blocks);
-        for(let k in blocks){
-
-            if(blocks[k].getType() === BLOCK_TYPE_ENEMY && player.getType() === BLOCK_TYPE_PLAYER) {
-                if(!blocks[k].dead){
-                    if (this.__charTopCollide(this.levelBuilder.player, blocks[k])) {
-                        this.levelBuilder.player.kill();
-                        this.levelBuilder.enemies[enemyIndex].die();
-                    }
-                    else
-                        this.levelBuilder.player.die();
-                }
-            }
-
-            if(blocks[k] instanceof CollidableBlock){
-                blocks[k].onCollision(player);
-            }
-
-            if(blocks[k] instanceof ItemBlock) {
-                if(!blocks[k].picked)
-                    this.levelBuilder.player.pick(blocks[k]);
-            }
-        }
     },
 
     __isCollide: function(player, block){
@@ -100,10 +79,5 @@ CollisionManager.prototype = {
         let fromRight = player.getCenterX() - player.boxLeft < npc.getCenterX() + npc.boxRight; // the player is hiting the right of npc
 
         return fromTop && fromBottom && fromLeft && fromRight;
-    },
-
-    __charTopCollide: function(player, npc){
-        let fromTop = player.getCenterY() + player.boxBottom > npc.getCenterY() - npc.boxTop;  // the player is hiting the top of npc
-        return fromTop;
     }
 };
