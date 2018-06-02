@@ -374,6 +374,7 @@ Player.prototype = {
 
     kill: function (enemy) {
         enemy.die();
+        this.score += enemy.scorePoint;
         this.velY = -this.jumpStrength*2;
         this.__drawPlayerJumping();
     },

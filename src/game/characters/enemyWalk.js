@@ -83,6 +83,9 @@ EnemyWalk.prototype = {
         this.tickCount = 0;
         this.ticksPerFrame = 3 * this.slowness/2;
         this.numberOfFrames = this.enemyForw.length;
+
+
+        this.scorePoint = 250;
     },
 
 
