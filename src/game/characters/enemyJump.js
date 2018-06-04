@@ -1,23 +1,23 @@
 
-let IMG_ENEMY_1_PATH = SPRITES_PATH + "npc/enemy_0/";
+let IMG_ENEMY_2_PATH = SPRITES_PATH + "npc/enemy_0/";
 
-let IMG_ENEMY_1_F_STOP = IMG_ENEMY_1_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_STOP_PATH;
+let IMG_ENEMY_2_F_STOP = IMG_ENEMY_2_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_STOP_PATH;
 
-let IMG_ENEMY_1_B_STOP = IMG_ENEMY_1_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_STOP_PATH;
+let IMG_ENEMY_2_B_STOP = IMG_ENEMY_2_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_STOP_PATH;
 
-let IMG_ENEMY_1_F_FEETFRONT = IMG_ENEMY_1_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_FEET_FRONT_PATH;
+let IMG_ENEMY_2_F_FEETFRONT = IMG_ENEMY_2_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_FEET_FRONT_PATH;
 
-let IMG_ENEMY_1_B_FEETFRONT = IMG_ENEMY_1_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_FRONT_PATH;
+let IMG_ENEMY_2_B_FEETFRONT = IMG_ENEMY_2_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_FRONT_PATH;
 
-let IMG_ENEMY_1_F_RUN = IMG_ENEMY_1_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_RUN_PATH;
+let IMG_ENEMY_2_F_RUN = IMG_ENEMY_2_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_RUN_PATH;
 
-let IMG_ENEMY_1_B_RUN = IMG_ENEMY_1_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_RUN_PATH;
+let IMG_ENEMY_2_B_RUN = IMG_ENEMY_2_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_RUN_PATH;
 
-let IMG_ENEMY_1_F_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_FEET_BACK_PATH;
+let IMG_ENEMY_2_F_FEETBACK = IMG_ENEMY_2_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_FEET_BACK_PATH;
 
-let IMG_ENEMY_1_B_FEETBACK = IMG_ENEMY_1_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_BACK_PATH;
+let IMG_ENEMY_2_B_FEETBACK = IMG_ENEMY_2_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_BACK_PATH;
 
-function EnemyWalk(scene, x, y, blockSize) {
+function EnemyJump(scene, x, y, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
     this.canvas = this.scene.canvas;
@@ -29,7 +29,7 @@ function EnemyWalk(scene, x, y, blockSize) {
     this.dead = false;
 }
 
-EnemyWalk.prototype = {
+EnemyJump.prototype = {
 
     init: function() {
 
@@ -49,9 +49,13 @@ EnemyWalk.prototype = {
         this.y = this.y - this.h / 2;
 
         this.speed = SHIFT_STEP / this.slowness;
+        this.jumpStrength = JUMP_STRENGTH - 1.5;
 
         this.velX = 0;
         this.velY = 0;
+
+        this.jumping = false;
+        this.jumpTimeout = TIMEOUT_JUMP;
 
         this.shiftX = undefined;
 
@@ -67,14 +71,14 @@ EnemyWalk.prototype = {
         this.enemyBackw2 = new Image();
         this.enemyBackw3 = new Image();
 
-        this.enemyForw0.src = IMG_ENEMY_1_F_STOP;
-        this.enemyForw1.src = IMG_ENEMY_1_F_FEETFRONT;
-        this.enemyForw2.src = IMG_ENEMY_1_F_RUN;
-        this.enemyForw3.src = IMG_ENEMY_1_F_FEETBACK;
-        this.enemyBackw0.src = IMG_ENEMY_1_B_STOP;
-        this.enemyBackw1.src = IMG_ENEMY_1_B_FEETFRONT;
-        this.enemyBackw2.src = IMG_ENEMY_1_B_RUN;
-        this.enemyBackw3.src = IMG_ENEMY_1_B_FEETBACK;
+        this.enemyForw0.src = IMG_ENEMY_2_F_STOP;
+        this.enemyForw1.src = IMG_ENEMY_2_F_FEETFRONT;
+        this.enemyForw2.src = IMG_ENEMY_2_F_RUN;
+        this.enemyForw3.src = IMG_ENEMY_2_F_FEETBACK;
+        this.enemyBackw0.src = IMG_ENEMY_2_B_STOP;
+        this.enemyBackw1.src = IMG_ENEMY_2_B_FEETFRONT;
+        this.enemyBackw2.src = IMG_ENEMY_2_B_RUN;
+        this.enemyBackw3.src = IMG_ENEMY_2_B_FEETBACK;
 
         this.enemyForw = [this.enemyForw1, this.enemyForw2, this.enemyForw3, this.enemyForw0];
         this.enemyBackw = [this.enemyBackw1, this.enemyBackw2, this.enemyBackw3, this.enemyBackw0];
@@ -92,6 +96,16 @@ EnemyWalk.prototype = {
     update: function(shiftX){
         if (!this.dead) {
             this.shiftX = shiftX;
+
+            if(this.jumpTimeout > -1) {
+                this.jumpTimeout--;
+            }
+
+            if(!this.jumping) {
+                this.velY = -this.jumpStrength * 2;
+                this.jumping = true;
+                this.jumpTimeout = TIMEOUT_JUMP;
+            }
 
             // apply forces
             this.velX *= FRICTION;
@@ -116,6 +130,8 @@ EnemyWalk.prototype = {
             // move the player
             this.x += this.velX;
             this.y += this.velY;
+
+            this.__drawEnemyJumping();
         }
     },
 
@@ -173,6 +189,8 @@ EnemyWalk.prototype = {
         let topValue = this.getCenterY() - this.y + this.boxBottom;
         this.y = what.getY() - topValue;
         this.velY = 0;
+        this.jumping = false;
+        this.jumpTimeout = TIMEOUT_JUMP;
     },
 
     getCenterX: function(){
@@ -188,8 +206,15 @@ EnemyWalk.prototype = {
     },
 
     __drawEnemyWalking: function(){
+        if (!this.jumping) {
+            this.__update();
+            this.__drawEnemy();
+        }
+    },
 
-        this.__update();
+    __drawEnemyJumping: function(){
+
+        this.frameIndex = JUMPING_FRAME;
         this.__drawEnemy();
     },
 

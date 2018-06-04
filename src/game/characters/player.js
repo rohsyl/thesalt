@@ -472,7 +472,3 @@ Player.prototype = {
         }
     }
 };
-
-function increment(){
-    this.saltLevel = this.saltLevel % 360 + 1;
-}
