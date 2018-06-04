@@ -37,6 +37,10 @@ CharacterSelectionScene.prototype = {
         this.charactersLabels = ["R-Men", "Shaolin", "Dødskamp", "Célapéro"];
         this.title = "Select Your Player";
 
+        this.voidImg = new Image();
+        this.voidImg.src = SPRITES_PATH + "menu/void.png";
+
+
         this.imagesWH = 200;
         this.imagesY = this.canvas.height/4;
         this.originX = this.canvas.width/2 - this.imagesWH*2;
@@ -47,11 +51,9 @@ CharacterSelectionScene.prototype = {
             this.imagesX.push(this.imagesX[j] + this.imagesWH);
         }
 
-
-
         this.buttonW = 160;
         this.buttonH = 50;
-        this.backButton = [this.canvas.width/2 - this.buttonW/2, this.imagesY + this.imagesWH + this.buttonW, this.buttonW, this.buttonH, "Back"];
+        this.backButton = [this.canvas.width/2 - this.buttonW/2, this.imagesY + this.imagesWH + this.buttonW*2, this.buttonW, this.buttonH, "Back"];
 
         this.isMouseHoverImages = [false, false, false, false];
         this.isMouseHoverButton = false;
@@ -65,10 +67,19 @@ CharacterSelectionScene.prototype = {
         this.canvas.addEventListener("mousemove", this.mm);
         this.canvas.addEventListener("click", this.mc);
 
+
+        this.voidPortal = this.__sprite({
+                width: 4200,
+                height: 300,
+                image: this.voidImg,
+                numberOfFrames: 10,
+                ticksPerFrame: 3
+            }
+        );
+
     },
 
     update: function(){
-
     },
 
     draw: function(){
@@ -76,19 +87,12 @@ CharacterSelectionScene.prototype = {
         this.context.font = '38pt Kremlin Pro Web';
         this.context.fillStyle = '#000000';
         this.context.textAlign="center";
-        this.context.fillText(this.title, this.imagesX[1]+this.imagesWH, this.imagesY - 50);
+        this.context.fillText(this.title, this.canvas.width/2 - 38/2, this.imagesY - 50);
 
         for (let i = 0; i < this.charactersImages.length; i++) {
 
             if (this.isMouseHoverImages[i]) {
                 this.context.drawImage(this.charactersSelectedImages[i], this.imagesX[i], this.imagesY, this.imagesWH, this.imagesWH);
-
-                // this.context.beginPath();
-                // this.context.rect(this.imagesX[i], this.imagesY, this.imagesWH, this.imagesWH);
-                // this.context.lineWidth = 2;
-                // this.context.strokeStyle = '#660000';
-                // this.context.stroke();
-                // this.context.closePath();
             } else
                 this.context.drawImage(this.charactersImages[i], this.imagesX[i], this.imagesY, this.imagesWH, this.imagesWH);
 
@@ -98,6 +102,42 @@ CharacterSelectionScene.prototype = {
             this.context.textAlign="center";
             this.context.fillText(this.charactersLabels[i], this.imagesX[i] + this.imagesWH/2, this.imagesY + this.imagesWH + 20);
         }
+
+        //portal drawing
+        this.context.save();
+
+        this.context.clearRect(this.canvas.width/2 - this.voidPortal.realH/2, (this.imagesY + this.imagesWH) + (this.backButton[1] - (this.imagesY + this.imagesWH))/4, this.voidPortal.realW, this.voidPortal.realH);
+
+        let radius = this.voidPortal.realH/2;
+        let destX = this.canvas.width/2 - this.voidPortal.realW/2;
+        let destY = (this.imagesY + this.imagesWH) + (this.backButton[1] - (this.imagesY + this.imagesWH))/4;
+        this.context.beginPath();
+        this.context.moveTo(destX + radius, destY);
+        this.context.lineTo(destX + this.voidPortal.realW - radius, destY);
+        this.context.quadraticCurveTo(destX + this.voidPortal.realW, destY, destX + this.voidPortal.realW, destY + radius);
+        this.context.lineTo(destX + this.voidPortal.realW, destY + this.voidPortal.realH - radius);
+        this.context.quadraticCurveTo(destX + this.voidPortal.realW, destY + this.voidPortal.realH, destX + this.voidPortal.realW - radius, destY + this.voidPortal.realH);
+        this.context.lineTo(destX + radius, destY + this.voidPortal.realH);
+        this.context.quadraticCurveTo(destX, destY + this.voidPortal.realH, destX, destY + this.voidPortal.realH - radius);
+        this.context.lineTo(destX, destY + radius);
+        this.context.quadraticCurveTo(destX, destY, destX + radius, destY);
+        this.context.closePath();
+
+        this.context.clip();
+
+        this.voidPortal.update();
+        this.context.drawImage(this.voidPortal.image,
+            // source x, y
+            this.voidPortal.frameIndex * this.voidPortal.width / this.voidPortal.numberOfFrames, 0,
+            // source w, h
+            this.voidPortal.width / this.voidPortal.numberOfFrames, this.voidPortal.height,
+            // dest x, y
+            destX, destY,
+            // dest w, h
+            this.voidPortal.realW, this.voidPortal.realH
+        );
+
+        this.context.restore();
 
         // draw button
         this.context.beginPath();
@@ -119,6 +159,40 @@ CharacterSelectionScene.prototype = {
         this.context.fillText(this.backButton[4], this.backButton[0] + this.backButton[2]/2, this.backButton[1]+40);
 
     },
+
+    __sprite: function(options) {
+
+        let that = {},
+        tickCount = 0,
+        ticksPerFrame = options.ticksPerFrame || 0;
+
+        that.numberOfFrames = options.numberOfFrames || 1;
+        that.frameIndex = 0;
+        that.width = options.width;
+        that.height = options.height;
+        that.image = options.image;
+
+        that.realW = that.width/that.numberOfFrames/2;
+        that.realH = that.height/2;
+
+
+        that.update = function () {
+            tickCount++;
+            if (tickCount > ticksPerFrame) {
+                tickCount = 0;
+
+                if (that.frameIndex < that.numberOfFrames - 1) {
+                    // Go to the next frame
+                    that.frameIndex++;
+                } else {
+                    that.frameIndex = 0;
+                }
+            }
+        };
+
+        return that;
+    },
+
 
     __checkPos: function(mouseEvent){
 
@@ -153,6 +227,8 @@ CharacterSelectionScene.prototype = {
 
         for(let i = 0; i < this.charactersImages.length; i++){
             if (this.isMouseHoverImages[i]){
+
+
                 this.canvas.removeEventListener("mousemove", this.mm);
                 this.canvas.removeEventListener("click", this.mc);
                 this.gb.initActiveScene(new LevelScene(this.gb, i));
