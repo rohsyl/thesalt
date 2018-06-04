@@ -70,8 +70,10 @@ GameOverScene.prototype = {
 
     __checkPos: function(mouseEvent){
 
-        this.mouseX = mouseEvent.clientX;
-        this.mouseY = mouseEvent.clientY;
+        let rect = this.canvas.getBoundingClientRect();
+
+        this.mouseX = mouseEvent.clientX - rect.left;
+        this.mouseY = mouseEvent.clientY - rect.top;
 
         if(this.mouseX > this.buttonsX && this.mouseX < this.buttonsX + this.buttonsWidth
             && this.mouseY > this.buttonsY && this.mouseY < this.buttonsY + this.buttonsHeight){
