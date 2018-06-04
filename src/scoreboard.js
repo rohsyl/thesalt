@@ -6,10 +6,11 @@ $(function () {
         if(data.status.success){
             let scores = data.data;
             for(let i = 0; i < scores.length; i++){
+                let country = scores[i].country != null ? scores[i].country : '';
                 let row = '<tr>' +
                     '<td>'+scores[i].player+'</td>' +
                     '<td>'+scores[i].score+'</td>' +
-                    '<td>'+scores[i].country+'</td>' +
+                    '<td>'+country+'</td>' +
                     '<td>'+scores[i].date+'</td>' +
                 '</tr>';
                 table.append(row);

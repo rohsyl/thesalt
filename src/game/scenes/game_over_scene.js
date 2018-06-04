@@ -24,6 +24,8 @@ GameOverScene.prototype = {
         this.canvas.addEventListener("mousemove", this.mm);
         this.canvas.addEventListener("click", this.mc);
 
+        console.log('game over');
+        this.gb.saveScore();
     },
 
     update: function(){

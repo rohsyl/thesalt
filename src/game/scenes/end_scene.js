@@ -24,6 +24,8 @@ EndScene.prototype = {
         this.canvas.addEventListener("mousemove", this.mm);
         this.canvas.addEventListener("click", this.mc);
 
+        console.log('game ended');
+        this.gb.saveScore();
     },
 
     update: function(){
