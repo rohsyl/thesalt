@@ -7,7 +7,7 @@ const FPS = 60;
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.height = window.innerHeight - 50;
     }
     window.addEventListener('resize', resizeCanvas, false);
     resizeCanvas();
