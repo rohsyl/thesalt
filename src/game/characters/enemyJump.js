@@ -55,7 +55,6 @@ EnemyJump.prototype = {
         this.velY = 0;
 
         this.jumping = false;
-        this.jumpTimeout = TIMEOUT_JUMP;
 
         this.shiftX = undefined;
 
@@ -87,9 +86,6 @@ EnemyJump.prototype = {
         this.tickCount = 0;
         this.ticksPerFrame = 3 * this.slowness/2;
         this.numberOfFrames = this.enemyForw.length;
-
-
-        this.scorePoint = 250;
     },
 
 
@@ -97,14 +93,9 @@ EnemyJump.prototype = {
         if (!this.dead) {
             this.shiftX = shiftX;
 
-            if(this.jumpTimeout > -1) {
-                this.jumpTimeout--;
-            }
-
             if(!this.jumping) {
                 this.velY = -this.jumpStrength * 2;
                 this.jumping = true;
-                this.jumpTimeout = TIMEOUT_JUMP;
             }
 
             // apply forces
@@ -116,12 +107,12 @@ EnemyJump.prototype = {
     draw: function () {
         if (!this.dead) {
 
-            if (this.isEnemyForw) {
+            if (this.isEnemyForw && this.jumping) {
                 if (this.velX < this.speed)
                     this.velX++;
                 this.__drawEnemyWalking();
             }
-            else if (!this.isEnemyForw) {
+            else if (!this.isEnemyForw && this.jumping) {
                 if (this.velX > -this.speed)
                     this.velX--;
                 this.__drawEnemyWalking();
@@ -190,7 +181,6 @@ EnemyJump.prototype = {
         this.y = what.getY() - topValue;
         this.velY = 0;
         this.jumping = false;
-        this.jumpTimeout = TIMEOUT_JUMP;
     },
 
     getCenterX: function(){

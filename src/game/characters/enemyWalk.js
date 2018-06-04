@@ -188,7 +188,6 @@ EnemyWalk.prototype = {
     },
 
     __drawEnemyWalking: function(){
-
         this.__update();
         this.__drawEnemy();
     },
