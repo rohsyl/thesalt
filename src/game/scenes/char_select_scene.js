@@ -46,6 +46,11 @@ CharacterSelectionScene.prototype = {
         this.originX = this.canvas.width/2 - this.imagesWH*2;
         this.imagesX = [this.originX];
 
+        this.dragok = false;
+        this.dragIndex = 0;
+        this.newPosX = 0;
+        this.newPosY = 0;
+
         for (let i = 1; i < this.charactersImages.length; i++){
             let j = i-1;
             this.imagesX.push(this.imagesX[j] + this.imagesWH);
@@ -77,12 +82,21 @@ CharacterSelectionScene.prototype = {
             }
         );
 
+        this.canvas.onmousedown = this.__dNdDown(onmousedown(MouseEvent));
+        this.canvas.onmouseup = this.__dNdUp();
+
+
     },
+
 
     update: function(){
     },
 
     draw: function(){
+
+        console.log(this.newPosX + " | " + this.newPosY);
+
+        this.canvas.onmousemove = this.__dNdMove();
 
         this.context.font = '38pt Kremlin Pro Web';
         this.context.fillStyle = '#000000';
@@ -225,14 +239,36 @@ CharacterSelectionScene.prototype = {
             this.gb.initActiveScene(this.mainScene);
         }
 
-        for(let i = 0; i < this.charactersImages.length; i++){
-            if (this.isMouseHoverImages[i]){
 
+    },
 
-                this.canvas.removeEventListener("mousemove", this.mm);
-                this.canvas.removeEventListener("click", this.mc);
-                this.gb.initActiveScene(new LevelScene(this.gb, i));
-            }
+    __dNdMove: function (e){
+        if (this.dragok[this.dragIndex]){
+
+            this.newPosX = e.pageX - this.canvas.offsetLeft;
+            this.newPosY = e.pageY - this.canvas.offsetTop;
         }
+    },
+
+    __dNdDown: function(e){
+
+        for(let i = 0; i < this.charactersImages.length; i++)
+            if (this.isMouseHoverImages[i])
+                this.dragIndex = i;
+
+        if (e.pageX < x + 15 + this.canvas.offsetLeft && e.pageX > x - 15 +
+            this.canvas.offsetLeft && e.pageY < y + 15 + this.canvas.offsetTop &&
+            e.pageY > y -15 + this.canvas.offsetTop){
+            this.newPosX = e.pageX - this.canvas.offsetLeft;
+            this.newPosY = e.pageY - this.canvas.offsetTop;
+            this.dragok[this.dragIndex] = true;
+            this.canvas.onmousemove = this.__dNdMove(e);
+        }
+    },
+
+    __dNdUp: function(e){
+        this.dragok[this.dragIndex] = false;
+        this.canvas.onmousemove = null;
     }
+
 };
