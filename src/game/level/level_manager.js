@@ -28,9 +28,11 @@ const IMG_ITEMS_PATH = SPRITES_PATH + "items/";
 const IMG_FLOOR_CAVE_1 = IMG_BLOCKS_PATH + "floor_cave_1.png";
 const IMG_FLOOR_CAVE_2 = IMG_BLOCKS_PATH + "floor_cave_2.png";
 const IMG_FLOOR_GRASS = IMG_BLOCKS_PATH + "floor_grass.png";
+const IMG_FLOOR_DIRT = IMG_BLOCKS_PATH + "floor_dirt.png";
 const IMG_PIZZA = IMG_ITEMS_PATH +  "pizza.png";
 const IMG_RJ45 = IMG_ITEMS_PATH +  "rj45.png";
 const IMG_WATER = IMG_ITEMS_PATH +  "water_bottle.png";
+const IMG_END = IMG_ITEMS_PATH +  "endpoint.png";
 
 /**
  * LevelManager constructor
@@ -88,6 +90,9 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
         f: function(i, j){
             return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
         },
+        d: function(i, j){
+            return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_DIRT));
+        },
         g: function(i, j){
             return self.__refBlock(new CollidableBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_2));
         },
@@ -115,6 +120,9 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
         // 3: function(i, j){
         //     return self.__refBlock(new EnemyFire(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize()));
         // },
+        _: function(i, j) {
+            return self.__refBlock(new EndPoint(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_END, 200));
+        }
     }
 }
 LevelManager.prototype = {
@@ -175,7 +183,7 @@ LevelManager.prototype = {
         this.player.init();
 
         for (e in this.enemies){
-                this.enemies[e].init();
+            this.enemies[e].init();
         }
 
         // console.log('builder : init done');
@@ -225,12 +233,6 @@ LevelManager.prototype = {
         // draw player
         this.player.draw();
 
-        // draw player score
-        this.context.fillText(this.scoreLabel.concat(this.player.score) ,this.canvas.width - 200, 100);
-
-        // draw player salt level
-        this.context.fillText(this.saltLevelLabel.concat(Math.round(this.player.saltLevel).toString()) ,200, 100);
-
         // draw enemies
         for (e in this.enemies){
             this.enemies[e].draw();
@@ -245,6 +247,14 @@ LevelManager.prototype = {
                 }
             }
         }
+
+
+        // draw player score
+        this.context.fillText(this.scoreLabel.concat(this.gb.score) ,this.canvas.width - 200, 50);
+
+        // draw player salt level
+        this.context.fillText(this.saltLevelLabel.concat(Math.round(this.player.saltLevel).toString()) ,200, 50);
+
 
         // shift the background alongside the player position
         let cw = this.canvas.width,

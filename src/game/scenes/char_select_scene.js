@@ -155,7 +155,8 @@ CharacterSelectionScene.prototype = {
             if (this.isMouseHoverImages[i]){
                 this.canvas.removeEventListener("mousemove", this.mm);
                 this.canvas.removeEventListener("click", this.mc);
-                this.gb.initActiveScene(new LevelScene(this.gb, i));
+                this.gb.setSelectedCharacter(i);
+                this.gb.initLevel(0);
             }
         }
     }

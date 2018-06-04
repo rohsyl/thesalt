@@ -19,6 +19,17 @@ function GameBoard(canvas) {
     this.keyLeftPressed = false;
     this.keyRightPressed = false;
     this.keyUpPressed = false;
+
+    this.selectedChar = 0;
+
+    this.levelScenes = [
+        new LevelInstance('level1', [ SPRITES_PATH + "background/level1/background.jpg", SPRITES_PATH + "background/level1/background.jpg"]),
+        new LevelInstance('level2', [ SPRITES_PATH + "background/level2/landscape.png", SPRITES_PATH + "background/level2/landscape.png"]),
+        new LevelInstance('level3', [ SPRITES_PATH + "background/level3/background.png", SPRITES_PATH + "background/level3/background.png"]),
+    ];
+    this.currentLevelIndex = 0;
+
+    this.score = 0;
 }
 GameBoard.prototype = {
 
@@ -80,8 +91,27 @@ GameBoard.prototype = {
         return false;
     },
 
+    setSelectedCharacter: function(selectedChar){
+        this.selectedChar = selectedChar;
+    },
+
+    getSelectedCharacter: function(){
+        return this.selectedChar;
+    },
+
     initActiveScene: function(scene) {
         scene.init();
         this.activeScene = scene;
+    },
+
+    initLevel: function(i){
+        if(i < this.levelScenes.length){
+            this.currentLevelIndex = i;
+            let levelInstance = this.levelScenes[this.currentLevelIndex];
+            this.initActiveScene(new LevelScene(this, levelInstance));
+        }
+        else{
+            console.log('end of the game');
+        }
     }
 };

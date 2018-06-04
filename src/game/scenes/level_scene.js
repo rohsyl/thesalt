@@ -1,19 +1,17 @@
 
-function LevelScene(gb, charSelected) {
+function LevelScene(gb, levelInstance) {
     this.gb = gb;
-    this.playerSelected = charSelected;
+    this.playerSelected = gb.getSelectedCharacter();
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
+    this.levelInstance = levelInstance;
 }
 LevelScene.prototype = {
 
     init: function(){
         let lvlLoader = new LevelLoader();
-        let level = lvlLoader.loadLevel("level2");
-        let backgrounds = [
-            SPRITES_PATH + "background/level1/background1.jpg",
-            SPRITES_PATH + "background/level1/background2.jpg"
-        ];
+        let level = lvlLoader.loadLevel(this.levelInstance.getLevelName());
+        let backgrounds = this.levelInstance.getLevelBackgrounds();
         this.levelManager = new LevelManager(this, level, this.playerSelected, backgrounds);
         this.levelManager.init();
         this.collisionManager = new CollisionManager(this.levelManager);

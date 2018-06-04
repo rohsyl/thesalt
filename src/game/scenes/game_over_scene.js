@@ -1,9 +1,9 @@
-function GameOver(gb) {
+function GameOverScene(gb) {
     this.gb = gb;
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
 }
-GameOver.prototype = {
+GameOverScene.prototype = {
 
     init: function(){
 
@@ -56,6 +56,7 @@ GameOver.prototype = {
         this.context.font = '38pt Kremlin Pro Web';
         this.context.fillStyle = '#000000';
         this.context.textAlign="center";
+        console.log(this.textLabel);
         this.context.fillText(this.textLabel ,this.canvas.width/2, 100 );
 
         this.context.font = '30pt Kremlin Pro Web';
@@ -84,7 +85,8 @@ GameOver.prototype = {
         if (this.isMouseHoverButton) {
             this.canvas.removeEventListener("mousemove", this.mm);
             this.canvas.removeEventListener("click", this.mc);
-            this.gb.initActiveScene(new MainScene(this.gb));
+            this.gb.score = 0;
+            this.gb.initLevel(0);
         }
     }
 };

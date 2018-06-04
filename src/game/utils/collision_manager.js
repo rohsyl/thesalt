@@ -61,6 +61,12 @@ CollisionManager.prototype = {
      */
     __triggerCollision: function(player, blocks){
         player.onCollision(blocks);
+        for(let i in blocks){
+            if(blocks[i] instanceof EndPoint){
+                let end = blocks[i];
+                end.onCollision(player);
+            }
+        }
     },
 
     __isCollide: function(player, block){
