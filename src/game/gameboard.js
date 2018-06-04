@@ -111,7 +111,7 @@ GameBoard.prototype = {
             this.initActiveScene(new LevelScene(this, levelInstance));
         }
         else{
-            console.log('end of the game');
+            this.initActiveScene(new EndScene(this));
         }
     }
 };
