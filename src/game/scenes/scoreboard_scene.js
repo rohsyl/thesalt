@@ -10,6 +10,8 @@ function ScoreboardScene(mainScene) {
     this.gb = this.mainScene.gb;
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
+
+    this.scores = [];
 }
 ScoreboardScene.prototype = {
 
@@ -19,7 +21,7 @@ ScoreboardScene.prototype = {
         let width = 20;
 
         this.textX = this.canvas.width/2;
-        this.textHeight = [width*2, width*1.5, width, width, width, width*1.5, width];
+        this.textHeight = [width*2, width*1.5, width, width, width];
         this.textY = [y];
         for (let i = 1; i < this.textHeight.length; i++){
             let j = i-1;
@@ -27,12 +29,18 @@ ScoreboardScene.prototype = {
         }
 
         this.zero = "  ";
-        this.textLabel = ["The Salt 2.0", "Best Scores : ", "10542 pts - Billy", this.zero+"7932 pts - Phillipe", this.zero+"5276 pts - Anatol", "Your Last Score : ", this.zero+this.zero+this.zero+this.zero+"0 pts"];
+        this.textLabel = ["The Salt 2.0", "Best Scores : ", "10542 pts - Billy", this.zero+"7932 pts - Phillipe", this.zero+"5276 pts - Anatol"];
         this.textLeftIndexes = [2, 3, 4, 6];
 
         let self = this;
         this.mc = function (mouseEvent){self.__checkClick(mouseEvent)};
         this.canvas.addEventListener("click", this.mc);
+
+        let api = new Api();
+        api.getScoreboard(function(data){
+            if(data.status.success)
+                self.scores = data.data;
+        });
     },
 
     update: function(){
@@ -53,6 +61,7 @@ ScoreboardScene.prototype = {
             }
             this.context.fillText(this.textLabel[i], x, this.textY[i]);
         }
+
 
     },
 
