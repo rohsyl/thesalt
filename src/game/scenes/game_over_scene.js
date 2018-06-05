@@ -6,8 +6,8 @@ function GameOverScene(gb) {
     this.x =0;
     this.y =0;
 
-    this.h = this.canvas.height;
-    this.w = this.canvas.width;
+    this.h = 1080;
+    this.w = 1920;
 }
 GameOverScene.prototype = {
 
@@ -46,7 +46,7 @@ GameOverScene.prototype = {
 
         this.context.beginPath();
 
-        this.context.drawImage(this.image, this.x, this.y, this.w, this.h);
+        this.context.drawImage(this.image, this.x, this.y, this.w, this.h-50);
 
         this.context.rect(this.buttonsX, this.buttonsY,
         this.buttonsWidth, this.buttonsHeight);
@@ -69,7 +69,7 @@ GameOverScene.prototype = {
         this.context.fillStyle = '#000000';
         this.context.textAlign="center";
         console.log(this.textLabel);
-        this.context.fillText(this.textLabel ,this.canvas.width/2, 100 );
+        //this.context.fillText(this.textLabel ,this.canvas.width/2, 100 );
 
         this.context.font = '30pt Kremlin Pro Web';
         this.context.fillText(this.buttonsLabel, this.buttonsX+this.buttonsWidth/2, this.buttonsY + this.buttonsHeight/2 + 12);
