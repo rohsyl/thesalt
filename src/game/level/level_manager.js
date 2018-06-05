@@ -212,7 +212,7 @@ LevelManager.prototype = {
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined"){
-                    if(this.__isInViewport(this.sprites[i][j]))
+                    //if(this.__isInViewport(this.sprites[i][j]))
                         this.sprites[i][j].update(this.shiftX);
                 }
             }
@@ -242,7 +242,7 @@ LevelManager.prototype = {
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined"){
-                    if(this.__isInViewport(this.sprites[i][j]))
+                    //if(this.__isInViewport(this.sprites[i][j]))
                             this.sprites[i][j].draw();
                 }
             }
@@ -253,29 +253,31 @@ LevelManager.prototype = {
         this.context.fillText(this.scoreLabel.concat(this.gb.score) ,this.canvas.width - 200, 50);
 
         // draw player salt level
-        this.context.fillText(this.saltLevelLabel.concat(Math.round(this.player.saltLevel).toString()) ,200, 50);
+        this.context.fillText(this.saltLevelLabel.concat(Math.round(this.gb.saltLevel).toString()) ,200, 50);
 
 
         // shift the background alongside the player position
         let cw = this.canvas.width,
             ch = this.canvas.height;
 
+        console.log('shift x ' + this.shiftX);
+        console.log('player x ' + this.player.x);
         if(this.player.x > cw * 1 / 2 + this.blockSize * 2 && this.gb.keyRightPressed){
             if(this.shiftX < this.levelTotalWidth){
                 this.shiftX += this.getShiftStep();
-                this.player.x -= this.player.speed;
+                this.player.x -= this.player.velX;
             }
         }
         else if(this.player.x < cw * 1 / 2 - this.blockSize * 2 && this.gb.keyLeftPressed){
             if(this.shiftX > 0){
-                this.shiftX -= this.getShiftStep();
-                this.player.x += this.player.speed;
+                this.shiftX -= -this.getShiftStep();
+                this.player.x += this.player.velX;
             }
         }
     },
 
     getShiftStep: function(){
-        return this.player.speed;
+        return this.player.velX;
     },
 
     /**

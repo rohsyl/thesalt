@@ -167,13 +167,13 @@ EnemyJump.prototype = {
                         this.fall();
                     }
                     else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision) {
-                         console.log("Enemy Left collision" + " : " + this.getCenterX());
+                        // console.log("Enemy Left collision" + " : " + this.getCenterX());
                         let leftValue = this.getCenterX() - this.x + this.boxLeft;
                         this.x = block.getX() - leftValue;
                         this.isEnemyForw = false;
                     }
                     else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision) {
-                         console.log("Enemy Right collision" + " : " + this.getCenterX());
+                        // console.log("Enemy Right collision" + " : " + this.getCenterX());
                         let rightValue = this.getCenterX() - this.x - this.boxLeft;
                         this.x = block.getX() + block.w - rightValue;
                         this.isEnemyForw = true;
