@@ -1,5 +1,16 @@
+html{
+    height: 100%;
+}
 body{
     margin: 0;
+    height: 100%;
+}
+
+#homepage{
+    background-image: url('../sprites/background/firstscreen/first_screen.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 #game-canvas{
@@ -7,6 +18,24 @@ body{
     display:none;
 }
 
-#form-name{
-    margin-top : 200px;
+
+#form-name .logo{
+    width: 100px;
+    height: 200px;
+    margin: 0 auto;
+    margin-top : 15px;
+    background-image: url('../sprites/logo/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
+
+#form-name .card{
+    margin-top : 15px;
+    padding : 15px 15px 0 15px;
+    background-color: #fff;
+    border-radius: 6px;
+    border : 1px solid #ccc;
+    box-shadow: 0 0 15px #ccc;
+}
+

@@ -18,7 +18,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body>
+<body id="homepage">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -44,19 +44,21 @@
     </nav>
 
     <div id="form-name" class="container" style="max-width: 400px">
-        <h1 class="page-header">The salt</h1>
-        <form class="form">
-            <!-- Text input-->
-            <div class="form-group">
-                <label class="control-label" for="player-name">Player name</label>
-                <input id="player-name" name="player-name" type="text" placeholder="Enter your name" class="form-control input-md">
-            </div>
+        <div class="logo"></div>
+        <div class="card">
+            <form class="form">
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="control-label" for="player-name">Player name</label>
+                    <input id="player-name" name="player-name" type="text" placeholder="Enter your name" class="form-control input-md">
+                </div>
 
-            <!-- Button -->
-            <div class="form-group">
-                <button id="btnSave" name="btnSave" class="btn btn-primary">Play</button>
-            </div>
-        </form>
+                <!-- Button -->
+                <div class="form-group">
+                    <button id="btnSave" name="btnSave" class="btn btn-primary btn-block">Play</button>
+                </div>
+            </form>
+        </div>
 
     </div>
 
