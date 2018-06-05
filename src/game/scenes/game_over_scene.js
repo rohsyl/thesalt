@@ -69,7 +69,6 @@ GameOverScene.prototype = {
         this.context.font = '38pt Kremlin Pro Web';
         this.context.fillStyle = '#000000';
         this.context.textAlign="center";
-        console.log(this.textLabel);
         //this.context.fillText(this.textLabel ,this.canvas.width/2, 100 );
 
         this.context.font = '30pt Kremlin Pro Web';
