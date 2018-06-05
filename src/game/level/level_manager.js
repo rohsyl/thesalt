@@ -253,7 +253,7 @@ LevelManager.prototype = {
         this.context.fillText(this.scoreLabel.concat(this.gb.score) ,this.canvas.width - 200, 50);
 
         // draw player salt level
-        this.context.fillText(this.saltLevelLabel.concat(Math.round(this.player.saltLevel).toString()) ,200, 50);
+        this.context.fillText(this.saltLevelLabel.concat(Math.round(this.gb.saltLevel).toString()) ,200, 50);
 
 
         // shift the background alongside the player position

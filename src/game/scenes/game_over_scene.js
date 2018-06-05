@@ -35,6 +35,7 @@ GameOverScene.prototype = {
 
         console.log('game over');
         this.gb.saveScore();
+        this.gb.saltLevel = 0;
     },
 
     update: function(){

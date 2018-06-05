@@ -97,8 +97,6 @@ function Player(scene, x, y, indexPlayerSelected, blockSize) {
     // ========================================================================
     // player score
     this.score = 0;
-    this.saltLevel = 0;
-    this.saltLevel.toFixed(0);
 }
 
 Player.prototype = {
@@ -257,10 +255,10 @@ Player.prototype = {
             }
 
             // increase salt level each second
-            this.saltLevel = this.saltLevel + SALT_PER_SECOND / FPS;
+            this.gb.saltLevel = this.gb.saltLevel + SALT_PER_SECOND / FPS;
 
             // die if salt level = 100
-            if(this.saltLevel >= 100)
+            if(this.gb.saltLevel >= 100)
                 this.die();
         }
 
@@ -401,10 +399,10 @@ Player.prototype = {
     },
 
     reduceSalt: function(nbr){
-        if(this.saltLevel - nbr < 0)
-            this.saltLevel = 0;
+        if(this.gb.saltLevel - nbr < 0)
+            this.gb.saltLevel = 0;
         else
-            this.saltLevel -= nbr;
+            this.gb.saltLevel -= nbr;
     },
 
     boostSpeed: function(nbr, time){
