@@ -2,6 +2,12 @@ function GameOverScene(gb) {
     this.gb = gb;
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
+    this.image = undefined;
+    this.x =0;
+    this.y =0;
+
+    this.h = this.canvas.height;
+    this.w = this.canvas.width;
 }
 GameOverScene.prototype = {
 
@@ -24,6 +30,9 @@ GameOverScene.prototype = {
         this.canvas.addEventListener("mousemove", this.mm);
         this.canvas.addEventListener("click", this.mc);
 
+        this.image = new Image();
+        this.image.src = 'assets/sprites/background/gameover/gameover.jpg';
+
         console.log('game over');
         this.gb.saveScore();
     },
@@ -36,6 +45,8 @@ GameOverScene.prototype = {
 
 
         this.context.beginPath();
+
+        this.context.drawImage(this.image, this.x, this.y, this.w, this.h);
 
         this.context.rect(this.buttonsX, this.buttonsY,
         this.buttonsWidth, this.buttonsHeight);
@@ -53,7 +64,6 @@ GameOverScene.prototype = {
         this.context.strokeStyle = '#000000';
         this.context.stroke();
         this.context.closePath();
-
 
         this.context.font = '38pt Kremlin Pro Web';
         this.context.fillStyle = '#000000';
