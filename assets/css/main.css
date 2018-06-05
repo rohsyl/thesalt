@@ -39,3 +39,16 @@ body{
     box-shadow: 0 0 15px #ccc;
 }
 
+
+.rank{
+    height: 30px;
+    margin-top : -6px;
+    margin-bottom: -6px;
+}
+
+.highlight .player-name{
+    font-weight: bold;
+}
+.highlight .score{
+    font-weight: bold;
+}
