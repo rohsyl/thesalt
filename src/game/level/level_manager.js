@@ -117,9 +117,9 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
         2: function(i, j){
             return self.__refBlock(new EnemyJump(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
         },
-        // 3: function(i, j){
-        //     return self.__refBlock(new EnemyFire(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize()));
-        // },
+         3: function(i, j){
+             return self.__refBlock(new EnemyFire(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(),IMG_FLOOR_CAVE_1));
+         },
         _: function(i, j) {
             return self.__refBlock(new EndPoint(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_END, 200));
         }

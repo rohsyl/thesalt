@@ -204,7 +204,6 @@ Player.prototype = {
                 }
             }
 
-
             // apply forces
             this.velX *= FRICTION;
 
