@@ -128,10 +128,8 @@ Player.prototype = {
         this.jumpCount = NB_ALLOWED_JUMP;
         this.jumpTimeout = TIMEOUT_JUMP;
 
-        this.boostedSpeedTimeout = 0;
         this.boostedJumpTimeout = 0;
 
-        this.shiftX = undefined;
 
         // ========================================================================
         // player graphics
@@ -161,12 +159,13 @@ Player.prototype = {
         this.tickCount = 0;
         this.ticksPerFrame = 3;
         this.numberOfFrames = this.playerForw.length;
+
+        this.hasRJ = false;
     },
 
 
-    update: function(shiftX){
+    update: function(){
         if (!this.dead) {
-            this.shiftX = shiftX;
             // doublejump timeout
             if(this.jumpTimeout > -1) {
                 this.jumpTimeout--;
@@ -178,13 +177,6 @@ Player.prototype = {
             }
             else{
                 this.jumpStrength = JUMP_STRENGTH;
-            }
-
-            if(this.boostedSpeedTimeout > 0){
-                this.boostedSpeedTimeout -= 1 / 60;
-            }
-            else{
-                this.speed = SHIFT_STEP;
             }
 
             // start jumping
@@ -212,9 +204,11 @@ Player.prototype = {
 
             // apply velocity left // right
             if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w - this.blockSize) {
-                if(this.velX < this.speed)
+                if(this.velX < this.speed) {
                     this.velX++;
+                }
             }
+
             else if(this.gb.keyLeftPressed && this.x > this.blockSize) {
                 if(this.velX > -this.speed)
                     this.velX--;
@@ -405,11 +399,6 @@ Player.prototype = {
             this.saltLevel = 0;
         else
             this.saltLevel -= nbr;
-    },
-
-    boostSpeed: function(nbr, time){
-        this.speed += nbr;
-        this.boostedSpeedTimeout = time;
     },
 
     boostJump: function(nbr, time){

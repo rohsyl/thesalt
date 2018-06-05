@@ -269,13 +269,13 @@ LevelManager.prototype = {
         else if(this.player.x < cw * 1 / 2 - this.blockSize * 2 && this.gb.keyLeftPressed){
             if(this.shiftX > 0){
                 this.shiftX -= this.getShiftStep();
-                this.player.x += this.player.speed;
+                this.player.x += this.player.velX;
             }
         }
     },
 
     getShiftStep: function(){
-        return this.player.speed;
+        return this.player.velX;
     },
 
     /**

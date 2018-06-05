@@ -17,7 +17,7 @@ LevelLoader.prototype = {
      * @returns {string} The levelString
      */
     loadLevel: function(name){
-        let filePath = "src/level/" + name + ".sel?lvl=9";
+        let filePath = "src/level/" + name + ".sel?lvl=15";
         let xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET",filePath,false);
         xmlhttp.send(null);

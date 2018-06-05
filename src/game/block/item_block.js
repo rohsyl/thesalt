@@ -56,7 +56,8 @@ ItemBlock.prototype = {
             // TODO : add rj45 effect
             // boost speed dont work well
             // boost jump by 2 for 10 seconds
-            player.boostSpeed(2, 10);
+            player.hasRJ = true;
+
         }
         else if(this.spriteSrc == IMG_WATER){
             player.reduceSalt(10);

@@ -136,8 +136,6 @@ CharacterSelectionScene.prototype = {
     },
 
     draw: function() {
-
-
         //portal drawing
         this.context.save();
 
