@@ -4,5 +4,5 @@ body{
 
 #game-canvas{
     background-color: #cccccc;
-    display:block;
+    display:none;
 }
