@@ -17,6 +17,7 @@ let IMG_ENEMY_2_F_FEETBACK = IMG_ENEMY_2_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_
 
 let IMG_ENEMY_2_B_FEETBACK = IMG_ENEMY_2_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_BACK_PATH;
 
+
 function EnemyJump(scene, x, y, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
@@ -27,6 +28,7 @@ function EnemyJump(scene, x, y, blockSize) {
     this.blockSize = blockSize;
     this.slowness = 5;
     this.dead = false;
+    this.ENEMY_JUMP_TIMOUT = 5 * FPS;
 }
 
 EnemyJump.prototype = {
@@ -86,6 +88,10 @@ EnemyJump.prototype = {
         this.tickCount = 0;
         this.ticksPerFrame = 3 * this.slowness/2;
         this.numberOfFrames = this.enemyForw.length;
+
+        this.jumpTimeout = this.ENEMY_JUMP_TIMOUT;
+
+        this.scorePoint = 350;
     },
 
 
@@ -93,9 +99,27 @@ EnemyJump.prototype = {
         if (!this.dead) {
             this.shiftX = shiftX;
 
-            if(!this.jumping) {
+
+            if(this.jumpTimeout === 0 && !this.jumping){
                 this.velY = -this.jumpStrength * 2;
                 this.jumping = true;
+                this.jumpTimeout = this.ENEMY_JUMP_TIMOUT;
+                console.log('jump');
+            }
+            else{
+                this.jumpTimeout--;
+                this.jumping = false;
+            }
+
+            if (this.isEnemyForw) {
+                if (this.velX < this.speed)
+                    this.velX++;
+                this.__drawEnemyWalking();
+            }
+            else if (!this.isEnemyForw) {
+                if (this.velX > -this.speed)
+                    this.velX--;
+                this.__drawEnemyWalking();
             }
 
             // apply forces
@@ -106,18 +130,6 @@ EnemyJump.prototype = {
 
     draw: function () {
         if (!this.dead) {
-
-            if (this.isEnemyForw && this.jumping) {
-                if (this.velX < this.speed)
-                    this.velX++;
-                this.__drawEnemyWalking();
-            }
-            else if (!this.isEnemyForw && this.jumping) {
-                if (this.velX > -this.speed)
-                    this.velX--;
-                this.__drawEnemyWalking();
-            }
-
             // move the player
             this.x += this.velX;
             this.y += this.velY;
@@ -155,13 +167,13 @@ EnemyJump.prototype = {
                         this.fall();
                     }
                     else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision) {
-                        // console.log("Enemy Left collision" + " : " + this.getCenterX());
+                         console.log("Enemy Left collision" + " : " + this.getCenterX());
                         let leftValue = this.getCenterX() - this.x + this.boxLeft;
                         this.x = block.getX() - leftValue;
                         this.isEnemyForw = false;
                     }
                     else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision) {
-                        // console.log("Enemy Right collision" + " : " + this.getCenterX());
+                         console.log("Enemy Right collision" + " : " + this.getCenterX());
                         let rightValue = this.getCenterX() - this.x - this.boxLeft;
                         this.x = block.getX() + block.w - rightValue;
                         this.isEnemyForw = true;
@@ -178,7 +190,7 @@ EnemyJump.prototype = {
 
     land: function(what){
         let topValue = this.getCenterY() - this.y + this.boxBottom;
-        this.y = what.getY() - topValue;
+        this.y = what.getY() - topValue - 2;
         this.velY = 0;
         this.jumping = false;
     },

@@ -226,7 +226,7 @@ Player.prototype = {
 
         if (!this.dead) {
             if(this.velX < 0.0001 && this.velX > 0){
-            this.velX = 0;
+                this.velX = 0;
             }
             if(this.velX > -0.0001 && this.velX < 0){
                 this.velX = 0;
