@@ -107,6 +107,7 @@ GameBoard.prototype = {
     },
 
     initLevel: function(i){
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if(i < this.levelScenes.length){
             this.currentLevelIndex = i;
             let levelInstance = this.levelScenes[this.currentLevelIndex];
@@ -126,7 +127,7 @@ GameBoard.prototype = {
                 let lat = position.coords.latitude;
                 let lng = position.coords.longitude;
                 api.addScore(self.playerName, self.score, lat, lng, function(data){
-                    console.log(data);
+
                 });
             }, function(error) {
                 //Handle Errors
@@ -146,13 +147,13 @@ GameBoard.prototype = {
                 }
 
                 api.addScore(self.playerName, self.score, null, null, function(data){
-                    console.log(data);
+
                 });
             });
         }
         else{
             api.addScore(self.playerName, self.score, null, null, function(data){
-                console.log(data);
+
             });
         }
     }

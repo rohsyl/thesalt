@@ -41,29 +41,20 @@ GameOverScene.prototype = {
     },
 
     draw: function() {
-
-
-        this.context.beginPath();
-
         //this.context.drawImage(this.image, this.image.width/2 - this.canvas.width/2, this.image.height/2 - this.canvas.height/2  , this.w, this.h);
+        //this.context.save();
+        this.context.beginPath();
         this.context.drawImage(this.image, 0, 0, this.w, this.h);
 
-        this.context.rect(this.buttonsX, this.buttonsY,
-        this.buttonsWidth, this.buttonsHeight);
-
-        this.context.fillStyle = '#FFFFFF';
-        if (!this.isMouseHoverButton)
-            this.context.fillStyle = 'rgba(255,255,255,0.2)';
-        else
-            this.context.fillStyle = 'rgba(255,255,255,1)';
-
-        this.context.fillRect(this.buttonsX, this.buttonsY,
-            this.buttonsWidth, this.buttonsHeight);
-        this.context.fill();
         this.context.lineWidth = 2;
         this.context.strokeStyle = '#000000';
+        this.context.rect(this.buttonsX, this.buttonsY, this.buttonsWidth, this.buttonsHeight);
         this.context.stroke();
         this.context.closePath();
+
+        this.context.fillStyle = !this.isMouseHoverButton ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,1)';
+        this.context.fillRect(this.buttonsX, this.buttonsY, this.buttonsWidth, this.buttonsHeight);
+        this.context.fill();
 
         this.context.font = '38pt Kremlin Pro Web';
         this.context.fillStyle = '#000000';
@@ -73,8 +64,7 @@ GameOverScene.prototype = {
         this.context.font = '30pt Kremlin Pro Web';
         this.context.fillText(this.buttonsLabel, this.buttonsX+this.buttonsWidth/2, this.buttonsY + this.buttonsHeight/2 + 12);
 
-
-
+        //this.context.restore();
     },
 
     __checkPos: function(mouseEvent){
