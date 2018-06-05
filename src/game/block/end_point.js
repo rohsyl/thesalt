@@ -41,7 +41,7 @@ EndPoint.prototype = {
     onCollision: function(player){
         if(player.hasRJ) {
             this.gb.score += this.scorePoint;
-            this.gb.score += Math.round(this.gb.score * (100 - player.saltLevel) / 100);
+            this.gb.score += Math.round(this.gb.score * (100 - this.gb.saltLevel) / 100);
             this.gb.initLevel(++this.gb.currentLevelIndex);
         }
     },

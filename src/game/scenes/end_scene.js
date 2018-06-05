@@ -13,7 +13,7 @@ EndScene.prototype = {
         this.buttonsX = this.canvas.width/2 - this.buttonsWidth/2;
         this.buttonsLabel = "Go to menu";
         this.isMouseHoverButton =false;
-        this.textLabel = "Game finished !";
+        this.textLabel = "Score : ";
 
         this.mouseX = 0;
         this.mouseY = 0;
@@ -59,7 +59,7 @@ EndScene.prototype = {
         this.context.fillStyle = '#000000';
         this.context.textAlign="center";
         console.log(this.textLabel);
-        this.context.fillText(this.textLabel ,this.canvas.width/2, 100 );
+        this.context.fillText(this.textLabel.concat(" ", this.gb.score) ,this.canvas.width/2, 100 );
 
         this.context.font = '30pt Kremlin Pro Web';
         this.context.fillText(this.buttonsLabel, this.buttonsX+this.buttonsWidth/2, this.buttonsY + this.buttonsHeight/2 + 12);

@@ -400,7 +400,9 @@ Player.prototype = {
     },
 
     boostJump: function(nbr, time){
-        this.jumpStrength += nbr;
+        if(this.boostedJumpTimeout <= 0){
+            this.jumpStrength += nbr;
+        }
         this.boostedJumpTimeout = time;
     },
 
