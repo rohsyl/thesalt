@@ -31,6 +31,7 @@ function GameBoard(canvas, playerName) {
 
     this.playerName = playerName;
     this.score = 0;
+    this.saltLevel = 0;
 }
 GameBoard.prototype = {
 
@@ -73,6 +74,9 @@ GameBoard.prototype = {
         }
         else if(this.__isKey(e.keyCode, KEYS_UP)) {
             this.keyUpPressed = false;
+        }
+        else if(e.shiftKey && e.keyCode === 76) {
+            this.initActiveScene(new LevelBuilder(this, this.activeScene))
         }
     },
 

@@ -97,8 +97,6 @@ function Player(scene, x, y, indexPlayerSelected, blockSize) {
     // ========================================================================
     // player score
     this.score = 0;
-    this.saltLevel = 0;
-    this.saltLevel.toFixed(0);
 }
 
 Player.prototype = {
@@ -128,10 +126,8 @@ Player.prototype = {
         this.jumpCount = NB_ALLOWED_JUMP;
         this.jumpTimeout = TIMEOUT_JUMP;
 
-        this.boostedSpeedTimeout = 0;
         this.boostedJumpTimeout = 0;
 
-        this.shiftX = undefined;
 
         // ========================================================================
         // player graphics
@@ -161,12 +157,13 @@ Player.prototype = {
         this.tickCount = 0;
         this.ticksPerFrame = 3;
         this.numberOfFrames = this.playerForw.length;
+
+        this.hasRJ = false;
     },
 
 
-    update: function(shiftX){
+    update: function(){
         if (!this.dead) {
-            this.shiftX = shiftX;
             // doublejump timeout
             if(this.jumpTimeout > -1) {
                 this.jumpTimeout--;
@@ -178,13 +175,6 @@ Player.prototype = {
             }
             else{
                 this.jumpStrength = JUMP_STRENGTH;
-            }
-
-            if(this.boostedSpeedTimeout > 0){
-                this.boostedSpeedTimeout -= 1 / 60;
-            }
-            else{
-                this.speed = SHIFT_STEP;
             }
 
             // start jumping
@@ -211,9 +201,11 @@ Player.prototype = {
 
             // apply velocity left // right
             if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w - this.blockSize) {
-                if(this.velX < this.speed)
+                if(this.velX < this.speed) {
                     this.velX++;
+                }
             }
+
             else if(this.gb.keyLeftPressed && this.x > this.blockSize) {
                 if(this.velX > -this.speed)
                     this.velX--;
@@ -256,10 +248,10 @@ Player.prototype = {
             }
 
             // increase salt level each second
-            this.saltLevel = this.saltLevel + SALT_PER_SECOND / FPS;
+            this.gb.saltLevel = this.gb.saltLevel + SALT_PER_SECOND / FPS;
 
             // die if salt level = 100
-            if(this.saltLevel >= 100)
+            if(this.gb.saltLevel >= 100)
                 this.die();
         }
 
@@ -400,19 +392,16 @@ Player.prototype = {
     },
 
     reduceSalt: function(nbr){
-        if(this.saltLevel - nbr < 0)
-            this.saltLevel = 0;
+        if(this.gb.saltLevel - nbr < 0)
+            this.gb.saltLevel = 0;
         else
-            this.saltLevel -= nbr;
-    },
-
-    boostSpeed: function(nbr, time){
-        this.speed += nbr;
-        this.boostedSpeedTimeout = time;
+            this.gb.saltLevel -= nbr;
     },
 
     boostJump: function(nbr, time){
-        this.jumpStrength += nbr;
+        if(this.boostedJumpTimeout <= 0){
+            this.jumpStrength += nbr;
+        }
         this.boostedJumpTimeout = time;
     },
 
