@@ -31,6 +31,7 @@ function GameBoard(canvas, playerName) {
 
     this.playerName = playerName;
     this.score = 0;
+    this.saltLevel = 0;
 }
 GameBoard.prototype = {
 

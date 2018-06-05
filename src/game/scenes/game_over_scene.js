@@ -3,11 +3,9 @@ function GameOverScene(gb) {
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
     this.image = undefined;
-    this.x =0;
-    this.y =0;
 
-    this.h = this.canvas.height;
-    this.w = this.canvas.width;
+    this.h = 1080;
+    this.w = 1920;
 }
 GameOverScene.prototype = {
 
@@ -19,7 +17,7 @@ GameOverScene.prototype = {
         this.buttonsX = this.canvas.width/2 - this.buttonsWidth/2;
         this.buttonsLabel = "Replay";
         this.isMouseHoverButton =false;
-        this.textLabel = "Game over";
+        this.textLabel = "Score : ";
 
         this.mouseX = 0;
         this.mouseY = 0;
@@ -35,6 +33,7 @@ GameOverScene.prototype = {
 
         console.log('game over');
         this.gb.saveScore();
+        this.gb.saltLevel = 0;
     },
 
     update: function(){
@@ -46,7 +45,8 @@ GameOverScene.prototype = {
 
         this.context.beginPath();
 
-        this.context.drawImage(this.image, this.x, this.y, this.w, this.h);
+        //this.context.drawImage(this.image, this.image.width/2 - this.canvas.width/2, this.image.height/2 - this.canvas.height/2  , this.w, this.h);
+        this.context.drawImage(this.image, 0, 0, this.w, this.h);
 
         this.context.rect(this.buttonsX, this.buttonsY,
         this.buttonsWidth, this.buttonsHeight);
@@ -68,8 +68,7 @@ GameOverScene.prototype = {
         this.context.font = '38pt Kremlin Pro Web';
         this.context.fillStyle = '#000000';
         this.context.textAlign="center";
-        console.log(this.textLabel);
-        this.context.fillText(this.textLabel ,this.canvas.width/2, 100 );
+        this.context.fillText(this.textLabel.concat(" ", this.gb.score) ,this.canvas.width/2, 100 );
 
         this.context.font = '30pt Kremlin Pro Web';
         this.context.fillText(this.buttonsLabel, this.buttonsX+this.buttonsWidth/2, this.buttonsY + this.buttonsHeight/2 + 12);

@@ -212,7 +212,7 @@ LevelManager.prototype = {
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined"){
-                    if(this.__isInViewport(this.sprites[i][j]))
+                    //if(this.__isInViewport(this.sprites[i][j]))
                         this.sprites[i][j].update(this.shiftX);
                 }
             }
@@ -269,13 +269,13 @@ LevelManager.prototype = {
         else if(this.player.x < cw * 1 / 2 - this.blockSize * 2 && this.gb.keyLeftPressed){
             if(this.shiftX > 0){
                 this.shiftX -= this.getShiftStep();
-                this.player.x += this.player.velX;
+                this.player.x += this.player.speed;
             }
         }
     },
 
     getShiftStep: function(){
-        return this.player.velX;
+        return this.player.speed;
     },
 
     /**
