@@ -5,9 +5,8 @@ Chaque scène devrai implémenter les méthodes ci dessous.
 
  */
 
-function CharacterSelectionScene(gb, score, mainScene) {
+function CharacterSelectionScene(gb, mainScene) {
     this.gb = gb;
-    this.score = score;
     if (typeof mainScene == 'undefined')
         this.mainScene = new MainScene(this.gb);
     else

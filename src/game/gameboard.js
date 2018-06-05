@@ -11,7 +11,7 @@ const BLOCK_TYPE_PLAYER = 2;
 const BLOCK_TYPE_ENEMY = 3;
 const BLOCK_TYPE_ITEMS = 4;
 
-function GameBoard(canvas) {
+function GameBoard(canvas, playerName) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.activeScene = undefined;
@@ -19,12 +19,24 @@ function GameBoard(canvas) {
     this.keyLeftPressed = false;
     this.keyRightPressed = false;
     this.keyUpPressed = false;
+
+    this.selectedChar = 0;
+
+    this.levelScenes = [
+        new LevelInstance('level1', [ SPRITES_PATH + "background/level1/background.jpg", SPRITES_PATH + "background/level1/background.jpg"]),
+        new LevelInstance('level2', [ SPRITES_PATH + "background/level2/landscape.png", SPRITES_PATH + "background/level2/landscape.png"]),
+        new LevelInstance('level3', [ SPRITES_PATH + "background/level3/background.png", SPRITES_PATH + "background/level3/background.png"]),
+    ];
+    this.currentLevelIndex = 0;
+
+    this.playerName = playerName;
+    this.score = 0;
 }
 GameBoard.prototype = {
 
     init: function(){
 
-        this.initActiveScene(new MainScene(this));
+        this.initActiveScene(new CharacterSelectionScene(this));
 
         let self = this;
         document.addEventListener("keydown", function(e){self.keyDownHandler(e)}, false);
@@ -80,8 +92,67 @@ GameBoard.prototype = {
         return false;
     },
 
+    setSelectedCharacter: function(selectedChar){
+        this.selectedChar = selectedChar;
+    },
+
+    getSelectedCharacter: function(){
+        return this.selectedChar;
+    },
+
     initActiveScene: function(scene) {
         scene.init();
         this.activeScene = scene;
+    },
+
+    initLevel: function(i){
+        if(i < this.levelScenes.length){
+            this.currentLevelIndex = i;
+            let levelInstance = this.levelScenes[this.currentLevelIndex];
+            this.initActiveScene(new LevelScene(this, levelInstance));
+        }
+        else{
+            this.initActiveScene(new EndScene(this));
+        }
+    },
+
+
+    saveScore: function(){
+        let api = new Api();
+        let self = this;
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                let lat = position.coords.latitude;
+                let lng = position.coords.longitude;
+                api.addScore(self.playerName, self.score, lat, lng, function(data){
+                    console.log(data);
+                });
+            }, function(error) {
+                //Handle Errors
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        console.log("User denied the request for Geolocation.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        console.log("Location information is unavailable.");
+                        break;
+                    case error.TIMEOUT:
+                        console.log("The request to get user location timed out.");
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        console.log("An unknown error occurred.");
+                        break;
+                }
+
+                api.addScore(self.playerName, self.score, null, null, function(data){
+                    console.log(data);
+                });
+            });
+        }
+        else{
+            api.addScore(self.playerName, self.score, null, null, function(data){
+                console.log(data);
+            });
+        }
     }
 };

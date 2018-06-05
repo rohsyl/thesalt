@@ -4,5 +4,9 @@ body{
 
 #game-canvas{
     background-color: #cccccc;
-    display:block;
+    display:none;
+}
+
+#form-name{
+    margin-top : 200px;
 }

@@ -1,15 +1,9 @@
-function GameOverScene(gb) {
+function EndScene(gb) {
     this.gb = gb;
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
-    this.image = undefined;
-    this.x =0;
-    this.y =0;
-
-    this.h = this.canvas.height;
-    this.w = this.canvas.width;
 }
-GameOverScene.prototype = {
+EndScene.prototype = {
 
     init: function(){
 
@@ -17,9 +11,9 @@ GameOverScene.prototype = {
         this.buttonsWidth = 200;
         this.buttonsHeight = 50;
         this.buttonsX = this.canvas.width/2 - this.buttonsWidth/2;
-        this.buttonsLabel = "Replay";
+        this.buttonsLabel = "Go to menu";
         this.isMouseHoverButton =false;
-        this.textLabel = "Game over";
+        this.textLabel = "Game finished !";
 
         this.mouseX = 0;
         this.mouseY = 0;
@@ -30,10 +24,7 @@ GameOverScene.prototype = {
         this.canvas.addEventListener("mousemove", this.mm);
         this.canvas.addEventListener("click", this.mc);
 
-        this.image = new Image();
-        this.image.src = 'assets/sprites/background/gameover/gameover.jpg';
-
-        console.log('game over');
+        console.log('game ended');
         this.gb.saveScore();
     },
 
@@ -45,8 +36,6 @@ GameOverScene.prototype = {
 
 
         this.context.beginPath();
-
-        this.context.drawImage(this.image, this.x, this.y, this.w, this.h);
 
         this.context.rect(this.buttonsX, this.buttonsY,
         this.buttonsWidth, this.buttonsHeight);
@@ -64,6 +53,7 @@ GameOverScene.prototype = {
         this.context.strokeStyle = '#000000';
         this.context.stroke();
         this.context.closePath();
+
 
         this.context.font = '38pt Kremlin Pro Web';
         this.context.fillStyle = '#000000';
@@ -100,7 +90,7 @@ GameOverScene.prototype = {
             this.canvas.removeEventListener("mousemove", this.mm);
             this.canvas.removeEventListener("click", this.mc);
             this.gb.score = 0;
-            this.gb.initLevel(0);
+            this.gb.initActiveScene(new MainScene(this.gb));
         }
     }
 };

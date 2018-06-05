@@ -7,15 +7,17 @@ Rows after 24 are ignored...
 SIMPLE BLOCK
 ============
 e = empty
-f = floor_cave_1.png
-g = floor_cave_2.png
-o = floor_outside.png
+f = floor_cave_1
+g = floor_cave_2
+o = floor_grass
+d = floor_dirt
 
 ITEM BLOCK
 ==========
 z = pizza
 r = rj45
 w = water_bottle
+_ = end point
 
 ANIMATED BLOCK
 ==============

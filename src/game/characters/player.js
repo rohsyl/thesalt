@@ -226,10 +226,14 @@ Player.prototype = {
 
         if (!this.dead) {
             if(this.velX < 0.0001 && this.velX > 0){
-            this.velX = 0;
+                this.velX = 0;
             }
             if(this.velX > -0.0001 && this.velX < 0){
                 this.velX = 0;
+            }
+
+            if(this.y > this.canvas.height + 50){
+                this.die();
             }
 
             // move the player
@@ -374,8 +378,9 @@ Player.prototype = {
 
     kill: function (enemy) {
         enemy.die();
-        this.score += enemy.scorePoint;
+        this.gb.score += enemy.scorePoint;
         this.velY = -this.jumpStrength*2;
+        this.jumpCount = 0;
         this.__drawPlayerJumping();
     },
 
@@ -385,13 +390,14 @@ Player.prototype = {
         this.velX = 0;
         this.dead = true;
         console.log("die...");
+
+        this.gb.initActiveScene(new GameOverScene(this.gb));
     },
 
     pick: function(item) {
-        this.score += item.scorePoint;
+        this.gb.score += item.scorePoint;
         item.effect(this);
         item.pick();
-        console.log(this.score);
     },
 
     reduceSalt: function(nbr){
@@ -466,7 +472,3 @@ Player.prototype = {
         }
     }
 };
-
-function increment(){
-    this.saltLevel = this.saltLevel % 360 + 1;
-}
