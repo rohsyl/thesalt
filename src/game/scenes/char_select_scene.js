@@ -130,7 +130,8 @@ CharacterSelectionScene.prototype = {
         if (this.launch){
             this.canvas.removeEventListener("mousemove", this.mm);
             this.canvas.removeEventListener("click", this.mc);
-            // TODO : launch level
+            this.gb.setSelectedCharacter(this.dragIndex);
+            this.gb.initLevel(0);
         }
     },
 
