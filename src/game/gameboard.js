@@ -11,7 +11,7 @@ const BLOCK_TYPE_PLAYER = 2;
 const BLOCK_TYPE_ENEMY = 3;
 const BLOCK_TYPE_ITEMS = 4;
 
-function GameBoard(canvas) {
+function GameBoard(canvas, playerName) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.activeScene = undefined;
@@ -29,13 +29,14 @@ function GameBoard(canvas) {
     ];
     this.currentLevelIndex = 0;
 
+    this.playerName = playerName;
     this.score = 0;
 }
 GameBoard.prototype = {
 
     init: function(){
 
-        this.initActiveScene(new MainScene(this));
+        this.initActiveScene(new CharacterSelectionScene(this));
 
         let self = this;
         document.addEventListener("keydown", function(e){self.keyDownHandler(e)}, false);
@@ -123,7 +124,7 @@ GameBoard.prototype = {
             navigator.geolocation.getCurrentPosition(function(position) {
                 let lat = position.coords.latitude;
                 let lng = position.coords.longitude;
-                api.addScore('wu-shaolin', self.score, lat, lng, function(data){
+                api.addScore(self.playerName, self.score, lat, lng, function(data){
                     console.log(data);
                 });
             }, function(error) {
@@ -143,13 +144,13 @@ GameBoard.prototype = {
                         break;
                 }
 
-                api.addScore('wu-shaolin', self.score, null, null, function(data){
+                api.addScore(self.playerName, self.score, null, null, function(data){
                     console.log(data);
                 });
             });
         }
         else{
-            api.addScore('wu-shaolin', self.score, null, null, function(data){
+            api.addScore(self.playerName, self.score, null, null, function(data){
                 console.log(data);
             });
         }

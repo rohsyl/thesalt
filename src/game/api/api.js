@@ -1,5 +1,5 @@
 function Api(){
-    this.url = 'http://thesalt.rohs.ch/api/';
+    this.url = 'https://thesalt.rohs.ch/api/';
     this.ACTION_SCOREBOARD = '?action=scoreboard';
     this.ACTION_ADD = '?action=add';
 
