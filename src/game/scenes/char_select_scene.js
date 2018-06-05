@@ -35,36 +35,40 @@ CharacterSelectionScene.prototype = {
         this.charactersSelectedImages[3].src = IMG_PLAYER_SELECT_SCREEN[3];
 
         this.charactersLabels = ["R-Men", "Shaolin", "Dødskamp", "Célapéro"];
-        this.title = "Select Your Player";
+        this.title = "Drop Your Player in the Portal";
 
         this.voidImg = new Image();
         this.voidImg.src = SPRITES_PATH + "menu/void.png";
 
 
         this.imagesWH = 200;
-        this.imagesY = this.canvas.height/4;
-        this.originX = this.canvas.width/2 - this.imagesWH*2;
-        this.imagesX = [this.originX];
+        this.defaultImagesY = this.canvas.height/4;
+        this.defaultImagesX = [this.canvas.width/2 - this.imagesWH*2];
+        this.imagesY = [this.defaultImagesY];
+        this.imagesX = [this.defaultImagesX[0]];
 
-        this.dragok = false;
-        this.dragIndex = 0;
-        this.newPosX = 0;
-        this.newPosY = 0;
 
         for (let i = 1; i < this.charactersImages.length; i++){
             let j = i-1;
+            this.defaultImagesX.push(this.imagesX[j] + this.imagesWH);
             this.imagesX.push(this.imagesX[j] + this.imagesWH);
+            this.imagesY.push(this.defaultImagesY)
         }
 
         this.buttonW = 160;
         this.buttonH = 50;
-        this.backButton = [this.canvas.width/2 - this.buttonW/2, this.imagesY + this.imagesWH + this.buttonW*2, this.buttonW, this.buttonH, "Back"];
+        this.backButton = [this.canvas.width/2 - this.buttonW/2, this.defaultImagesY + this.imagesWH + this.buttonW*2, this.buttonW, this.buttonH, "Back"];
 
         this.isMouseHoverImages = [false, false, false, false];
         this.isMouseHoverButton = false;
+        this.isMouseHoverPortal = false;
 
         this.mouseX = 0;
         this.mouseY = 0;
+        this.mouseOffset = [0, 0];
+        this.isDragActive = false;
+        this.dragIndex = -1;
+        this.launch = false;
 
         let self = this;
         this.mm = function (mouseEvent){self.__checkPos(mouseEvent)};
@@ -72,6 +76,21 @@ CharacterSelectionScene.prototype = {
         this.canvas.addEventListener("mousemove", this.mm);
         this.canvas.addEventListener("click", this.mc);
 
+        this.isMouseDown = false;
+
+        this.canvas.onmousedown = function(){
+            self.isMouseDown = true;
+            for(let i = 0; i < self.charactersImages.length; i++) {
+                if (self.isMouseHoverImages[i]) {
+                    // define mouse offset
+                    self.mouseOffset[0] = self.mouseX - self.imagesX[i];
+                    self.mouseOffset[1] = self.mouseY - self.imagesY[i];
+                }
+            }
+        };
+        this.canvas.onmouseup = function(){
+            self.isMouseDown = false;
+        };
 
         this.voidPortal = this.__sprite({
                 width: 4200,
@@ -82,59 +101,61 @@ CharacterSelectionScene.prototype = {
             }
         );
 
-        this.canvas.onmousedown = this.__dNdDown(onmousedown(MouseEvent));
-        this.canvas.onmouseup = this.__dNdUp();
-
-
     },
 
 
     update: function(){
+
+        if (this.isMouseDown) {
+            for(let i = 0; i < this.charactersImages.length; i++) {
+                if (this.isMouseHoverImages[i] && !this.isDragActive || this.isDragActive && this.dragIndex == i) {
+                    this.imagesX[i] = this.mouseX - this.mouseOffset[0];
+                    this.imagesY[i] = this.mouseY - this.mouseOffset[1];
+                    this.isDragActive = true;
+                    this.dragIndex = i;
+                }
+            }
+        } else {
+            for(let i = 0; i < this.charactersImages.length; i++) {
+                if (!this.isMouseHoverPortal){
+                    this.imagesX[i] = this.defaultImagesX[i];
+                    this.imagesY[i] = this.defaultImagesY;
+                    this.dragIndex = -1;
+                    this.isDragActive = false;
+                } else if (this.isDragActive) {
+                    this.launch = true;
+                }
+            }
+        }
+
+        if (this.launch){
+            this.canvas.removeEventListener("mousemove", this.mm);
+            this.canvas.removeEventListener("click", this.mc);
+            // TODO : launch level
+        }
     },
 
-    draw: function(){
+    draw: function() {
 
-        console.log(this.newPosX + " | " + this.newPosY);
-
-        this.canvas.onmousemove = this.__dNdMove();
-
-        this.context.font = '38pt Kremlin Pro Web';
-        this.context.fillStyle = '#000000';
-        this.context.textAlign="center";
-        this.context.fillText(this.title, this.canvas.width/2 - 38/2, this.imagesY - 50);
-
-        for (let i = 0; i < this.charactersImages.length; i++) {
-
-            if (this.isMouseHoverImages[i]) {
-                this.context.drawImage(this.charactersSelectedImages[i], this.imagesX[i], this.imagesY, this.imagesWH, this.imagesWH);
-            } else
-                this.context.drawImage(this.charactersImages[i], this.imagesX[i], this.imagesY, this.imagesWH, this.imagesWH);
-
-
-            this.context.font = '16pt Kremlin Pro Web';
-            this.context.fillStyle = '#000000';
-            this.context.textAlign="center";
-            this.context.fillText(this.charactersLabels[i], this.imagesX[i] + this.imagesWH/2, this.imagesY + this.imagesWH + 20);
-        }
 
         //portal drawing
         this.context.save();
 
-        this.context.clearRect(this.canvas.width/2 - this.voidPortal.realH/2, (this.imagesY + this.imagesWH) + (this.backButton[1] - (this.imagesY + this.imagesWH))/4, this.voidPortal.realW, this.voidPortal.realH);
+        this.context.clearRect(this.canvas.width/2 - this.voidPortal.realH/2, (this.defaultImagesY + this.imagesWH) + (this.backButton[1] - (this.defaultImagesY + this.imagesWH))/4, this.voidPortal.realW, this.voidPortal.realH);
 
         let radius = this.voidPortal.realH/2;
-        let destX = this.canvas.width/2 - this.voidPortal.realW/2;
-        let destY = (this.imagesY + this.imagesWH) + (this.backButton[1] - (this.imagesY + this.imagesWH))/4;
+        this.voidPortal.destX = this.canvas.width/2 - this.voidPortal.realW/2;
+        this.voidPortal.destY = (this.defaultImagesY + this.imagesWH) + (this.backButton[1] - (this.defaultImagesY + this.imagesWH))/4;
         this.context.beginPath();
-        this.context.moveTo(destX + radius, destY);
-        this.context.lineTo(destX + this.voidPortal.realW - radius, destY);
-        this.context.quadraticCurveTo(destX + this.voidPortal.realW, destY, destX + this.voidPortal.realW, destY + radius);
-        this.context.lineTo(destX + this.voidPortal.realW, destY + this.voidPortal.realH - radius);
-        this.context.quadraticCurveTo(destX + this.voidPortal.realW, destY + this.voidPortal.realH, destX + this.voidPortal.realW - radius, destY + this.voidPortal.realH);
-        this.context.lineTo(destX + radius, destY + this.voidPortal.realH);
-        this.context.quadraticCurveTo(destX, destY + this.voidPortal.realH, destX, destY + this.voidPortal.realH - radius);
-        this.context.lineTo(destX, destY + radius);
-        this.context.quadraticCurveTo(destX, destY, destX + radius, destY);
+        this.context.moveTo(this.voidPortal.destX + radius, this.voidPortal.destY);
+        this.context.lineTo(this.voidPortal.destX + this.voidPortal.realW - radius, this.voidPortal.destY);
+        this.context.quadraticCurveTo(this.voidPortal.destX + this.voidPortal.realW, this.voidPortal.destY, this.voidPortal.destX + this.voidPortal.realW, this.voidPortal.destY + radius);
+        this.context.lineTo(this.voidPortal.destX + this.voidPortal.realW, this.voidPortal.destY + this.voidPortal.realH - radius);
+        this.context.quadraticCurveTo(this.voidPortal.destX + this.voidPortal.realW, this.voidPortal.destY + this.voidPortal.realH, this.voidPortal.destX + this.voidPortal.realW - radius, this.voidPortal.destY + this.voidPortal.realH);
+        this.context.lineTo(this.voidPortal.destX + radius, this.voidPortal.destY + this.voidPortal.realH);
+        this.context.quadraticCurveTo(this.voidPortal.destX, this.voidPortal.destY + this.voidPortal.realH, this.voidPortal.destX, this.voidPortal.destY + this.voidPortal.realH - radius);
+        this.context.lineTo(this.voidPortal.destX, this.voidPortal.destY + radius);
+        this.context.quadraticCurveTo(this.voidPortal.destX, this.voidPortal.destY, this.voidPortal.destX + radius, this.voidPortal.destY);
         this.context.closePath();
 
         this.context.clip();
@@ -146,12 +167,33 @@ CharacterSelectionScene.prototype = {
             // source w, h
             this.voidPortal.width / this.voidPortal.numberOfFrames, this.voidPortal.height,
             // dest x, y
-            destX, destY,
+            this.voidPortal.destX, this.voidPortal.destY,
             // dest w, h
             this.voidPortal.realW, this.voidPortal.realH
         );
 
         this.context.restore();
+
+        this.context.font = '38pt Kremlin Pro Web';
+        this.context.fillStyle = '#000000';
+        this.context.textAlign="center";
+        this.context.fillText(this.title, this.canvas.width/2, this.defaultImagesY - 50);
+
+        for (let i = 0; i < this.charactersImages.length; i++) {
+
+            if (this.isMouseHoverImages[i] && !this.isDragActive
+                || this.isMouseHoverImages[i] && this.dragIndex == i && this.isDragActive) {
+                this.context.drawImage(this.charactersSelectedImages[i], this.imagesX[i], this.imagesY[i], this.imagesWH, this.imagesWH);
+            } else
+                this.context.drawImage(this.charactersImages[i], this.imagesX[i], this.imagesY[i], this.imagesWH, this.imagesWH);
+
+
+            this.context.font = '16pt Kremlin Pro Web';
+            this.context.fillStyle = '#000000';
+            this.context.textAlign="center";
+            this.context.fillText(this.charactersLabels[i], this.defaultImagesX[i] + this.imagesWH/2, this.defaultImagesY + this.imagesWH + 20);
+        }
+
 
         // draw button
         this.context.beginPath();
@@ -185,6 +227,8 @@ CharacterSelectionScene.prototype = {
         that.width = options.width;
         that.height = options.height;
         that.image = options.image;
+        that.destX = 0;
+        that.destY = 0;
 
         that.realW = that.width/that.numberOfFrames/2;
         that.realH = that.height/2;
@@ -210,26 +254,20 @@ CharacterSelectionScene.prototype = {
 
     __checkPos: function(mouseEvent){
 
-        this.mouseX = mouseEvent.clientX;
-        this.mouseY = mouseEvent.clientY;
+        let rect = this.canvas.getBoundingClientRect();
+        this.mouseX = mouseEvent.clientX - rect.left;
+        this.mouseY = mouseEvent.clientY - rect.top;
 
         for(let i = 0; i < this.charactersImages.length; i++) {
-            if(this.mouseX > this.imagesX[i] && this.mouseX < this.imagesX[i] + this.imagesWH
-                && this.mouseY > this.imagesY && this.mouseY < this.imagesY + this.imagesWH){
-                this.isMouseHoverImages[i] = true;
-            }else{
-                this.isMouseHoverImages[i] = false;
-            }
-
+            this.isMouseHoverImages[i] = this.mouseX > this.imagesX[i] && this.mouseX < this.imagesX[i] + this.imagesWH
+                && this.mouseY > this.imagesY[i] && this.mouseY < this.imagesY[i] + this.imagesWH;
         }
 
-        if(this.mouseX > this.backButton[0] && this.mouseX < this.backButton[0] + this.backButton[2]
-            && this.mouseY > this.backButton[1] && this.mouseY < this.backButton[1] + this.backButton[3]){
-            this.isMouseHoverButton = true;
-        }else{
-            this.isMouseHoverButton = false;
-        }
+        this.isMouseHoverButton = this.mouseX > this.backButton[0] && this.mouseX < this.backButton[0] + this.backButton[2]
+            && this.mouseY > this.backButton[1] && this.mouseY < this.backButton[1] + this.backButton[3];
 
+        this.isMouseHoverPortal = this.mouseX > this.voidPortal.destX && this.mouseX < this.voidPortal.destX + this.voidPortal.realW
+            && this.mouseY > this.voidPortal.destY && this.mouseY < this.voidPortal.destY + this.voidPortal.realH;
     },
 
     __checkClick: function(){
@@ -238,37 +276,6 @@ CharacterSelectionScene.prototype = {
             this.canvas.removeEventListener("click", this.mc);
             this.gb.initActiveScene(this.mainScene);
         }
-
-
-    },
-
-    __dNdMove: function (e){
-        if (this.dragok[this.dragIndex]){
-
-            this.newPosX = e.pageX - this.canvas.offsetLeft;
-            this.newPosY = e.pageY - this.canvas.offsetTop;
-        }
-    },
-
-    __dNdDown: function(e){
-
-        for(let i = 0; i < this.charactersImages.length; i++)
-            if (this.isMouseHoverImages[i])
-                this.dragIndex = i;
-
-        if (e.pageX < x + 15 + this.canvas.offsetLeft && e.pageX > x - 15 +
-            this.canvas.offsetLeft && e.pageY < y + 15 + this.canvas.offsetTop &&
-            e.pageY > y -15 + this.canvas.offsetTop){
-            this.newPosX = e.pageX - this.canvas.offsetLeft;
-            this.newPosY = e.pageY - this.canvas.offsetTop;
-            this.dragok[this.dragIndex] = true;
-            this.canvas.onmousemove = this.__dNdMove(e);
-        }
-    },
-
-    __dNdUp: function(e){
-        this.dragok[this.dragIndex] = false;
-        this.canvas.onmousemove = null;
     }
 
 };
