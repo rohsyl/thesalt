@@ -38,8 +38,6 @@ EnemyWalk.prototype = {
         this.h = this.blockSize*2;
         this.w = this.blockSize*2;
 
-
-
         // hit boxes
         this.boxTop = this.h / 2;
         this.boxBottom = this.h / 2;

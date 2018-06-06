@@ -32,6 +32,7 @@ const IMG_FLOOR_DIRT = IMG_BLOCKS_PATH + "floor_dirt.png";
 const IMG_PIZZA = IMG_ITEMS_PATH +  "pizza.png";
 const IMG_RJ45 = IMG_ITEMS_PATH +  "rj45.png";
 const IMG_WATER = IMG_ITEMS_PATH +  "water_bottle.png";
+const IMG_SALT = IMG_ITEMS_PATH +  "salt.png";
 const IMG_END = IMG_ITEMS_PATH +  "endpoint.png";
 
 /**
@@ -52,8 +53,6 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
     this.levelTotalWidth = 0;
     this.shiftX = 0;
 
-    this.scoreLabel = "Score : ";
-    this.saltLevelLabel = "Salt level : ";
 
     this.backgrounds = [];
     this.backgroundPaths = [];
@@ -66,6 +65,8 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
 
     // this variable contain a ref to the player
     this.player = undefined;
+
+    this.scoreDisplay = undefined;
 
     // array of ref to all enemies
     this.enemies = [];
@@ -150,6 +151,9 @@ LevelManager.prototype = {
         // console.log("canvas height", this.canvas.height);
         // console.log("window height", window.innerHeight);
         // console.log("blocksize", this.blockSize);
+
+        this.scoreDisplay = new ScoreDisplay(this.gb, 10, 10, this.blockSize);
+
         let nbRow = levelBlock.length > LEVEL_ROW_NB ? LEVEL_ROW_NB : levelBlock.length;
         for(let i = 0; i < nbRow; i++){
             let row = [];
@@ -250,11 +254,7 @@ LevelManager.prototype = {
 
 
         // draw player score
-        this.context.fillText(this.scoreLabel.concat(this.gb.score) ,this.canvas.width - 200, 50);
-
-        // draw player salt level
-        this.context.fillText(this.saltLevelLabel.concat(Math.round(this.gb.saltLevel).toString()) ,200, 50);
-
+        this.scoreDisplay.draw();
 
         // shift the background alongside the player position
         let cw = this.canvas.width,

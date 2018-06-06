@@ -29,29 +29,42 @@ if(isset($_GET['action'])){
 				isset($_POST['player']) && !empty($_POST['player']) &&
 				isset($_POST['score']) && !empty($_POST['score'])
 			) {
-
-				$pdo = getPdo();
-
-				$country = null;
-				if( isset($_POST['lat']) && !empty($_POST['lat']) &&
-					isset($_POST['lng']) && !empty($_POST['lng'])
-				){
-					$country = getCountry($_POST['lat'], $_POST['lng']);
+				$player = $_POST['player'];
+				$score = $_POST['score'];
+				
+				// get player best score
+				$bestScore = getPlayerBestScore($player);
+				
+				// if this score is bigger
+				if($score > $bestScore){
+					// delete all old score
+					deletePlayerScore($player);
+				
+					// insert new score
+					$country = null;
+					if( isset($_POST['lat']) && !empty($_POST['lat']) &&
+						isset($_POST['lng']) && !empty($_POST['lng'])
+					){
+						$country = getCountry($_POST['lat'], $_POST['lng']);
+					}
+					
+					insertScore($score, $player, $country);
+					
+					$result = array(
+						'status' => array(
+							'success' => true,
+							'message' => 'Score added...'
+						)
+					);
 				}
-				
-				$statement = $pdo->prepare('INSERT INTO score(score, player, date, country) VALUES(:score, :player, NOW(), :country)');
-				$statement->execute(array(
-					'score' => $_POST['score'],
-					'player' => $_POST['player'],
-					'country' => $country
-				));
-				
-				$result = array(
-					'status' => array(
-						'success' => true,
-						'message' => 'Score added...'
-					)
-				);
+				else{
+					$result = array(
+						'status' => array(
+							'success' => true,
+							'message' => 'Score not added because is not ' . $player .' best score...'
+						)
+					);
+				}
 			}
 			else{
 				

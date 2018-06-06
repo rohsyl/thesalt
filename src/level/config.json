@@ -1,0 +1,14 @@
+[
+  {
+    "levelName": "level1",
+    "backgrounds": ["background/level1/background.jpg", "background/level1/background.jpg"]
+  },
+  {
+    "levelName": "level2",
+    "backgrounds": ["background/level2/landscape.png", "background/level2/landscape.png"]
+  },
+  {
+    "levelName": "level3",
+    "backgrounds": ["background/level3/background.png", "background/level3/background.png"]
+  }
+]
