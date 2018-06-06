@@ -30,16 +30,16 @@ LevelBuilder.prototype = {
 
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
 
-        this.grid = new Array(LEVEL_ROW_NB);
+        this.grid = new Array(LEVEL_ROW_NB*3);
 
         this.menuWidth = this.blockSize*2;
         this.leftOffset = this.menuWidth + this.blockSize;
         this.menuBlocks = new Array(this.blockImgDefinitions.length);
         this.menuBlocks[0] = new ItemValue("e", this.blockImgDefinitions["e"], 0, 0);
         this.menuBlocks[1] = new ItemValue("f", this.blockImgDefinitions["f"], 0, 1 * this.menuWidth);
-        this.menuBlocks[2] = new ItemValue("d", this.blockImgDefinitions["d"], 0, 2 * this.menuWidth);
-        this.menuBlocks[3] = new ItemValue("g", this.blockImgDefinitions["g"], 0, 3 * this.menuWidth);
-        this.menuBlocks[4] = new ItemValue("o", this.blockImgDefinitions["o"], 0, 4 * this.menuWidth);
+        this.menuBlocks[2] = new ItemValue("g", this.blockImgDefinitions["g"], 0, 2 * this.menuWidth);
+        this.menuBlocks[3] = new ItemValue("o", this.blockImgDefinitions["o"], 0, 3 * this.menuWidth);
+        this.menuBlocks[4] = new ItemValue("d", this.blockImgDefinitions["d"], 0, 4 * this.menuWidth);
         this.menuBlocks[5] = new ItemValue("p", this.blockImgDefinitions["p"], 0, 5 * this.menuWidth);
         this.menuBlocks[6] = new ItemValue("z", this.blockImgDefinitions["z"], 0, 6 * this.menuWidth);
         this.menuBlocks[7] = new ItemValue("r", this.blockImgDefinitions["r"], 0, 7 * this.menuWidth);
@@ -54,6 +54,7 @@ LevelBuilder.prototype = {
 
         this.mouseX = 0;
         this.mouseY = 0;
+        this.scrollShift = 30;
 
         this.mouseOverItem = new Array(this.menuBlocks.length);
         for (let i = 0; i < this.mouseOverItem.length; i++){
@@ -64,9 +65,12 @@ LevelBuilder.prototype = {
         let self = this;
         this.mc = function (mouseEvent){self.__checkClick(mouseEvent)};
         this.mm = function (mouseEvent){self.__checkPos(mouseEvent)};
+        this.mw = function (mouseEvent){self.__checkWheel(mouseEvent)};
+
         this.canvas.addEventListener("click", this.mc);
         this.canvas.addEventListener("mousemove", this.mm);
 
+        this.canvas.addEventListener("mousewheel", this.mw);
 
         document.addEventListener("keydown", function(e){self.keyDownHandler(e)}, false);
 
@@ -77,22 +81,6 @@ LevelBuilder.prototype = {
     },
 
     draw: function() {
-
-        // draw menu blocks
-        for (let i = 0; i < this.menuBlocks.length; i++){
-            this.context.drawImage(this.menuBlocks[i].getImage(), this.menuBlocksValues[0], i * this.menuBlocksValues[1], this.menuBlocksValues[2], this.menuBlocksValues[3]);
-        }
-
-        // draw red square on selelcted item
-        this.context.beginPath();
-        this.context.rect(this.menuBlocksValues[0]+1, this.selectedItem * this.menuBlocksValues[1]+1, this.menuBlocksValues[2]-2, this.menuBlocksValues[3]-2);
-        this.context.lineWidth = 2;
-        this.context.strokeStyle = '#F00';
-        this.context.stroke();
-        this.context.closePath();
-
-
-
         // draw grid
         for (let x = 0; x < this.grid.length; x++) {
             for (let y = 0; y < this.grid[x].length; y++) {
@@ -110,7 +98,30 @@ LevelBuilder.prototype = {
             }
         }
 
+        // draw menu background
+        this.context.beginPath();
+        this.context.fillRect(0, 0, this.menuWidth, this.canvas.height);
+        this.context.fillStyle = '#FFF';
+        this.context.stroke();
+        this.context.closePath();
+
+
+        // draw menu blocks
+        for (let i = 0; i < this.menuBlocks.length; i++){
+            this.context.drawImage(this.menuBlocks[i].getImage(), this.menuBlocksValues[0], i * this.menuBlocksValues[1], this.menuBlocksValues[2], this.menuBlocksValues[3]);
+        }
+
+        // draw red square on selelcted item
+        this.context.beginPath();
+        this.context.rect(this.menuBlocksValues[0]+1, this.selectedItem * this.menuBlocksValues[1]+1, this.menuBlocksValues[2]-2, this.menuBlocksValues[3]-2);
+        this.context.lineWidth = 2;
+        this.context.strokeStyle = '#F00';
+        this.context.stroke();
+        this.context.closePath();
+
+
     },
+
 
     // detect shift + S to save
     keyDownHandler: function(e) {
@@ -157,10 +168,7 @@ LevelBuilder.prototype = {
             for (let i = 0; i < array.length; i++){
                 this.__fillGrid(this.grid.length-1, i, "e");
             }
-
-
         }
-        console.log(e.keyCode);
     },
 
     // fill the defined grid with a value
@@ -228,6 +236,13 @@ LevelBuilder.prototype = {
                 }
             }
         }
+    },
+
+    __checkWheel: function (mouseEvent) {
+        if (mouseEvent.wheelDelta / 120 > 0)
+            this.leftOffset += this.scrollShift;
+        else
+            this.leftOffset -= this.scrollShift;
     },
 };
 
