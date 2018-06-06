@@ -1,3 +1,7 @@
+/**
+ * This class allow you to execute ajax request to the API of the salt
+ * @constructor
+ */
 function Api(){
     this.url = 'https://thesalt.rohs.ch/api/';
     this.ACTION_SCOREBOARD = '?action=scoreboard';
@@ -9,6 +13,10 @@ function Api(){
     this.PARAM_LNG = 'lng';
 }
 Api.prototype = {
+    /**
+     * Get the scoreboard data
+     * @param callback function Callback method that give the request response
+     */
     getScoreboard: function(callback){
         let xhr = new XMLHttpRequest();
         xhr.open("GET", this.url + this.ACTION_SCOREBOARD, true);
@@ -25,6 +33,14 @@ Api.prototype = {
         xhr.send();
     },
 
+    /**
+     * Add the given score in the scoreboard
+     * @param player string The name of the player
+     * @param score number The score
+     * @param lat number The latitude
+     * @param lng number The longitude
+     * @param callback function The callback called when request complete
+     */
     addScore(player, score, lat, lng, callback){
         let xhr = new XMLHttpRequest();
         xhr.open("POST", this.url + this.ACTION_ADD, true);
