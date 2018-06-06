@@ -1,9 +1,5 @@
 [
   {
-    "levelName": "level4",
-    "backgrounds": ["background/level1/background.jpg", "background/level1/background.jpg", "background/level1/background.jpg", "background/level1/background.jpg"]
-  },
-  {
     "levelName": "level1",
     "backgrounds": ["background/level1/background.jpg", "background/level1/background.jpg"]
   },
@@ -14,5 +10,13 @@
   {
     "levelName": "level3",
     "backgrounds": ["background/level3/background.png", "background/level3/background.png"]
+  },
+  {
+    "levelName": "level4",
+    "backgrounds": ["background/level1/background.jpg", "background/level1/background.jpg", "background/level1/background.jpg", "background/level1/background.jpg"]
+  },
+  {
+    "levelName": "level5",
+    "backgrounds": ["background/level3/background.png", "background/level3/background.png", "background/level3/background.png"]
   }
 ]
