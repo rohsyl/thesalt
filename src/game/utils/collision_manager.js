@@ -14,17 +14,18 @@ CollisionManager.prototype = {
                 blocksInCollision.push(this.levelBuilder.collidableBlocks[i]);
             }
         }
-        this.__triggerCollision(this.levelBuilder.player, blocksInCollision);
+        this.__triggerCollision(this.levelBuilder.player, blocksInCollision, true);
 
         // collision enemy vs collidable block
         for (e in this.levelBuilder.enemies) {
             blocksInCollision = [];
             for(let i = 0; i < this.levelBuilder.collidableBlocks.length; i++){
                 if(this.__isCollide(this.levelBuilder.enemies[e], this.levelBuilder.collidableBlocks[i])){
+                    //console.log('is collision ',  this.levelBuilder.enemies[e], this.levelBuilder.collidableBlocks[i]);
                     blocksInCollision.push(this.levelBuilder.collidableBlocks[i]);
                 }
             }
-            this.__triggerCollision(this.levelBuilder.enemies[e], blocksInCollision);
+            this.__triggerCollision(this.levelBuilder.enemies[e], blocksInCollision, true);
         }
 
         // collision player vs enemy
@@ -56,10 +57,14 @@ CollisionManager.prototype = {
      * if a collision is detected, call the collision listener
      * @param player Player The player
      * @param blocks [] The block
+     * @param mustBeCollidableBlock boolean (optional) true if the blocks must contain collidable block
      * @private
      */
-    __triggerCollision: function(player, blocks){
-        player.onCollision(blocks);
+    __triggerCollision: function(player, blocks, mustBeCollidableBlock){
+        if(typeof mustBeCollidableBlock === 'undefined'){
+            mustBeCollidableBlock = false;
+        }
+        player.onCollision(blocks, mustBeCollidableBlock);
         for(let i in blocks){
             if(blocks[i] instanceof EndPoint){
                 let end = blocks[i];

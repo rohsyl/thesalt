@@ -47,6 +47,7 @@ EnemyWalk.prototype = {
         this.y = this.y - this.h / 2;
 
         this.speed = SHIFT_STEP / this.slowness;
+        this.gravity = GRAVITY;
 
         this.velX = 0;
         this.velY = 0;
@@ -93,7 +94,7 @@ EnemyWalk.prototype = {
 
             // apply forces
             this.velX *= FRICTION;
-            this.velY += GRAVITY;
+            this.velY += this.gravity;
         }
     },
 
@@ -120,15 +121,18 @@ EnemyWalk.prototype = {
     /**
      * Trigger when the enemy is on collision with one or many blocks
      * @param whats [] Blocks in collision
+     * @param mustBeCollidableBlock boolean
      */
-    onCollision: function(whats){
+    onCollision: function(whats, mustBeCollidableBlock){
         if (!this.dead) {
 
+            let hasCollisionWithCollidableBlock = false;
             for(let k in whats) {
                 if (whats[k] instanceof CollidableBlock) {
+                    hasCollisionWithCollidableBlock = true;
                     let block = whats[k];
                     let enemy_bottom = this.getCenterY() + this.boxBottom;
-                    let tiles_bottom = block.getY() + block.h;
+                    let tiles_bottom = block.getY() + block.h - 1;
                     let enemy_right = this.getCenterX() + this.boxRight;
                     let tiles_right = block.getX() + block.w;
 
@@ -160,17 +164,23 @@ EnemyWalk.prototype = {
 
                 }
             }
+            if(!hasCollisionWithCollidableBlock && mustBeCollidableBlock){
+                console.log('no collisison -> fall');
+                this.gravity = GRAVITY;
+            }
         }
     },
 
     fall: function(){
-        this.velY = GRAVITY;
+        this.gravity = GRAVITY;
+        this.velY = this.gravity;
     },
 
     land: function(what){
         let topValue = this.getCenterY() - this.y + this.boxBottom;
-        this.y = what.getY() - topValue;
+        this.y = what.getY() - topValue + 1;
         this.velY = 0;
+        this.gravity = 0;
     },
 
     getCenterX: function(){

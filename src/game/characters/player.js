@@ -118,9 +118,12 @@ Player.prototype = {
 
         this.speed = SHIFT_STEP;
         this.jumpStrength = JUMP_STRENGTH;
+        this.gravity = GRAVITY;
 
         this.velX = 0;
         this.velY = 0;
+
+        this.shiftX = undefined;
 
         this.jumping = false;
         this.jumpCount = NB_ALLOWED_JUMP;
@@ -181,6 +184,8 @@ Player.prototype = {
             if(this.gb.keyUpPressed){
                 // first jump
                 if(!this.jumping){
+                    this.y = this.y - 1;
+                    this.gravity = GRAVITY;
                     this.velY = -this.jumpStrength*2;
                     this.jumping = true;
                     this.jumpCount--;
@@ -198,7 +203,7 @@ Player.prototype = {
             // apply forces
             this.velX *= FRICTION;
 
-            this.velY += GRAVITY;
+            this.velY += this.gravity;
 
             // apply velocity left // right
             if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w - this.blockSize) {
@@ -262,14 +267,17 @@ Player.prototype = {
      * Trigger when the player is on collision with one or many blocks
      * @param whats [] Blocks in collision
      */
-    onCollision: function(whats){
-
+    onCollision: function(whats, mustBeCollidableBlock){
         if (!this.dead){
+
+
+            let hasCollisionWithCollidableBlock = false;
             for(let k in whats) {
                 if(whats[k] instanceof CollidableBlock){
+                    hasCollisionWithCollidableBlock = true;
                     let block = whats[k];
                     let player_bottom = this.getCenterY() + this.boxBottom;
-                    let tiles_bottom = block.getY() + block.h;
+                    let tiles_bottom = block.getY() + block.h - 1;
                     let player_right = this.getCenterX() + this.boxRight;
                     let tiles_right = block.getX() + block.w;
 
@@ -340,16 +348,22 @@ Player.prototype = {
                     }
                 }
             }
+            if(!hasCollisionWithCollidableBlock && mustBeCollidableBlock){
+                //console.log('no collisison -> fall');
+                this.gravity = GRAVITY;
+            }
         }
     },
 
     fall: function(){
-        this.velY = GRAVITY;
+        this.gravity = GRAVITY;
+        this.velY = this.gravity;
     },
 
     land: function(what){
         let topValue = this.getCenterY() - this.y + this.boxBottom;
-        this.y = what.getY() - topValue;
+        this.y = what.getY() - topValue + 1;
+        this.gravity = 0;
         this.velY = 0;
         this.jumpCount = NB_ALLOWED_JUMP;
         this.jumping = false;
