@@ -59,7 +59,8 @@ ScoreDisplay.prototype = {
 
 
         this.context.font = '20pt Kremlin Pro Web';
-        this.context.fillText(this.scoreLabel.concat(this.gb.score) , this.blockSize * 4, this.blockSize * 1.5 - 10 + this.marginTop);
+
+        this.context.fillText(this.scoreLabel.concat(this.gb.score) , this.blockSize * 4 + this.marginLeft, this.blockSize * 1.5 - 10 + this.marginTop);
         //this.context.restore();
     },
 
