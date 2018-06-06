@@ -127,6 +127,7 @@ Player.prototype = {
         this.jumping = false;
         this.jumpCount = NB_ALLOWED_JUMP;
         this.jumpTimeout = TIMEOUT_JUMP;
+        this.falling = false;
 
         this.boostedJumpTimeout = 0;
 
@@ -197,12 +198,12 @@ Player.prototype = {
                     this.jumpTimeout = TIMEOUT_JUMP;
                 }
             }
-
-
             // apply forces
             this.velX *= FRICTION;
 
             this.velY += this.gravity;
+
+            this.falling = this.velY > 0;
 
             // apply velocity left // right
             if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w - this.blockSize) {
@@ -232,6 +233,8 @@ Player.prototype = {
                 this.die();
             }
 
+
+
             // move the player
             this.x += this.velX;
             this.y += this.velY;
@@ -260,6 +263,8 @@ Player.prototype = {
                 this.die();
         }
 
+
+
     },
 
     /**
@@ -284,6 +289,8 @@ Player.prototype = {
                     let t_collision = player_bottom - block.getY();
                     let l_collision = player_right - block.getX();
                     let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
+
+
 
                     if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision )
                     {
@@ -325,9 +332,8 @@ Player.prototype = {
                     let l_collision = player_right - (enemy.getCenterX() - enemy.boxLeft);
                     let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
 
-                    if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision )
-                    {
-                        //console.log("Top collision");
+
+                    if(this.falling && this.getCenterY() + this.boxBottom < enemy.getCenterY()){
                         this.kill(enemy);
                     }
                     else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision)
