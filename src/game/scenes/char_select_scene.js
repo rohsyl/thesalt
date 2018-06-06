@@ -93,6 +93,8 @@ CharacterSelectionScene.prototype = {
             }
         );
 
+        this.gb.audio.setLevelAudio(AUDIOS_PATH + 'main.mp3');
+        this.gb.audio.playLevelAudio();
     },
 
 
