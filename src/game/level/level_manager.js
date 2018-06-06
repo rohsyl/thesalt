@@ -127,12 +127,17 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
     }
 }
 LevelManager.prototype = {
+    /**
+     * Init method
+     */
     init: function(){
         // console.log('builder : init start');
 
+        // instance all background
         for(let i = 0; i < this.backgroundPaths.length; i++){
             this.backgrounds.push(new Background(this.backgroundPaths[i], this.scene, i * BACKGROUND_WIDTH, 0));
         }
+        // init all background
         for(let i = 0; i < this.backgrounds.length; i++){
             this.backgrounds[i].init();
         }
@@ -177,6 +182,7 @@ LevelManager.prototype = {
         // console.log("levelTotalWidth", this.levelTotalWidth);
 
 
+        // init all blocks
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined")
@@ -184,13 +190,13 @@ LevelManager.prototype = {
             }
         }
 
+        // init player
         this.player.init();
 
+        // init enemies
         for (e in this.enemies){
             this.enemies[e].init();
         }
-
-        // console.log('builder : init done');
 
         //make the level move automaticallys
         /*let self = this;
@@ -199,20 +205,27 @@ LevelManager.prototype = {
         }, 20);*/
     },
 
+    /**
+     * Update method
+     */
     update: function(){
+        // calculate block size
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
 
+        // update backgrounds
         for(let i = 0; i < this.backgrounds.length; i++){
             this.backgrounds[i].update(this.shiftX);
         }
 
+        // update player
         this.player.update(this.shiftX);
 
-
+        // update enemies
         for (e in this.enemies) {
             this.enemies[e].update(this.shiftX);
         }
 
+        // update blocks
         for(let i = 0; i < this.sprites.length; i++){
             for(let j = 0; j < this.sprites[i].length; j++){
                 if(typeof this.sprites[i][j] !== "undefined"){
@@ -224,9 +237,12 @@ LevelManager.prototype = {
 
     },
 
-
+    /**
+     * Draw method
+     */
     draw: function(){
 
+        // calculate block size
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
 
         // draw background
@@ -257,15 +273,16 @@ LevelManager.prototype = {
         this.scoreDisplay.draw();
 
         // shift the background alongside the player position
-        let cw = this.canvas.width,
-            ch = this.canvas.height;
+        let cw = this.canvas.width;
 
+        // move to the right
         if(this.player.x > cw * 1 / 2 + this.blockSize * 2 && this.gb.keyRightPressed){
             if(this.shiftX < this.levelTotalWidth){
                 this.shiftX += this.getShiftStep();
                 this.player.x -= this.player.speed;
             }
         }
+        // move to the left
         else if(this.player.x < cw * 1 / 2 - this.blockSize * 2 && this.gb.keyLeftPressed){
             if(this.shiftX > 0){
                 this.shiftX -= this.getShiftStep();
@@ -274,6 +291,10 @@ LevelManager.prototype = {
         }
     },
 
+    /**
+     * Get the step at which the background must move at each frame
+     * @returns {*|number} The shift step
+     */
     getShiftStep: function(){
         return this.player.speed;
     },
@@ -299,6 +320,14 @@ LevelManager.prototype = {
         }
     },
 
+    /**
+     * Create a new instance of a block by the given blockString
+     * @param blockString string The name of the block
+     * @param i int Horizontal position
+     * @param j int Vertical position
+     * @returns {*} A block
+     * @private
+     */
     __instanceBlock: function(blockString, i, j){
         if(!this.blockDefinitions.hasOwnProperty(blockString)){
             // console.log('block type unknown, undefined returned...');
@@ -309,6 +338,12 @@ LevelManager.prototype = {
         //return undefined;
     },
 
+    /**
+     * Set the reference to the given block
+     * @param block * The block
+     * @returns {*} The block
+     * @private
+     */
     __refBlock: function(block){
         switch(block.getType()){
             case BLOCK_TYPE_PLAYER:
@@ -327,14 +362,31 @@ LevelManager.prototype = {
         return block;
     },
 
+    /**
+     * Get the block size
+     * @returns {number|*} The block size
+     * @private
+     */
     __getBlockSize: function(){
         return this.blockSize;
     },
 
+    /**
+     * Calculate the x position by the given index
+     * @param j int The index
+     * @returns {number} The x position
+     * @private
+     */
     __calcX: function(j){
         return j * this.blockSize;
     },
 
+    /**
+     * Calculate the y position by the given index
+     * @param i int The index
+     * @returns {number} The y position
+     * @private
+     */
     __calcY: function(i){
         return i * this.blockSize;
     }

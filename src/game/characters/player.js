@@ -199,12 +199,9 @@ Player.prototype = {
                 }
             }
 
-
             // apply forces
             this.velX *= FRICTION;
-
             this.velY += this.gravity;
-
             this.falling = this.velY > 0;
 
             // apply velocity left // right
@@ -235,8 +232,6 @@ Player.prototype = {
                 this.die();
             }
 
-            console.log(this.velX, this.speed);
-
             // move the player
             this.x += this.velX;
             this.y += this.velY;
@@ -264,9 +259,6 @@ Player.prototype = {
             if(this.gb.saltLevel >= 100)
                 this.die();
         }
-
-
-
     },
 
     /**
@@ -276,7 +268,9 @@ Player.prototype = {
     onCollision: function(whats, mustBeCollidableBlock){
         if (!this.dead){
 
-
+            // this variable define of the player is in collision with any collidable block
+            // it allow you to know if the player is in the
+            // if the player is in the air, when need to make it fall
             let hasCollisionWithCollidableBlock = false;
             for(let k in whats) {
                 if(whats[k] instanceof CollidableBlock){
@@ -292,10 +286,7 @@ Player.prototype = {
                     let l_collision = player_right - block.getX();
                     let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
 
-
-
-                    if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision )
-                    {
+                    if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision ) {
                         //console.log("Top collision");
                         this.land(block);
                     }
@@ -304,14 +295,12 @@ Player.prototype = {
                         //console.log("bottom collision");
                         this.fall();
                     }
-                    else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
-                    {
+                    else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision) {
                         //console.log("Left collision");
                         let leftValue = this.getCenterX() - this.x + this.boxLeft;
                         this.x = block.getX() - leftValue;
                     }
-                    else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
-                    {
+                    else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision ) {
                         //console.log("Right collision");
                         let rightValue = this.getCenterX() - this.x - this.boxLeft;
                         this.x = block.getX() + block.w - rightValue;
@@ -334,28 +323,24 @@ Player.prototype = {
                     let l_collision = player_right - (enemy.getCenterX() - enemy.boxLeft);
                     let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
 
-
                     if(this.falling && this.getCenterY() + this.boxBottom < enemy.getCenterY()){
                         this.kill(enemy);
                     }
-                    else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision)
-                    {
+                    else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision) {
                         //console.log("bottom collision");
                         this.die();
                     }
-                    else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision)
-                    {
+                    else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision) {
                         //console.log("Left collision");
                         this.die();
                     }
-                    else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision )
-                    {
+                    else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision ) {
                         //console.log("Right collision");
                         this.die();
                     }
                 }
             }
-            if(!hasCollisionWithCollidableBlock && mustBeCollidableBlock){
+            if(!hasCollisionWithCollidableBlock && mustBeCollidableBlock) {
                 //console.log('no collisison -> fall');
                 this.gravity = GRAVITY;
             }
@@ -403,8 +388,6 @@ Player.prototype = {
         this.__drawPlayerJumping();
         this.velX = 0;
         this.dead = true;
-        console.log("die...");
-
         this.gb.initActiveScene(new GameOverScene(this.gb));
     },
 
@@ -429,7 +412,6 @@ Player.prototype = {
     },
 
     __drawPlayerWaiting: function(){
-
         if (!this.jumping){
             this.frameIndex = DEFAULT_FRAME;
             this.__drawPlayer();
@@ -438,7 +420,6 @@ Player.prototype = {
     },
 
     __drawPlayerWalking: function(){
-
         if (!this.jumping) {
             this.__update();
             this.__drawPlayer();
@@ -447,35 +428,19 @@ Player.prototype = {
     },
 
     __drawPlayerJumping: function(){
-
         this.frameIndex = JUMPING_FRAME;
         this.__drawPlayer();
     },
 
     __drawPlayer(){
-        // c'est useless enfaite ahah
-        //this.context.clearRect(this.x, this.y, this.w, this.h);
-
-        let player;
-
-        if (this.isPlayerForw)
-            player = this.playerForw;
-        else
-            player = this.playerBackw;
-
+        let player = this.isPlayerForw ? this.playerForw : this.playerBackw;
         this.context.drawImage(player[this.frameIndex], this.x, this.y, this.w, this.h);
-
     },
 
-
     __update: function () {
-
         this.tickCount += 1;
-
         if (this.tickCount > this.ticksPerFrame) {
-
             this.tickCount = 0;
-
             if (this.frameIndex < this.numberOfFrames -1)
                 this.frameIndex += 1;
             else
