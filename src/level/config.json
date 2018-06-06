@@ -11,7 +11,7 @@
   },
   {
     "levelName": "level3",
-    "audio" : null,
+    "audio" : "birds",
     "backgrounds": ["background/level3/background.png", "background/level3/background.png"]
   },
   {

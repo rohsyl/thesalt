@@ -36,6 +36,7 @@ Audio.prototype = {
     },
 
     setLevelAudio: function(audio){
+        this.stopAll();
         this.soundLevel = new Howl({
             src: [audio],
             loop: true
