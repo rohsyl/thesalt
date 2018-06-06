@@ -5,6 +5,9 @@ let JUMP_STRENGTH = 8;
 let NB_ALLOWED_JUMP = 2;
 let SALT_PER_SECOND = 2;
 
+/**
+ * Path to the player sprites
+ */
 let IMG_PLAYER_0_PATH = SPRITES_PATH + "players/player_0/";
 let IMG_PLAYER_1_PATH = SPRITES_PATH + "players/player_1/";
 let IMG_PLAYER_2_PATH = SPRITES_PATH + "players/player_2/";
@@ -82,7 +85,15 @@ let IMG_PLAYER_B_FEETBACK = [
     IMG_PLAYER_3_PATH + IMG_PLAYER_BACKW_PATH + IMG_PLAYER_FEET_BACK_PATH
 ];
 
-
+/**
+ * This class create the player and all his methods
+ * @param scene
+ * @param x = x index of the player's position
+ * @param y = y index of the player's position
+ * @param indexPlayerSelected = which player has been selected
+ * @param blockSize = size of the player
+ * @constructor
+ */
 function Player(scene, x, y, indexPlayerSelected, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
@@ -164,13 +175,14 @@ Player.prototype = {
         this.hasRJ = false;
     },
 
-
+    /**
+     * This method is called every frame to update the position of the player
+     */
     update: function(){
         if (!this.dead) {
             // doublejump timeout
             if(this.jumpTimeout > -1) {
                 this.jumpTimeout--;
-                // console.log(this.jumpTimeout);
             }
 
             if(this.boostedJumpTimeout > 0){
@@ -218,9 +230,13 @@ Player.prototype = {
         }
     },
 
+    /**
+     * This method is called every frame to redraw the player
+     */
     draw: function () {
 
         if (!this.dead) {
+            // apply velocity on the player
             if(this.velX < 0.0001 && this.velX > 0){
                 this.velX = 0;
             }
@@ -228,6 +244,7 @@ Player.prototype = {
                 this.velX = 0;
             }
 
+            // if the player go beyond the map he die
             if(this.y > this.canvas.height + 50){
                 this.die();
             }
@@ -236,18 +253,22 @@ Player.prototype = {
             this.x += this.velX;
             this.y += this.velY;
 
+            // if the "w", "space" or "up arrow" key is pressed the player jump
             if(this.gb.keyUpPressed){
                 this.__drawPlayerJumping();
             }
 
+            // if the "d" or "right arrow" key is pressed the player goes to the right
             if(this.gb.keyRightPressed && this.x < this.canvas.width - this.w) {
                 this.isPlayerForw = true;
                 this.__drawPlayerWalking();
             }
+            // if the "a" or "left arrow" key is pressed the player goes to the left
             else if(this.gb.keyLeftPressed && this.x > 50) {
                 this.isPlayerForw = false;
                 this.__drawPlayerWalking();
             }
+            // the player is waiting
             else {
                 this.__drawPlayerWaiting();
             }
@@ -286,31 +307,33 @@ Player.prototype = {
                     let l_collision = player_right - block.getX();
                     let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
 
+                    // top collision
                     if (t_collision < b_collision && t_collision < l_collision && t_collision < r_collision ) {
-                        //console.log("Top collision");
                         this.land(block);
                     }
+                    // bottom collision
                     else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision)
                     {
-                        //console.log("bottom collision");
                         this.fall();
                     }
+                    // right collision
                     else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision) {
-                        //console.log("Left collision");
                         let leftValue = this.getCenterX() - this.x + this.boxLeft;
                         this.x = block.getX() - leftValue;
                     }
+                    // left collision
                     else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision ) {
-                        //console.log("Right collision");
                         let rightValue = this.getCenterX() - this.x - this.boxLeft;
                         this.x = block.getX() + block.w - rightValue;
                     }
                 }
+                // if in collision with an item, the player will pick it
                 else if(whats[k] instanceof ItemBlock) {
                     let item = whats[k];
                     if(!item.picked)
                         this.pick(item);
                 }
+                // if in collision with an enemy
                 else if(whats[k].getType() === BLOCK_TYPE_ENEMY){
                     let enemy = whats[k];
                     let player_bottom = this.getCenterY() + this.boxBottom;
@@ -323,35 +346,38 @@ Player.prototype = {
                     let l_collision = player_right - (enemy.getCenterX() - enemy.boxLeft);
                     let r_collision = tiles_right - (this.getCenterX() - this.boxRight);
 
+                    // top collision --> kill the enemy
                     if(this.falling && this.getCenterY() + this.boxBottom < enemy.getCenterY()){
                         this.kill(enemy);
                     }
+                    // bottom collision --> the player die
                     else if (b_collision < t_collision && b_collision < l_collision && b_collision < r_collision) {
-                        //console.log("bottom collision");
                         this.die();
                     }
+                    // right collision --> the player die
                     else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision) {
-                        //console.log("Left collision");
                         this.die();
                     }
+                    // left collision --> the player die
                     else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision ) {
-                        //console.log("Right collision");
                         this.die();
                     }
                 }
             }
+            // fall if he's not in collision
             if(!hasCollisionWithCollidableBlock && mustBeCollidableBlock) {
-                //console.log('no collisison -> fall');
                 this.gravity = GRAVITY;
             }
         }
     },
 
+    // add gravity to the player
     fall: function(){
         this.gravity = GRAVITY;
         this.velY = this.gravity;
     },
 
+    // set the player on the floor
     land: function(what){
         let topValue = this.getCenterY() - this.y + this.boxBottom;
         this.y = what.getY() - topValue + 1;
@@ -362,18 +388,22 @@ Player.prototype = {
         this.jumpTimeout = TIMEOUT_JUMP;
     },
 
+    // return the type of the block
     getType: function(){
         return BLOCK_TYPE_PLAYER;
     },
 
+    // return the x center of the player
     getCenterX: function(){
         return this.x + this.w / 2;
     },
 
+    // return the y center of the player
     getCenterY: function(){
         return this.y + this.h / 2;
     },
 
+    // method to kill an enemy
     kill: function (enemy) {
         enemy.die();
         this.gb.score += enemy.scorePoint;
@@ -383,6 +413,7 @@ Player.prototype = {
         this.__drawPlayerJumping();
     },
 
+    // when the player die display the game over screen
     die: function () {
         this.velY = -this.jumpStrength*2;
         this.__drawPlayerJumping();
@@ -391,12 +422,14 @@ Player.prototype = {
         this.gb.initActiveScene(new GameOverScene(this.gb));
     },
 
+    // method to pick an item
     pick: function(item) {
         this.gb.score += item.scorePoint;
         item.effect(this);
         item.pick();
     },
 
+    // method to reduce the salt (when player kill an enemy or pick a bottle item)
     reduceSalt: function(nbr){
         if(this.gb.saltLevel - nbr < 0)
             this.gb.saltLevel = 0;
@@ -404,6 +437,7 @@ Player.prototype = {
             this.gb.saltLevel -= nbr;
     },
 
+    // method to boost the jump of the player when he picks a pizza
     boostJump: function(nbr, time){
         if(this.boostedJumpTimeout <= 0){
             this.jumpStrength += nbr;
@@ -411,6 +445,7 @@ Player.prototype = {
         this.boostedJumpTimeout = time;
     },
 
+    // draw the player with the default frame
     __drawPlayerWaiting: function(){
         if (!this.jumping){
             this.frameIndex = DEFAULT_FRAME;
@@ -419,6 +454,7 @@ Player.prototype = {
             this.__drawPlayerJumping();
     },
 
+    // draw the player with the walking frame
     __drawPlayerWalking: function(){
         if (!this.jumping) {
             this.__update();
@@ -427,16 +463,19 @@ Player.prototype = {
             this.__drawPlayerJumping();
     },
 
+    // draw the player with the jumping frame
     __drawPlayerJumping: function(){
         this.frameIndex = JUMPING_FRAME;
         this.__drawPlayer();
     },
 
+    // draw the player
     __drawPlayer(){
         let player = this.isPlayerForw ? this.playerForw : this.playerBackw;
         this.context.drawImage(player[this.frameIndex], this.x, this.y, this.w, this.h);
     },
 
+    // method to update the frame of the player
     __update: function () {
         this.tickCount += 1;
         if (this.tickCount > this.ticksPerFrame) {
