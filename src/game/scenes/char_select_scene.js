@@ -54,12 +54,7 @@ CharacterSelectionScene.prototype = {
             this.imagesY.push(this.defaultImagesY)
         }
 
-        this.buttonW = 160;
-        this.buttonH = 50;
-        this.backButton = [this.canvas.width/2 - this.buttonW/2, this.defaultImagesY + this.imagesWH + this.buttonW*2, this.buttonW, this.buttonH, "Back"];
-
         this.isMouseHoverImages = [false, false, false, false];
-        this.isMouseHoverButton = false;
         this.isMouseHoverPortal = false;
 
         this.mouseX = 0;
@@ -71,9 +66,7 @@ CharacterSelectionScene.prototype = {
 
         let self = this;
         this.mm = function (mouseEvent){self.__checkPos(mouseEvent)};
-        this.mc = function (mouseEvent){self.__checkClick(mouseEvent)};
         this.canvas.addEventListener("mousemove", this.mm);
-        this.canvas.addEventListener("click", this.mc);
 
         this.isMouseDown = false;
 
@@ -139,11 +132,11 @@ CharacterSelectionScene.prototype = {
         //portal drawing
         this.context.save();
 
-        this.context.clearRect(this.canvas.width/2 - this.voidPortal.realH/2, (this.defaultImagesY + this.imagesWH) + (this.backButton[1] - (this.defaultImagesY + this.imagesWH))/4, this.voidPortal.realW, this.voidPortal.realH);
+        this.context.clearRect(this.canvas.width/2 - this.voidPortal.realH/2, (this.defaultImagesY + this.imagesWH) + ((this.defaultImagesY + this.imagesWH))/4, this.voidPortal.realW, this.voidPortal.realH);
 
         let radius = this.voidPortal.realH/2;
         this.voidPortal.destX = this.canvas.width/2 - this.voidPortal.realW/2;
-        this.voidPortal.destY = (this.defaultImagesY + this.imagesWH) + (this.backButton[1] - (this.defaultImagesY + this.imagesWH))/4;
+        this.voidPortal.destY = (this.defaultImagesY + this.imagesWH) + ((this.defaultImagesY + this.imagesWH))/4;
         this.context.beginPath();
         this.context.moveTo(this.voidPortal.destX + radius, this.voidPortal.destY);
         this.context.lineTo(this.voidPortal.destX + this.voidPortal.realW - radius, this.voidPortal.destY);
@@ -155,7 +148,6 @@ CharacterSelectionScene.prototype = {
         this.context.lineTo(this.voidPortal.destX, this.voidPortal.destY + radius);
         this.context.quadraticCurveTo(this.voidPortal.destX, this.voidPortal.destY, this.voidPortal.destX + radius, this.voidPortal.destY);
         this.context.closePath();
-
         this.context.clip();
 
         this.voidPortal.update();
@@ -171,6 +163,9 @@ CharacterSelectionScene.prototype = {
         );
 
         this.context.restore();
+        this.context.stroke();
+        this.context.closePath();
+
 
         this.context.font = '38pt Kremlin Pro Web';
         this.context.fillStyle = '#000000';
@@ -179,8 +174,7 @@ CharacterSelectionScene.prototype = {
 
         for (let i = 0; i < this.charactersImages.length; i++) {
 
-            if (this.isMouseHoverImages[i] && !this.isDragActive
-                || this.isMouseHoverImages[i] && this.dragIndex == i && this.isDragActive) {
+            if (this.isMouseHoverImages[i] && !this.isDragActive || this.isMouseHoverImages[i] && this.dragIndex === i && this.isDragActive) {
                 this.context.drawImage(this.charactersSelectedImages[i], this.imagesX[i], this.imagesY[i], this.imagesWH, this.imagesWH);
             } else
                 this.context.drawImage(this.charactersImages[i], this.imagesX[i], this.imagesY[i], this.imagesWH, this.imagesWH);
@@ -191,27 +185,6 @@ CharacterSelectionScene.prototype = {
             this.context.textAlign="center";
             this.context.fillText(this.charactersLabels[i], this.defaultImagesX[i] + this.imagesWH/2, this.defaultImagesY + this.imagesWH + 20);
         }
-
-
-        // draw button
-        this.context.beginPath();
-        this.context.rect(this.backButton[0], this.backButton[1], this.backButton[2], this.backButton[3]);
-        this.context.fillStyle = '#FFFFFF';
-        if (!this.isMouseHoverButton)
-            this.context.fillStyle = 'rgba(255,255,255,0.2)';
-        else
-            this.context.fillStyle = 'rgba(255,255,255,1)';
-        this.context.fillRect(this.backButton[0], this.backButton[1], this.backButton[2], this.backButton[3]);
-        this.context.fill();
-        this.context.lineWidth = 2;
-        this.context.strokeStyle = '#000000';
-        this.context.stroke();
-        this.context.closePath();
-        this.context.font = '38pt Kremlin Pro Web';
-        this.context.fillStyle = '#000000';
-        this.context.textAlign="center";
-        this.context.fillText(this.backButton[4], this.backButton[0] + this.backButton[2]/2, this.backButton[1]+40);
-
     },
 
     __sprite: function(options) {
@@ -261,19 +234,8 @@ CharacterSelectionScene.prototype = {
                 && this.mouseY > this.imagesY[i] && this.mouseY < this.imagesY[i] + this.imagesWH;
         }
 
-        this.isMouseHoverButton = this.mouseX > this.backButton[0] && this.mouseX < this.backButton[0] + this.backButton[2]
-            && this.mouseY > this.backButton[1] && this.mouseY < this.backButton[1] + this.backButton[3];
-
         this.isMouseHoverPortal = this.mouseX > this.voidPortal.destX && this.mouseX < this.voidPortal.destX + this.voidPortal.realW
             && this.mouseY > this.voidPortal.destY && this.mouseY < this.voidPortal.destY + this.voidPortal.realH;
     },
-
-    __checkClick: function(){
-        if (this.isMouseHoverButton) {
-            this.canvas.removeEventListener("mousemove", this.mm);
-            this.canvas.removeEventListener("click", this.mc);
-            this.gb.initActiveScene(this.mainScene);
-        }
-    }
 
 };

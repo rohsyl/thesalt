@@ -24,7 +24,10 @@ EndScene.prototype = {
         this.canvas.addEventListener("mousemove", this.mm);
         this.canvas.addEventListener("click", this.mc);
 
-        console.log('game ended');
+
+        this.image = new Image();
+        this.image.src = 'assets/sprites/background/firstscreen/first_screen.png';
+
         this.gb.saveScore();
     },
 
@@ -34,8 +37,8 @@ EndScene.prototype = {
 
     draw: function() {
 
-
         this.context.beginPath();
+        this.context.drawImage(this.image, 0, 0, this.w, this.h);
 
         this.context.rect(this.buttonsX, this.buttonsY,
         this.buttonsWidth, this.buttonsHeight);
@@ -58,8 +61,7 @@ EndScene.prototype = {
         this.context.font = '38pt Kremlin Pro Web';
         this.context.fillStyle = '#000000';
         this.context.textAlign="center";
-        console.log(this.textLabel);
-        this.context.fillText(this.textLabel.concat(" ", this.gb.score) ,this.canvas.width/2, 100 );
+        this.context.fillText(this.textLabel.concat(this.gb.score) ,this.canvas.width/2, 100 );
 
         this.context.font = '30pt Kremlin Pro Web';
         this.context.fillText(this.buttonsLabel, this.buttonsX+this.buttonsWidth/2, this.buttonsY + this.buttonsHeight/2 + 12);
@@ -90,7 +92,8 @@ EndScene.prototype = {
             this.canvas.removeEventListener("mousemove", this.mm);
             this.canvas.removeEventListener("click", this.mc);
             this.gb.score = 0;
-            this.gb.initActiveScene(new MainScene(this.gb));
+            this.gb.saltLevel = 0;
+            this.gb.initActiveScene(new CharacterSelectionScene(this.gb));
         }
     }
 };

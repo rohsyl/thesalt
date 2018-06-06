@@ -44,7 +44,6 @@ CollisionManager.prototype = {
             if(!this.levelBuilder.itemsBlock[i].picked){
                 if(this.__isCollide(this.levelBuilder.player, this.levelBuilder.itemsBlock[i])){
                     blocksInCollision.push(this.levelBuilder.itemsBlock[i]);
-                    console.log("collision player vs item")
                 }
             }
         }
