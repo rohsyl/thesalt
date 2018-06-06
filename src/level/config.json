@@ -1,7 +1,7 @@
 [
   {
     "levelName": "level1",
-    "audio" : "cave",
+    "audio" : "level1",
     "backgrounds": ["background/level1/background.jpg", "background/level1/background.jpg"]
   },
   {
@@ -11,12 +11,12 @@
   },
   {
     "levelName": "level3",
-    "audio" : "birds",
+    "audio" : "level3",
     "backgrounds": ["background/level3/background.png", "background/level3/background.png"]
   },
   {
     "levelName": "level4",
-    "audio" : "cave_hardcore",
+    "audio" : "level4",
     "backgrounds": ["background/level4/background.png", "background/level4/background.png", "background/level4/background.png", "background/level4/background.png"]
   },
   {
