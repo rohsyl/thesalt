@@ -113,10 +113,10 @@ function LevelManager(scene, levelString, playerSelected, backgroundPaths){
             return self.__refBlock(new ItemBlock(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_WATER, 25));
         },
         1: function(i, j){
-            return self.__refBlock(new EnemyWalk(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
+            return self.__refBlock(new EnemyWalk(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
         },
         2: function(i, j){
-            return self.__refBlock(new EnemyJump(self.gb, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
+            return self.__refBlock(new EnemyJump(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize(), IMG_FLOOR_CAVE_1));
         },
         // 3: function(i, j){
         //     return self.__refBlock(new EnemyFire(self.scene, self.__calcX(j), self.__calcY(i), self.__getBlockSize()));
