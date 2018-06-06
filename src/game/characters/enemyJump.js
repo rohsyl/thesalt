@@ -218,6 +218,7 @@ EnemyJump.prototype = {
 
     die: function(){
         this.dead = true;
+        this.gb.audio.playEnemyDie();
     },
 
     __drawEnemyWalking: function(){
