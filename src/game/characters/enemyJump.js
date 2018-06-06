@@ -95,7 +95,6 @@ EnemyJump.prototype = {
         if (!this.dead) {
             this.shiftX = shiftX;
 
-            console.log(this.jumpTimeout);
             if(this.jumpTimeout <= 0){
                 if(!this.jumping){
                     this.y = this.y - 1;
@@ -190,7 +189,7 @@ EnemyJump.prototype = {
                 }
             }
             if(!hasCollisionWithCollidableBlock && mustBeCollidableBlock){
-                console.log('no collisison -> fall');
+                //console.log('no collisison -> fall');
                 this.gravity = GRAVITY;
             }
         }

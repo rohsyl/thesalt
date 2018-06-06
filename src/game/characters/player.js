@@ -124,7 +124,6 @@ Player.prototype = {
         this.velY = 0;
 
         this.shiftX = undefined;
-
         this.jumping = false;
         this.jumpCount = NB_ALLOWED_JUMP;
         this.jumpTimeout = TIMEOUT_JUMP;

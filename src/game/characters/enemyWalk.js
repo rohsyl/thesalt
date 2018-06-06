@@ -165,7 +165,7 @@ EnemyWalk.prototype = {
                 }
             }
             if(!hasCollisionWithCollidableBlock && mustBeCollidableBlock){
-                console.log('no collisison -> fall');
+                //console.log('no collisison -> fall');
                 this.gravity = GRAVITY;
             }
         }
