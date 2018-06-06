@@ -5,6 +5,7 @@ function LevelScene(gb, levelInstance) {
     this.canvas = this.gb.canvas;
     this.context = this.gb.context;
     this.levelInstance = levelInstance;
+
 }
 LevelScene.prototype = {
 
@@ -15,6 +16,12 @@ LevelScene.prototype = {
         this.levelManager = new LevelManager(this, level, this.playerSelected, backgrounds);
         this.levelManager.init();
         this.collisionManager = new CollisionManager(this.levelManager);
+
+        console.log(this.levelInstance.getAudio());
+        if(this.levelInstance.getAudio() != null) {
+            this.gb.audio.setLevelAudio(this.levelInstance.getAudio());
+            this.gb.audio.playLevelAudio();
+        }
     },
 
     update: function(){

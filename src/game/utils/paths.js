@@ -1,4 +1,5 @@
 const SPRITES_PATH = "assets/sprites/";
+const AUDIOS_PATH = "assets/audio/";
 
 const IMG_ENEMY_FORW_PATH = "forwards/";
 const IMG_ENEMY_BACKW_PATH = "backwards/";

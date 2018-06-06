@@ -28,6 +28,7 @@ EndScene.prototype = {
         this.image = new Image();
         this.image.src = 'assets/sprites/background/firstscreen/first_screen.png';
 
+        this.gb.audio.playVictory();
         this.gb.saveScore();
     },
 

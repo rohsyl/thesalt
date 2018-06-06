@@ -1,22 +1,27 @@
 [
   {
     "levelName": "level1",
+    "audio" : "cave",
     "backgrounds": ["background/level1/background.jpg", "background/level1/background.jpg"]
   },
   {
     "levelName": "level2",
+    "audio" : null,
     "backgrounds": ["background/level2/landscape.png", "background/level2/landscape.png"]
   },
   {
     "levelName": "level3",
+    "audio" : null,
     "backgrounds": ["background/level3/background.png", "background/level3/background.png"]
   },
   {
     "levelName": "level4",
+    "audio" : null,
     "backgrounds": ["background/level1/background.jpg", "background/level1/background.jpg", "background/level1/background.jpg", "background/level1/background.jpg"]
   },
   {
     "levelName": "level5",
+    "audio" : null,
     "backgrounds": ["background/level3/background.png", "background/level3/background.png", "background/level3/background.png"]
   }
 ]

@@ -1,6 +1,7 @@
-function LevelInstance(name, backgrounds){
+function LevelInstance(name, backgrounds, audio){
     this.name = name;
     this.backgrounds = backgrounds;
+    this.audio = AUDIOS_PATH + audio + '.mp3';
 }
 LevelInstance.prototype = {
     getLevelName: function(){
@@ -9,5 +10,9 @@ LevelInstance.prototype = {
 
     getLevelBackgrounds: function(){
         return this.backgrounds;
+    },
+
+    getAudio: function(){
+        return this.audio;
     }
 };
