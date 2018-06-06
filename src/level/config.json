@@ -16,8 +16,8 @@
   },
   {
     "levelName": "level4",
-    "audio" : null,
-    "backgrounds": ["background/level1/background.jpg", "background/level1/background.jpg", "background/level1/background.jpg", "background/level1/background.jpg"]
+    "audio" : "cave_hardcore",
+    "backgrounds": ["background/level4/background.png", "background/level4/background.png", "background/level4/background.png", "background/level4/background.png"]
   },
   {
     "levelName": "level5",
