@@ -394,6 +394,7 @@ Player.prototype = {
         this.gb.score += enemy.scorePoint;
         this.velY = -this.jumpStrength*2;
         this.jumpCount = 0;
+        this.reduceSalt(3);
         this.__drawPlayerJumping();
     },
 
