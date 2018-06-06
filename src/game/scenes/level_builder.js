@@ -2,6 +2,7 @@
     KEY MAPS :
         * SHIFT + L -> open Level Builder
         * SHIFT + A -> add a new column to level
+        * SHIFT + Q -> remove last column from level
         * SHIFT + I -> import a level from clipboard
         * SHIFT + S -> export level and download it
 
@@ -39,7 +40,7 @@ LevelBuilder.prototype = {
 
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
 
-        this.grid = new Array(LEVEL_ROW_NB*3);
+        this.grid = [];
 
         this.menuWidth = this.blockSize*2;
         this.leftOffset = this.menuWidth + this.blockSize;
@@ -59,11 +60,11 @@ LevelBuilder.prototype = {
 
         this.menuBlocksValues = [0, this.menuWidth, this.menuWidth, this.menuWidth];
 
-        this.__initGrid(LEVEL_ROW_NB);
+        this.__initGrid(LEVEL_ROW_NB*3);
 
         this.mouseX = 0;
         this.mouseY = 0;
-        this.scrollShift = 30;
+        this.scrollShift = 150;
 
         this.mouseOverItem = new Array(this.menuBlocks.length);
         for (let i = 0; i < this.mouseOverItem.length; i++){
@@ -187,6 +188,11 @@ LevelBuilder.prototype = {
             }
 
         }
+
+        if (e.shiftKey && e.keyCode === 81){
+            this.grid.pop();
+        }
+
         if (e.shiftKey && e.keyCode === 65){
             let array = new Array(LEVEL_ROW_NB);
 
@@ -223,15 +229,10 @@ LevelBuilder.prototype = {
             this.selectedItem = 10;
         if (e.keyCode === 221)
             this.selectedItem = 11;
-console.log(e.keyCode);
     },
 
     // fill the defined grid with a value
     __fillGrid(x, y, value){
-        // if (x > this.grid.length)
-        //     for (let i = this.grid.length; i > x; i++)
-        //         this.grid[i] = new Array(LEVEL_ROW_NB);
-
         this.grid[x][y] = new ItemValue(value, this.blockImgDefinitions[value], x * this.blockSize, y * this.blockSize);
     },
 
@@ -241,10 +242,11 @@ console.log(e.keyCode);
 
         let textRows = level.split(" ");
 
-        this.__initGrid(textRows.length);
+        this.__initGrid(textRows[0].length);
 
         for (let y = 0; y < this.grid[0].length; y++) {
             let chars = textRows[y].split("");
+
             for (let x = 0; x < this.grid.length; x++) {
                 this.__fillGrid(x, y, chars[x]);
             }
@@ -253,9 +255,10 @@ console.log(e.keyCode);
     },
 
     //  initialize grid with empty value
-    __initGrid(length){
+    __initGrid(width){
+        this.grid = new Array(width);
         for (let x = 0; x < this.grid.length; x++) {
-                this.grid[x] = new Array(length);
+                this.grid[x] = new Array(LEVEL_ROW_NB);
         }
         for (let x = 0; x < this.grid.length; x++) {
             for (let y = 0; y < this.grid[x].length; y++) {
