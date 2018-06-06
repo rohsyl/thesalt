@@ -1,4 +1,9 @@
-
+/*
+    KEY MAPS :
+        * SHIFT + L -> open Level Builder
+        * SHIFT + A -> add a new column to level
+        * SHIFT + S -> export level and download it
+ */
 function LevelBuilder(gb, mainScene) {
     this.gb = gb;
     if (typeof mainScene == 'undefined')
@@ -74,9 +79,28 @@ LevelBuilder.prototype = {
 
         document.addEventListener("keydown", function(e){self.keyDownHandler(e)}, false);
 
+        this.isMouseDown = false;
+
+        this.canvas.onmousedown = function(){
+            self.isMouseDown = true;
+        };
+        this.canvas.onmouseup = function() {
+            self.isMouseDown = false;
+        };
+
     },
 
     update: function(){
+
+        if(this.isMouseDown){
+            for (let x = 0; x < this.mouseOverGrid.length; x++) {
+                for (let y = 0; y < this.mouseOverGrid[x].length; y++) {
+                    if(this.mouseOverGrid[x][y]) {
+                        this.__fillGrid(x, y, this.menuBlocks[this.selectedItem].getChar());
+                    }
+                }
+            }
+        }
 
     },
 
