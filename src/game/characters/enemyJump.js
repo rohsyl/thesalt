@@ -17,7 +17,6 @@ let IMG_ENEMY_2_F_FEETBACK = IMG_ENEMY_2_PATH + IMG_ENEMY_FORW_PATH + IMG_ENEMY_
 
 let IMG_ENEMY_2_B_FEETBACK = IMG_ENEMY_2_PATH + IMG_ENEMY_BACKW_PATH + IMG_ENEMY_FEET_BACK_PATH;
 
-
 function EnemyJump(scene, x, y, blockSize) {
     this.scene = scene;
     this.gb = this.scene.gb;
@@ -28,7 +27,6 @@ function EnemyJump(scene, x, y, blockSize) {
     this.blockSize = blockSize;
     this.slowness = 8;
     this.dead = false;
-    this.ENEMY_JUMP_TIMOUT = 4 * FPS;
 }
 
 EnemyJump.prototype = {
@@ -40,20 +38,19 @@ EnemyJump.prototype = {
         this.h = this.blockSize*2;
         this.w = this.blockSize*2;
 
-
-
         // hit boxes
         this.boxTop = this.h / 2;
-        this.boxBottom = this.h / 2 ;
+        this.boxBottom = this.h / 2;
         this.boxLeft = this.w / 7;
         this.boxRight = this.w / 7;
 
         this.y = this.y - this.h / 2;
 
         this.speed = SHIFT_STEP / this.slowness;
+        this.gravity = GRAVITY;
         this.jumping = false;
         this.jumpStrength = JUMP_STRENGTH - 2;
-        this.jumpTimeout = this.ENEMY_JUMP_TIMOUT;
+        this.jumpTimeout = this.getRandomTimout();
 
         this.velX = 0;
         this.velY = 0;
@@ -62,7 +59,7 @@ EnemyJump.prototype = {
 
         // ========================================================================
         // enemy graphics
-        this.isEnemyForw = false;
+        this.isEnemyForw = true;
         this.enemyForw0 = new Image();
         this.enemyForw1 = new Image();
         this.enemyForw2 = new Image();
@@ -72,14 +69,14 @@ EnemyJump.prototype = {
         this.enemyBackw2 = new Image();
         this.enemyBackw3 = new Image();
 
-        this.enemyForw0.src = IMG_ENEMY_2_F_STOP;
-        this.enemyForw1.src = IMG_ENEMY_2_F_FEETFRONT;
-        this.enemyForw2.src = IMG_ENEMY_2_F_RUN;
-        this.enemyForw3.src = IMG_ENEMY_2_F_FEETBACK;
-        this.enemyBackw0.src = IMG_ENEMY_2_B_STOP;
-        this.enemyBackw1.src = IMG_ENEMY_2_B_FEETFRONT;
-        this.enemyBackw2.src = IMG_ENEMY_2_B_RUN;
-        this.enemyBackw3.src = IMG_ENEMY_2_B_FEETBACK;
+        this.enemyForw0.src = IMG_ENEMY_1_F_STOP;
+        this.enemyForw1.src = IMG_ENEMY_1_F_FEETFRONT;
+        this.enemyForw2.src = IMG_ENEMY_1_F_RUN;
+        this.enemyForw3.src = IMG_ENEMY_1_F_FEETBACK;
+        this.enemyBackw0.src = IMG_ENEMY_1_B_STOP;
+        this.enemyBackw1.src = IMG_ENEMY_1_B_FEETFRONT;
+        this.enemyBackw2.src = IMG_ENEMY_1_B_RUN;
+        this.enemyBackw3.src = IMG_ENEMY_1_B_FEETBACK;
 
         this.enemyForw = [this.enemyForw1, this.enemyForw2, this.enemyForw3, this.enemyForw0];
         this.enemyBackw = [this.enemyBackw1, this.enemyBackw2, this.enemyBackw3, this.enemyBackw0];
@@ -98,45 +95,49 @@ EnemyJump.prototype = {
         if (!this.dead) {
             this.shiftX = shiftX;
 
-            if(this.jumpTimeout === 0 && !this.jumping){
-                this.velY = -this.jumpStrength * 2;
-                this.jumping = true;
+            console.log(this.jumpTimeout);
+            if(this.jumpTimeout <= 0){
+                if(!this.jumping){
+                    this.y = this.y - 1;
+                    this.gravity = GRAVITY;
+                    this.velY = -this.jumpStrength * 2;
+                    this.jumping = true;
+                    this.jumpTimeout = this.getRandomTimout();
+                }
             }
             else{
                 this.jumpTimeout--;
-                this.jumping = false;
-
-                if (this.isEnemyForw) {
-                    if (this.velX < this.speed)
-                        this.velX++;
-                }
-                else if (!this.isEnemyForw) {
-                    if (this.velX > -this.speed)
-                        this.velX--;
-                }
             }
 
+            if (this.isEnemyForw) {
+                if (this.velX < this.speed)
+                    this.velX++;
+            }
+            if (!this.isEnemyForw) {
+                if (this.velX > -this.speed)
+                    this.velX--;
+            }
 
             // apply forces
             this.velX *= FRICTION;
-            this.velY += GRAVITY;
+            this.velY += this.gravity;
         }
     },
 
     draw: function () {
         if (!this.dead) {
-            // move the player
 
-            if(this.jumping){
-                this.__drawEnemyJumping();
-            }
-            else if (this.isEnemyForw) {
+            if (this.isEnemyForw) {
                 this.__drawEnemyWalking();
             }
             else if (!this.isEnemyForw) {
                 this.__drawEnemyWalking();
             }
+            else if(this.jumping){
+                this.__drawEnemyJumping();
+            }
 
+            // move the player
             this.x += this.velX;
             this.y += this.velY;
         }
@@ -145,15 +146,18 @@ EnemyJump.prototype = {
     /**
      * Trigger when the enemy is on collision with one or many blocks
      * @param whats [] Blocks in collision
+     * @param mustBeCollidableBlock boolean
      */
-    onCollision: function(whats){
+    onCollision: function(whats, mustBeCollidableBlock){
         if (!this.dead) {
 
+            let hasCollisionWithCollidableBlock = false;
             for(let k in whats) {
                 if (whats[k] instanceof CollidableBlock) {
+                    hasCollisionWithCollidableBlock = true;
                     let block = whats[k];
                     let enemy_bottom = this.getCenterY() + this.boxBottom;
-                    let tiles_bottom = block.getY() + block.h;
+                    let tiles_bottom = block.getY() + block.h - 1;
                     let enemy_right = this.getCenterX() + this.boxRight;
                     let tiles_right = block.getX() + block.w;
 
@@ -171,45 +175,38 @@ EnemyJump.prototype = {
                         this.fall();
                     }
                     else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision) {
-                        //console.log("Enemy Left collision" + " : " + this.getCenterX());
-                        //console.log(block.getX() + ' ' + block.getY());
-                        //if(block.getY() >= this.getCenterY() + this.boxBottom){
-                        //    console.log("bad collision");
-                        //}
-                        //else{
-                            let leftValue = this.getCenterX() - this.x + this.boxLeft;
-                            this.x = block.getX() - leftValue;
-                            this.isEnemyForw = false;
-                        //}
+                        // console.log("Enemy Left collision" + " : " + this.getCenterX());
+                        let leftValue = this.getCenterX() - this.x + this.boxLeft;
+                        this.x = block.getX() - leftValue;
+                        this.isEnemyForw = false;
                     }
                     else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision) {
-                        //console.log("Enemy Right collision" + " : " + this.getCenterX());
-                        //console.log(block.getX() + ' ' + block.getY());
-                        //if(block.getY() >= this.getCenterY() + this.boxBottom){
-                           // console.log("bad collision");
-                        //}
-                        //else {
-                            let rightValue = this.getCenterX() - this.x - this.boxLeft;
-                            this.x = block.getX() + block.w - rightValue;
-                            this.isEnemyForw = true;
-                        //}
+                        // console.log("Enemy Right collision" + " : " + this.getCenterX());
+                        let rightValue = this.getCenterX() - this.x - this.boxLeft;
+                        this.x = block.getX() + block.w - rightValue;
+                        this.isEnemyForw = true;
                     }
 
                 }
+            }
+            if(!hasCollisionWithCollidableBlock && mustBeCollidableBlock){
+                console.log('no collisison -> fall');
+                this.gravity = GRAVITY;
             }
         }
     },
 
     fall: function(){
-        this.velY = GRAVITY;
+        this.gravity = GRAVITY;
+        this.velY = this.gravity;
     },
 
     land: function(what){
         let topValue = this.getCenterY() - this.y + this.boxBottom;
-        this.y = what.getY() - topValue;
+        this.y = what.getY() - topValue + 1;
         this.velY = 0;
+        this.gravity = 0;
         this.jumping = false;
-        this.jumpTimeout = this.ENEMY_JUMP_TIMOUT;
     },
 
     getCenterX: function(){
@@ -248,6 +245,10 @@ EnemyJump.prototype = {
 
         this.context.drawImage(enemy[this.frameIndex], this.x - this.shiftX, this.y, this.w, this.h);
 
+    },
+
+    getRandomTimout: function(){
+        return (2 + Math.floor(Math.random() * 4)) * FPS;
     },
 
 
