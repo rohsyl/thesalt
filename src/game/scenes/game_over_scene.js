@@ -31,8 +31,10 @@ GameOverScene.prototype = {
         this.image = new Image();
         this.image.src = 'assets/sprites/background/gameover/gameover.jpg';
 
-        console.log('game over');
+
+        this.gb.audio.setLevelAudio(undefined);
         this.gb.audio.playGameOver();
+
         this.gb.saveScore();
         this.gb.saltLevel = 0;
     },

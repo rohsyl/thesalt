@@ -10,6 +10,12 @@ function Audio(){
     });
     this.soundLevel = undefined;
     this.soundEnabled = true;
+
+    let self = this;
+    this.btnToggleSound = $('#btnToggleSound').show();
+    this.btnToggleSound.click(function(){
+        self.toggleSound();
+    });
 }
 Audio.prototype = {
     playGameOver(){
@@ -37,10 +43,15 @@ Audio.prototype = {
 
     setLevelAudio: function(audio){
         this.stopAll();
-        this.soundLevel = new Howl({
-            src: [audio],
-            loop: true
-        });
+        if(typeof audio !== 'undefined'){
+            this.soundLevel = new Howl({
+                src: [audio],
+                loop: true
+            });
+        }
+        else{
+            this.soundLevel = undefined;
+        }
     },
 
     stopAll: function(){
@@ -58,6 +69,19 @@ Audio.prototype = {
         }
         else{
             this.stopAll();
+        }
+    },
+
+    toggleSound: function(){
+        this.setSoundEnabled(!this.soundEnabled);
+
+        if(this.soundEnabled){
+            this.btnToggleSound.find('.glyphicon').removeClass('glyphicon-volume-off');
+            this.btnToggleSound.find('.glyphicon').addClass('glyphicon-volume-up');
+        }
+        else{
+            this.btnToggleSound.find('.glyphicon').removeClass('glyphicon-volume-up');
+            this.btnToggleSound.find('.glyphicon').addClass('glyphicon-volume-off');
         }
     }
 };

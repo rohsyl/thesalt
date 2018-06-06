@@ -6,7 +6,7 @@
   },
   {
     "levelName": "level2",
-    "audio" : null,
+    "audio" : "level2",
     "backgrounds": ["background/level2/landscape.png", "background/level2/landscape.png"]
   },
   {
@@ -21,7 +21,7 @@
   },
   {
     "levelName": "level5",
-    "audio" : null,
+    "audio" : "level5",
     "backgrounds": ["background/level3/background.png", "background/level3/background.png", "background/level3/background.png"]
   }
 ]
