@@ -227,6 +227,7 @@ LevelBuilder.prototype = {
             && this.mouseY > this.menuBlocksValues[1] * i && this.mouseY < this.menuBlocksValues[1] * i + this.menuBlocksValues[3];
         }
 
+        // add new rows to mouseOverGrid
         this.mouseOverGrid = new Array(this.grid.length);
         for (let x = 0; x < this.mouseOverGrid.length; x++){
             this.mouseOverGrid[x] = new Array(this.grid[x].length);
@@ -238,8 +239,16 @@ LevelBuilder.prototype = {
         // check if mouse is over a grid block
         for (let x = 0; x < this.mouseOverGrid.length; x++){
             for (let y = 0; y < this.mouseOverGrid[x].length; y++) {
+
                 this.mouseOverGrid[x][y] = this.mouseX > this.grid[x][y].getX() + this.leftOffset && this.mouseX < this.grid[x][y].getX() + this.blockSize + this.leftOffset
                     && this.mouseY > this.grid[x][y].getY() && this.mouseY < this.grid[x][y].getY() + this.blockSize;
+
+                for (let i = 0; i < this.mouseOverItem.length; i++) {
+                    if (this.mouseOverItem[i])
+                        this.mouseOverGrid[x][y] = false;
+
+                }
+
             }
         }
     },
