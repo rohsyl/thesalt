@@ -198,6 +198,8 @@ Player.prototype = {
                     this.jumpTimeout = TIMEOUT_JUMP;
                 }
             }
+
+
             // apply forces
             this.velX *= FRICTION;
 
@@ -233,7 +235,7 @@ Player.prototype = {
                 this.die();
             }
 
-
+            console.log(this.velX, this.speed);
 
             // move the player
             this.x += this.velX;

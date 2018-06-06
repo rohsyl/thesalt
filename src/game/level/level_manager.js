@@ -20,7 +20,7 @@ const BACKGROUND_HEIGHT = 1080;
  * Scrolling speed of the level
  * @type {number}
  */
-const SHIFT_STEP = 10;
+const SHIFT_STEP = 5;
 
 const IMG_BLOCKS_PATH = SPRITES_PATH + "blocks/";
 const IMG_ITEMS_PATH = SPRITES_PATH + "items/";
