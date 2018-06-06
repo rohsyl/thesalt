@@ -55,14 +55,6 @@ LevelBuilder.prototype = {
         this.mouseX = 0;
         this.mouseY = 0;
 
-        this.mouseOverGrid = new Array(this.grid.length);
-        for (let x = 0; x < this.mouseOverGrid.length; x++){
-            this.mouseOverGrid[x] = new Array(this.grid[x].length);
-            for (let y = 0; y < this.mouseOverGrid[x].length; y++) {
-                this.mouseOverGrid[x][y] = false;
-            }
-        }
-
         this.mouseOverItem = new Array(this.menuBlocks.length);
         for (let i = 0; i < this.mouseOverItem.length; i++){
             this.mouseOverItem[i] = false;
@@ -126,6 +118,13 @@ LevelBuilder.prototype = {
 
             let levelText = "";
 
+            for (let y = 0; y < this.grid[0].length; y++) {
+                for (let x = 0; x < this.grid.length; x++) {
+                    levelText += this.grid[x][y].getChar();
+                }
+                levelText += "\n";
+            }
+
             let a = document.createElement("a");
             document.body.appendChild(a);
             a.style = "display: none";
@@ -150,6 +149,18 @@ LevelBuilder.prototype = {
             }
 
         }
+        if (e.shiftKey && e.keyCode === 65){
+            let array = new Array(LEVEL_ROW_NB);
+
+            this.grid.push(array);
+
+            for (let i = 0; i < array.length; i++){
+                this.__fillGrid(this.grid.length-1, i, "e");
+            }
+
+
+        }
+        console.log(e.keyCode);
     },
 
     // fill the defined grid with a value
@@ -182,6 +193,14 @@ LevelBuilder.prototype = {
         for (let i = 0; i < this.mouseOverItem.length; i++) {
             this.mouseOverItem[i] = this.mouseX > this.menuBlocksValues[0] && this.mouseX < this.menuBlocksValues[0] + this.menuBlocksValues[2]
             && this.mouseY > this.menuBlocksValues[1] * i && this.mouseY < this.menuBlocksValues[1] * i + this.menuBlocksValues[3];
+        }
+
+        this.mouseOverGrid = new Array(this.grid.length);
+        for (let x = 0; x < this.mouseOverGrid.length; x++){
+            this.mouseOverGrid[x] = new Array(this.grid[x].length);
+            for (let y = 0; y < this.mouseOverGrid[x].length; y++) {
+                this.mouseOverGrid[x][y] = false;
+            }
         }
 
         // check if mouse is over a grid block
