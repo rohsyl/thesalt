@@ -22,5 +22,14 @@ LevelLoader.prototype = {
         xmlhttp.open("GET",filePath,false);
         xmlhttp.send(null);
         return xmlhttp.responseText;
+    },
+
+    loadConfig: function(){
+        let filePath = "src/level/config.json?v=" + Math.random();
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET",filePath,false);
+        xmlhttp.send(null);
+        let config = JSON.parse(xmlhttp.response);
+        return config;
     }
 };

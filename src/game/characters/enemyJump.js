@@ -26,9 +26,9 @@ function EnemyJump(scene, x, y, blockSize) {
     this.x = x;
     this.y = y;
     this.blockSize = blockSize;
-    this.slowness = 5;
+    this.slowness = 8;
     this.dead = false;
-    this.ENEMY_JUMP_TIMOUT = 5 * FPS;
+    this.ENEMY_JUMP_TIMOUT = 4 * FPS;
 }
 
 EnemyJump.prototype = {
@@ -44,25 +44,25 @@ EnemyJump.prototype = {
 
         // hit boxes
         this.boxTop = this.h / 2;
-        this.boxBottom = this.h / 2;
+        this.boxBottom = this.h / 2 ;
         this.boxLeft = this.w / 7;
         this.boxRight = this.w / 7;
 
         this.y = this.y - this.h / 2;
 
         this.speed = SHIFT_STEP / this.slowness;
-        this.jumpStrength = JUMP_STRENGTH - 1.5;
+        this.jumping = false;
+        this.jumpStrength = JUMP_STRENGTH - 2;
+        this.jumpTimeout = this.ENEMY_JUMP_TIMOUT;
 
         this.velX = 0;
         this.velY = 0;
-
-        this.jumping = false;
 
         this.shiftX = undefined;
 
         // ========================================================================
         // enemy graphics
-        this.isEnemyForw = true;
+        this.isEnemyForw = false;
         this.enemyForw0 = new Image();
         this.enemyForw1 = new Image();
         this.enemyForw2 = new Image();
@@ -89,7 +89,6 @@ EnemyJump.prototype = {
         this.ticksPerFrame = 3 * this.slowness/2;
         this.numberOfFrames = this.enemyForw.length;
 
-        this.jumpTimeout = this.ENEMY_JUMP_TIMOUT;
 
         this.scorePoint = 350;
     },
@@ -99,27 +98,24 @@ EnemyJump.prototype = {
         if (!this.dead) {
             this.shiftX = shiftX;
 
-
             if(this.jumpTimeout === 0 && !this.jumping){
                 this.velY = -this.jumpStrength * 2;
                 this.jumping = true;
-                this.jumpTimeout = this.ENEMY_JUMP_TIMOUT;
             }
             else{
                 this.jumpTimeout--;
                 this.jumping = false;
+
+                if (this.isEnemyForw) {
+                    if (this.velX < this.speed)
+                        this.velX++;
+                }
+                else if (!this.isEnemyForw) {
+                    if (this.velX > -this.speed)
+                        this.velX--;
+                }
             }
 
-            if (this.isEnemyForw) {
-                if (this.velX < this.speed)
-                    this.velX++;
-                this.__drawEnemyWalking();
-            }
-            else if (!this.isEnemyForw) {
-                if (this.velX > -this.speed)
-                    this.velX--;
-                this.__drawEnemyWalking();
-            }
 
             // apply forces
             this.velX *= FRICTION;
@@ -130,10 +126,19 @@ EnemyJump.prototype = {
     draw: function () {
         if (!this.dead) {
             // move the player
+
+            if(this.jumping){
+                this.__drawEnemyJumping();
+            }
+            else if (this.isEnemyForw) {
+                this.__drawEnemyWalking();
+            }
+            else if (!this.isEnemyForw) {
+                this.__drawEnemyWalking();
+            }
+
             this.x += this.velX;
             this.y += this.velY;
-
-            this.__drawEnemyJumping();
         }
     },
 
@@ -166,16 +171,28 @@ EnemyJump.prototype = {
                         this.fall();
                     }
                     else if (l_collision < r_collision && l_collision < t_collision && l_collision < b_collision) {
-                         // console.log("Enemy Left collision" + " : " + this.getCenterX());
-                        let leftValue = this.getCenterX() - this.x + this.boxLeft;
-                        this.x = block.getX() - leftValue;
-                        this.isEnemyForw = false;
+                        //console.log("Enemy Left collision" + " : " + this.getCenterX());
+                        //console.log(block.getX() + ' ' + block.getY());
+                        //if(block.getY() >= this.getCenterY() + this.boxBottom){
+                        //    console.log("bad collision");
+                        //}
+                        //else{
+                            let leftValue = this.getCenterX() - this.x + this.boxLeft;
+                            this.x = block.getX() - leftValue;
+                            this.isEnemyForw = false;
+                        //}
                     }
                     else if (r_collision < l_collision && r_collision < t_collision && r_collision < b_collision) {
-                         // console.log("Enemy Right collision" + " : " + this.getCenterX());
-                        let rightValue = this.getCenterX() - this.x - this.boxLeft;
-                        this.x = block.getX() + block.w - rightValue;
-                        this.isEnemyForw = true;
+                        //console.log("Enemy Right collision" + " : " + this.getCenterX());
+                        //console.log(block.getX() + ' ' + block.getY());
+                        //if(block.getY() >= this.getCenterY() + this.boxBottom){
+                           // console.log("bad collision");
+                        //}
+                        //else {
+                            let rightValue = this.getCenterX() - this.x - this.boxLeft;
+                            this.x = block.getX() + block.w - rightValue;
+                            this.isEnemyForw = true;
+                        //}
                     }
 
                 }
@@ -189,9 +206,10 @@ EnemyJump.prototype = {
 
     land: function(what){
         let topValue = this.getCenterY() - this.y + this.boxBottom;
-        this.y = what.getY() - topValue - 2;
+        this.y = what.getY() - topValue;
         this.velY = 0;
         this.jumping = false;
+        this.jumpTimeout = this.ENEMY_JUMP_TIMOUT;
     },
 
     getCenterX: function(){
@@ -207,10 +225,8 @@ EnemyJump.prototype = {
     },
 
     __drawEnemyWalking: function(){
-        if (!this.jumping) {
-            this.__update();
-            this.__drawEnemy();
-        }
+        this.__update();
+        this.__drawEnemy();
     },
 
     __drawEnemyJumping: function(){
