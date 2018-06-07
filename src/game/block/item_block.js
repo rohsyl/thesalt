@@ -48,13 +48,16 @@ ItemBlock.prototype = {
 
     effect: function(player){
         if(this.spriteSrc == IMG_PIZZA){
+            this.gb.audio.playPickPizza();
             player.boostJump(2, 5);
         }
         else if(this.spriteSrc == IMG_RJ45){
+            this.gb.audio.playPickRj45();
             player.hasRJ = true;
 
         }
         else if(this.spriteSrc == IMG_WATER){
+            this.gb.audio.playPickWater();
             player.reduceSalt(10);
         }
     },

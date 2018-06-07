@@ -31,7 +31,7 @@ function GameBoard(canvas, playerName) {
         for(let bg in backgrounds){
             backgrounds[bg] = SPRITES_PATH + backgrounds[bg];
         }
-        this.levelScenes.push(new LevelInstance(levelConfig[lvl].levelName, backgrounds));
+        this.levelScenes.push(new LevelInstance(levelConfig[lvl].levelName, backgrounds, levelConfig[lvl].audio));
     }
 
     /*this.levelScenes = [
@@ -44,6 +44,8 @@ function GameBoard(canvas, playerName) {
     this.playerName = playerName;
     this.score = 0;
     this.saltLevel = 0;
+
+    this.audio = new Audio();
 }
 GameBoard.prototype = {
 

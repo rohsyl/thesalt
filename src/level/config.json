@@ -1,14 +1,27 @@
 [
   {
     "levelName": "level1",
+    "audio" : "level1",
     "backgrounds": ["background/level1/background.jpg", "background/level1/background.jpg"]
   },
   {
     "levelName": "level2",
+    "audio" : "level2",
     "backgrounds": ["background/level2/landscape.png", "background/level2/landscape.png"]
   },
   {
     "levelName": "level3",
+    "audio" : "level3",
     "backgrounds": ["background/level3/background.png", "background/level3/background.png"]
+  },
+  {
+    "levelName": "level4",
+    "audio" : "level4",
+    "backgrounds": ["background/level4/background.png", "background/level4/background.png", "background/level4/background.png", "background/level4/background.png"]
+  },
+  {
+    "levelName": "level5",
+    "audio" : "level5",
+    "backgrounds": ["background/level3/background.png", "background/level3/background.png", "background/level3/background.png"]
   }
 ]

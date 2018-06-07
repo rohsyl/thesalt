@@ -2,7 +2,12 @@
     KEY MAPS :
         * SHIFT + L -> open Level Builder
         * SHIFT + A -> add a new column to level
+        * SHIFT + Q -> remove last column from level
+        * SHIFT + I -> import a level from clipboard
         * SHIFT + S -> export level and download it
+
+        * 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ', ^ -> to select items in the menu bar
+
  */
 function LevelBuilder(gb, mainScene) {
     this.gb = gb;
@@ -35,7 +40,7 @@ LevelBuilder.prototype = {
 
         this.blockSize = this.canvas.height / LEVEL_ROW_NB;
 
-        this.grid = new Array(LEVEL_ROW_NB*3);
+        this.grid = [];
 
         this.menuWidth = this.blockSize*2;
         this.leftOffset = this.menuWidth + this.blockSize;
@@ -55,11 +60,11 @@ LevelBuilder.prototype = {
 
         this.menuBlocksValues = [0, this.menuWidth, this.menuWidth, this.menuWidth];
 
-        this.__initGrid();
+        this.__initGrid(LEVEL_ROW_NB*3);
 
         this.mouseX = 0;
         this.mouseY = 0;
-        this.scrollShift = 30;
+        this.scrollShift = 150;
 
         this.mouseOverItem = new Array(this.menuBlocks.length);
         for (let i = 0; i < this.mouseOverItem.length; i++){
@@ -87,7 +92,6 @@ LevelBuilder.prototype = {
         this.canvas.onmouseup = function() {
             self.isMouseDown = false;
         };
-
     },
 
     update: function(){
@@ -184,6 +188,11 @@ LevelBuilder.prototype = {
             }
 
         }
+
+        if (e.shiftKey && e.keyCode === 81){
+            this.grid.pop();
+        }
+
         if (e.shiftKey && e.keyCode === 65){
             let array = new Array(LEVEL_ROW_NB);
 
@@ -193,19 +202,61 @@ LevelBuilder.prototype = {
                 this.__fillGrid(this.grid.length-1, i, "e");
             }
         }
+        if(e.shiftKey && e.keyCode === 73)
+            this.__levelInput();
+
+        if (e.keyCode === 49)
+            this.selectedItem = 0;
+        if (e.keyCode === 50)
+            this.selectedItem = 1;
+        if (e.keyCode === 51)
+            this.selectedItem = 2;
+        if (e.keyCode === 52)
+            this.selectedItem = 3;
+        if (e.keyCode === 53)
+            this.selectedItem = 4;
+        if (e.keyCode === 54)
+            this.selectedItem = 5;
+        if (e.keyCode === 55)
+            this.selectedItem = 6;
+        if (e.keyCode === 56)
+            this.selectedItem = 7;
+        if (e.keyCode === 57)
+            this.selectedItem = 8;
+        if (e.keyCode === 48)
+            this.selectedItem = 9;
+        if (e.keyCode === 219)
+            this.selectedItem = 10;
+        if (e.keyCode === 221)
+            this.selectedItem = 11;
     },
 
     // fill the defined grid with a value
     __fillGrid(x, y, value){
-        // if (x > this.grid.length)
-        //     for (let i = this.grid.length; i > x; i++)
-        //         this.grid[i] = new Array(LEVEL_ROW_NB);
-
         this.grid[x][y] = new ItemValue(value, this.blockImgDefinitions[value], x * this.blockSize, y * this.blockSize);
     },
 
+    __levelInput: function(){
+
+        let level = prompt("Please paste your level.sel content : ", "");
+
+        let textRows = level.split(" ");
+
+        this.__initGrid(textRows[0].length);
+
+        for (let y = 0; y < this.grid[0].length; y++) {
+            let chars = textRows[y].split("");
+
+            for (let x = 0; x < this.grid.length; x++) {
+                this.__fillGrid(x, y, chars[x]);
+            }
+        }
+
+    },
+
     //  initialize grid with empty value
-    __initGrid(){
+    __initGrid(width){
+        this.grid = new Array(width);
         for (let x = 0; x < this.grid.length; x++) {
                 this.grid[x] = new Array(LEVEL_ROW_NB);
         }
@@ -246,9 +297,7 @@ LevelBuilder.prototype = {
                 for (let i = 0; i < this.mouseOverItem.length; i++) {
                     if (this.mouseOverItem[i])
                         this.mouseOverGrid[x][y] = false;
-
                 }
-
             }
         }
     },
