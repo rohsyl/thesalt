@@ -2,6 +2,7 @@ function Audio(){
     this.SOUND_GAMEOVER_URL = AUDIOS_PATH + 'game_over.mp3';
     this.SOUND_VICTORY_URL = AUDIOS_PATH + 'victory.mp3';
     this.SOUND_JUMP_URL = AUDIOS_PATH + 'jump.mp3';
+    this.SOUND_JUMP2_URL = AUDIOS_PATH + 'jump2.mp3';
     this.SOUND_DOUBLE_JUMP_URL = AUDIOS_PATH + 'doubleJump.mp3';
     this.SOUND_ENEMY_DIE_URL = AUDIOS_PATH + 'enemy_die.mp3';
     this.SOUND_PICK_WATER_URL = AUDIOS_PATH + 'pick_water.mp3';
@@ -16,6 +17,9 @@ function Audio(){
     });
     this.soundJump = new Howl({
         src: [this.SOUND_JUMP_URL]
+    });
+    this.soundJump2 = new Howl({
+        src: [this.SOUND_JUMP2_URL]
     });
     this.soundDoubleJump = new Howl({
         src: [this.SOUND_DOUBLE_JUMP_URL]
@@ -62,11 +66,18 @@ Audio.prototype = {
         }
     },
 
+    playJump2(){
+        if(this.soundEnabled){
+            this.soundJump2.play();
+        }
+    },
+
     playDoubleJump(){
         if(this.soundEnabled){
             this.soundDoubleJump.play();
         }
     },
+
 
     playEnemyDie(){
         if(this.soundEnabled){

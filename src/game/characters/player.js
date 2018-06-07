@@ -202,14 +202,20 @@ Player.prototype = {
                     this.jumping = true;
                     this.jumpCount--;
                     this.jumpTimeout = TIMEOUT_JUMP;
-                    this.gb.audio.playJump();
+                    if(this.playerSelected==3)
+                        this.gb.audio.playJump2()
+                    else
+                        this.gb.audio.playJump();
                 }
                 else if(this.jumpTimeout < 0 && this.jumpCount > 0){
                     this.velY = -this.jumpStrength*2;
                     this.jumping = true;
                     this.jumpCount--;
                     this.jumpTimeout = TIMEOUT_JUMP;
-                    this.gb.audio.playDoubleJump();
+                    if(this.playerSelected==3)
+                        this.gb.audio.playJump2()
+                    else
+                        this.gb.audio.playDoubleJump();
                 }
             }
 
