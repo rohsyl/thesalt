@@ -9,7 +9,11 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
         body { padding-top: 50px; }
+        p {font-weight:bold}
+        table>tbody {vertical-align: center}
+
     </style>
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -36,25 +40,76 @@
                 <ul class="nav navbar-nav">
                     <li><a href="index.html">The Game</a></li>
                     <li><a href="score.html">Scoreboard</a></li>
-                    <li><a href="howtoplay.html">How to play</a></li>
-                    <li class="active"><a href="credit.html">About us</a></li>
-
+                    <li class="active"><a href="howtoplay.html">How to play</a></li>
+                    <li class=""><a href="credit.html">About us</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
 
     <div class="container card">
-        <h1 class="page-header">About us</h1>
+        <h1 class="page-header">How to play</h1>
 
-        <p><b>This game was developed by</b><p/>
+        <p>The purpose of this game is to aquire the higher score as possible.<br/>
+        You can higher your score by</p>
+
         <ul>
-            <li>Célia Ahmad</li>
-            <li>Michael Coluccia</li>
-            <li>Gaetan Huser</li>
-            <li>Sylvain Roh</li>
+            <li>Killing an enemy (jump on his head)</li>
+            <li>Catching items</li>
+            <li>Reducing salt level</li>
+            <li>Reeching endpoint</li>
+
         </ul>
-        <p>for the RIA course in the HES-SO Valais/Wallis.</p>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Action</th>
+                <th scope="col">More</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row"><img src="assets/sprites/items/rj45.png" name="rj45"></th>
+                <td>+ 50 </td>
+                <td></td>
+
+            </tr>
+            <tr>
+                <th scope="row"><img src="assets/sprites/items/water_bottle.png" name="pizza"></th>
+                <td>-10 </td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"><img src="assets/sprites/npc/enemy_0/backwards/stop.png"width="50px" height="auto" name="enemy"></th>
+                <td>250</td>
+                <td>if walking</td>
+            </tr>
+
+            <tr>
+                <th scope="row"><img src="assets/sprites/npc/enemy_0/backwards/stop.png"width="50px" height="auto" name="enemy"></th>
+                <td>350</td>
+                <td>if jumping</td>
+
+            </tr>
+            <tr>
+                <th scope="row"><img src="assets/sprites/items/endpoint.png" name="end point"></th>
+                <td>+ score * (100 - salt level) / 100</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"><img src="assets/sprites/items/pizza.png" name="pizza"></th>
+                <td>Boost your jumps</td>
+                <td></td>
+
+            </tr>
+
+            </tbody>
+        </table>
+
+
     </div>
     <!-- JS FILES -->
     <script src="assets/js/jquery-3.3.1.min.js"></script>
